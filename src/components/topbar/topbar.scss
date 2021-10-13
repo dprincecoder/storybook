@@ -1,0 +1,30 @@
+.nav-extended .nav-wrapper{
+    min-height: 35px !important;
+    
+    .tabs .icon{
+        margin-top: 7px;
+    }
+    
+    .tabs .usr{
+        margin-top: 5px;
+    }
+    
+}
+
+a{
+    color: black;
+}
+
+.app-name{
+    width: 100%;
+    
+    .app-info{
+        padding: 5px;
+        .name a{
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+    }
+    
+}

@@ -1,0 +1,46 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html,
+body,
+#root{
+	
+	scroll-behavior: smooth;
+	background-color: #f1f1f0;
+	
+} 
+
+.App{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.centerEverything {
+	background-color: #fff;
+	width: 32rem;
+	overflow: hidden;
+	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+a {
+	text-decoration: none;
+	font-size: 1rem;
+	color: white;
+}
+
+
+body::-webkit-scrollbar {
+	width: 4px;
+}
+body::-webkit-scrollbar-thumb {
+	background-color: #037fff;
+	border-radius: 50px;
+}
+body::-webkit-scrollbar-track {
+	background-color: #e1e1d0;
+}
+

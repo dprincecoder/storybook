@@ -1,0 +1,53 @@
+.card{
+    .card-image{
+        img{
+            height: 300px;
+        }
+    }
+    .card-action{
+        display: flex;
+        h5{
+            margin-right: 10px;
+        }
+    }
+    .card-content{
+        .halfway{
+            float: right;
+            margin-top: 2rem;
+        }
+        .hide-input{
+            form{
+            input{
+                display: none;
+            }
+            button{
+                display: none;
+            }
+            }
+        }
+        
+        .show-input{
+            form{
+                
+            input{
+                display: flex;
+            }
+            button{
+                display: flex;
+            }
+            }
+            .section{
+                display: flex;
+                .shift{
+                    margin-left: 15px;
+                }
+            }
+        }
+        form{
+            padding-left: 10px;
+            h6{
+                color: #037fff;
+            }
+        }
+    }
+}
