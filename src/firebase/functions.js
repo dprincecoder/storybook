@@ -1,6 +1,7 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import "firebase/storage";
 import { firebaseConfig } from "./config";
 import dummyAvatar from "../dummyAvatar.png";
 
@@ -9,6 +10,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 const DB = firebaseApp.firestore();
 const auth = firebase.auth();
 const provider = new firebase.auth.GoogleAuthProvider();
+const storage = firebaseApp.storage();
 
 const handleUserProfile = async ({ userAuth, additionalData }) => {
 	if (!userAuth) return;
@@ -32,8 +34,8 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 				country: country || "",
 				city: city || "",
 				profilePic,
-                createdDate: timestamp,
-                userId: uid,
+				createdDate: timestamp,
+				userId: uid,
 				...additionalData,
 			});
 		} catch (error) {
@@ -52,5 +54,5 @@ const getCurrentUser = () => {
 	});
 };
 
-export { auth, provider, handleUserProfile, getCurrentUser };
+export { auth, provider, handleUserProfile, getCurrentUser, storage };
 export default DB;

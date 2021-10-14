@@ -1,42 +1,51 @@
-.card{
-    .usrChip{
-        display: flex;
-        padding: 10px;
-       .userChipOptions{
-           padding-left: 5px;
-           a{
-               text-transform: uppercase;
-               color:#037fff;
-               padding-right: 5px;
-           }
-           .late{
-               opacity: .5;
-           }
-       }
-    }
-    .card-content{
-    padding: 15px;
-    
-    h4{
-        margin: 0;
-        padding-bottom: 5px;
-    }
-    .options{
-        display: flex;
-        padding: 10px;
-        justify-content: space-around;
-        .liked{
-            color: #037fff;
-        }
-    }
-    .optionsCount{
-        display: flex;
-        justify-content: space-between;
-        margin: 10px;
-    }
-    
-    .card-image{
-        padding: 10px 0;
-    }
+.card {
+	.usrChip {
+		display: flex;
+		padding: 10px;
+		.userChipOptions {
+			padding-left: 5px;
+			a {
+				text-transform: uppercase;
+				color: #037fff;
+				padding-right: 5px;
+			}
+			.late {
+				opacity: 0.5;
+			}
+		}
+	}
+	.card-content {
+		padding: 15px;
+
+		h4 {
+			margin: 0;
+			padding-bottom: 5px;
+		}
+		.options {
+			display: flex;
+			padding: 10px;
+			justify-content: space-around;
+			.liked {
+				color: #037fff;
+			}
+		}
+		.optionsCount {
+			display: flex;
+			justify-content: space-between;
+			margin: 10px;
+		}
+
+		.card-image {
+			padding: 10px 0;
+		}
+	}
 }
-}
+
+// .row {
+// 	// .load-more {
+// 	// 	border: 1px solid #037fff;
+
+// 	// 	opacity: 0.5;
+// 	// 	margin-left: 2rem;
+// 	// }
+// }

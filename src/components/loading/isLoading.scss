@@ -1,0 +1,91 @@
+.roe {
+	margin-top: 30px;
+	opacity: 0.5;
+
+	.cardtop {
+		padding: 10px;
+		.topcard {
+			display: flex;
+		}
+		.chipimg {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			background-color: gray;
+			animation: skeleton-loading 1s linear infinite alternate;
+			display: flex;
+		}
+		.top {
+			padding-left: 10px;
+
+			.name {
+				padding: 0 5px;
+				width: 150px;
+				height: 15px;
+				background-color: gray;
+				border-radius: 20px;
+				animation: skeleton-loading 1s linear infinite alternate;
+			}
+			.time {
+				margin-top: 5px;
+				width: 100px;
+				height: 15px;
+				background-color: gray;
+				border-radius: 20px;
+				animation: skeleton-loading 1s linear infinite alternate;
+			}
+		}
+	}
+
+	.card-content {
+		.longest {
+			margin: 2rem;
+			width: 400px;
+			height: 20px;
+			background-color: gray;
+			border-radius: 20px;
+			animation: skeleton-loading 1s linear infinite alternate;
+		}
+		.longer {
+			margin: 1rem;
+			width: 300px;
+			height: 20px;
+			background-color: gray;
+			border-radius: 20px;
+			animation: skeleton-loading 1s linear infinite alternate;
+		}
+		.long {
+			margin: 2rem 0;
+			width: 450px;
+			height: 20px;
+			background-color: gray;
+			border-radius: 20px;
+			animation: skeleton-loading 1s linear infinite alternate;
+		}
+		.short {
+			margin: 2rem;
+			width: 250px;
+			height: 20px;
+			background-color: gray;
+			border-radius: 20px;
+			animation: skeleton-loading 1s linear infinite alternate;
+		}
+		.image {
+			margin: 2rem;
+			width: 400px;
+			height: 200px;
+			background-color: gray;
+			border-radius: 20px;
+			animation: skeleton-loading 1s linear infinite alternate;
+		}
+	}
+}
+
+@keyframes skeleton-loading {
+	0% {
+		background-color: hsl(200, 20%, 63%);
+	}
+	100% {
+		background-color: hsl(200, 20%, 93%);
+	}
+}
