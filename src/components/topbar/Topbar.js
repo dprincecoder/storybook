@@ -20,15 +20,12 @@ const Topbar = () => {
 	const dispatch = useDispatch();
 	const [loading, setLoading] = useState(true);
 	const { currentUser, userData } = useSelector(mapState);
-	const { uid } = currentUser;
-	const { profilePic, displayName, userId } = userData;
-	const isDisconnected = localStorage.getItem("networkcondition");
+	const { uid, userId } = currentUser;
+	const { profilePic, displayName } = userData;
 
 	useEffect(() => {
-		setTimeout(() => {
-			setLoading(false);
-		}, 7000);
 		dispatch(fetchUserDataStart(uid));
+
 		return () => {
 			dispatch(setUserData({}));
 		};
@@ -56,20 +53,18 @@ const Topbar = () => {
 									<AutoStoriesIcon />
 								</Link>
 							</li>
-							<li className="tab icon">
+							{/* <li className="tab icon">
 								<Link to={`/stories/notification`}>
 									<CircleNotificationsIcon />
 								</Link>
-							</li>
+							</li> */}
 							<li className="tab icon">
 								<Link to={`/users/story/post`}>
 									<AddBoxIcon />
 								</Link>
 							</li>
 							{!userId ? (
-								<div className="ml-4">
-									<IsLoading />
-								</div>
+								<IsLoading />
 							) : (
 								<>
 									<li className="tab">

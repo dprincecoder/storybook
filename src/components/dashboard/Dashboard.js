@@ -6,81 +6,154 @@ import InputForm from "../forms/inputs/InputForm";
 import "./dashboard.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUserStart } from "../../redux/user/user.action";
-import IsLoading from "../loading/IsLoading";
-// import {isDisconnected} from '../network/NetworkDetector'
+import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
+import { storage } from "../../firebase/functions.js";
+import {
+	handleUpdateUserImage,
+	handleUpdateUserDetails,
+} from "../../redux/user/user.helpers";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
 });
 const Dashboard = () => {
-	const isDisconnected = localStorage.getItem('networkcondition')
-	const { userData } = useSelector(mapState);
 	const dispatch = useDispatch();
+	const { userData } = useSelector(mapState);
 	const [showEditInput, setShowEditInput] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [errors, setErrors] = useState([]);
 	const [updateDisplayName, setUpdateDisplayName] = useState("");
+	const [updateImage, setUpdateImage] = useState(null);
 	const [updateCountry, setUpdateCountry] = useState("");
 	const [updateCity, setUpdateCity] = useState("");
 	const [updateFirstName, setUpdateFirstName] = useState("");
 	const [updateLastName, setUpdateLastName] = useState("");
-	const { displayName, email, firstName, lastName, profilePic, country, city } =
-		userData;
+	const [progress, setProgress] = useState(0);
+	const [imageUrl, setImageUrl] = useState(null);
+	const {
+		displayName,
+		userId,
+		email,
+		firstName,
+		lastName,
+		profilePic,
+		country,
+		city,
+	} = userData;
+
+	const reset = () => {
+		setUpdateDisplayName("");
+		setUpdateFirstName("");
+		setUpdateLastName("");
+		setUpdateCountry("");
+		setUpdateCity("");
+		setShowEditInput(!showEditInput);
+	};
 
 	const handleUpdate = (e) => {
 		e.preventDefault();
+		handleUpdateUserDetails(
+			updateDisplayName,
+			updateFirstName,
+			updateLastName,
+			updateCountry,
+			updateCity,
+			userId
+		);
+		reset();
+		window.location.reload();
 	};
 
+	const handleUpdateImage = () => {
+		let uploadTask = storage
+			.ref(`userImages/${updateImage.name}`)
+			.put(updateImage);
+		uploadTask.on(
+			"state_changed",
+			(snapshot) => {
+				setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+			},
+			(error) => {
+				console.log(error);
+			},
+			async () => {
+				await storage
+					.ref("userImages")
+					.child(updateImage.name)
+					.getDownloadURL()
+					.then((firebaseUrl) => {
+						// const newUrl = (prevURl) => ({ ...prevURl, imgUrl: firebaseUrl });
+						setImageUrl(firebaseUrl);
+					});
+			}
+		);
+		window.location.reload();
+	};
 
-	let loadTime;
-	function loadFunction() {
-		loadTime = setTimeout(() => {
-			setLoading(false);
-		}, 5000);
-	}
+	handleUpdateUserImage(imageUrl, userId);
 
-	useEffect(() => {
-		loadFunction();
-
-		return () => {
-			clearTimeout(loadTime);
-			console.log("removed");
-		}
-	}, []);
 	const handleLogout = () => {
 		dispatch(signOutUserStart());
 	};
 	return (
 		<div className="row">
-			{loading || isDisconnected === "offline" ? (
-				<IsLoading />
+			{!displayName || !userId ? (
+				<IsLoadingSkeleton />
 			) : (
 				<>
 					<div className="col s12 m12">
 						<div className="card">
 							<div className="card-image">
 								<img src={profilePic} alt={displayName} />
-								<Button custom="btn-floating halfway-fab waves-effect waves-light blue">
-									<i className="fas fa-edit"></i>
-								</Button>
+								<InputForm
+									type="file"
+									id="file-input"
+									style={{ display: "none" }}
+									handleChange={(e) => setUpdateImage(e.target.files[0])}
+								/>
+								<label htmlFor="file-input">
+									<div className="btn-floating halfway-fab waves-effect waves-light blue">
+										<i className="fas fa-edit"></i>
+									</div>
+								</label>
+								{updateImage && (
+									<div className="">
+										<img
+											src={URL.createObjectURL(updateImage)}
+											alt=""
+											className="responsive-img"
+										/>
+										<Button
+											onClick={handleUpdateImage}
+											custom="bt green btn-success">
+											Update
+										</Button>
+										&nbsp;&nbsp;
+										{progress > 0 && (
+											<progress value={progress} id="uploader" max="100" />
+										)}
+									</div>
+								)}
 							</div>
 							<div className="divider"></div>
 							{/* <div className="divider"></div> */}
 							<div className="card-content">
 								<AuthWrapper
 									custom={`row ${showEditInput ? "show-input" : "hide-input"}`}>
-										<Button
-											onClick={() => setShowEditInput(!showEditInput)}
-											custom="btn-floating halfway waves-effect waves-light blue">
-											<i className="fas fa-edit"></i>
-										</Button>
-										<span>Intro</span>
-										<div className="divider"></div>
+									<Button
+										onClick={() => setShowEditInput(!showEditInput)}
+										custom="btn-floating halfway waves-effect waves-light blue">
+										<i className="fas fa-edit"></i>
+									</Button>
+									<span>Intro</span>
+									<div className="divider"></div>
 									<form onSubmit={handleUpdate}>
 										<div className="usrName">
-												<span>
-													Dispaly Name:
-												<h5 style={{color: "#037fff"}}>{displayName && displayName}</h5>
+											<span>
+												Dispaly Name:
+												<h5 style={{ color: "#037fff" }}>
+													{displayName && displayName}
+												</h5>
 											</span>
 											<div className="divider"></div>
 											<InputForm
@@ -143,7 +216,7 @@ const Dashboard = () => {
 										</span>
 										<div className="divider"></div>
 										<div className="section">
-											<Button>Update</Button>
+											<Button type="submit">Update</Button>
 											<Button
 												onClick={() => setShowEditInput(!showEditInput)}
 												custom="red shift">
@@ -151,13 +224,13 @@ const Dashboard = () => {
 											</Button>
 										</div>
 									</form>
-										<div className="section">
-											<Button
-												onClick={handleLogout}
-												custom="waves-effect waves-light red">
-												LOG Out
-											</Button>
-										</div>
+									<div className="section">
+										<Button
+											onClick={handleLogout}
+											custom="waves-effect waves-light red">
+											LOG Out
+										</Button>
+									</div>
 								</AuthWrapper>
 							</div>
 						</div>

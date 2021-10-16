@@ -10,6 +10,7 @@ import IsLoading from "../loading/IsLoading";
 import firebase from "firebase/app";
 
 import "./addstory.scss";
+import { useHistory } from "react-router-dom";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -18,49 +19,97 @@ const mapState = ({ user }) => ({
 const AddStory = () => {
 	const { userData } = useSelector(mapState);
 	const dispatch = useDispatch();
+	const history = useHistory();
 	const inputRef = useRef();
 	const { profilePic, displayName } = userData;
 	const [title, setTitle] = useState("");
 	const [category, setCategory] = useState("");
 	const [photos, setPhotos] = useState([]);
-	const [photosURL, setPhotosURL] = useState("");
+	const [photoURL, setPhotoURL] = useState("");
 	const [imageUpload, setImageUpload] = useState(null);
 	const [storyDetails, setStoryDetails] = useState("");
 	const [loading, setLoading] = useState();
-	// console.log(imageUpload);
-	// let photosURL = [];
-	const upload = (img) => {
-		if (!img) return;
-		const uploadTask = storage.ref(`storyImages/${img.name}`).put(img);
+	const [progress, setProgress] = useState(0);
+	const [linkUrl, setLinkurl] = useState("");
+
+	const upload = (image) => {
+		const uploadTask = storage.ref(`storyImages/${image.name}`).put(image);
+
+		// const promises = [];
+		// imageUpload.map((img) => {
+		// 	if (!img) return;
+		// 	const uploadTask = storage.ref(`storyImages/${img.name}`).put(img);
+		// 	promises.push(uploadTask);
+		// 	uploadTask.on(
+		// 		"state_changed",
+		// 		(snapshot) => {
+		// 							setProgress(
+		// 								(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+		// 							);
+
+		// 		},
+		// 		(err) => {
+		// 			console.log(err);
+		// 		},
+		// 		async () => {
+		// 			await storage
+		// 				.ref("storyImages")
+		// 				.child(img.name)
+		// 				.getDownloadURL()
+		// 				.then((firebaseUrl) => {
+		// 					setPhotoURL(firebaseUrl);
+		// 					dispatch(
+		// 						addStoryStart({
+		// 							userThatPublished: displayName,
+		// 							userthatPublishedProfilePic: profilePic,
+		// 							storyTitle: title,
+		// 							storyCategory: category,
+		// 							storyDetails: storyDetails,
+		// 							storyPhotos: firebase.firestore.FieldValue.arrayUnion({
+		// 								url: { firebaseUrl },
+		// 							}),
+		// 						})
+		// 					);
+		// 				});
+		// 		}
+		// 	);
+		// });
 		uploadTask.on(
 			"state_changed",
-			(snapshot) => {},
-			(err) => console.error(err),
-			() => {
-				storage
+			(snapshot) => {
+				setProgress((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+			},
+			(err) => {
+				console.log(err);
+			},
+			async () => {
+				await storage
 					.ref("storyImages")
-					.child(img.name)
+					.child(image.name)
 					.getDownloadURL()
-					.then((url) => {
-						// const newUrl = (prevURl) => [...prevURl, url];
-						setPhotosURL(url);
+					.then((firebaseUrl) => {
+						dispatch(
+							addStoryStart({
+								userThatPublished: displayName,
+								userthatPublishedProfilePic: profilePic,
+								storyTitle: title,
+								storyCategory: category,
+								storyDetails: storyDetails,
+								storyPhotos: firebaseUrl,
+								storyVideo: "",
+							})
+						);
 					});
 			}
 		);
-		// imageUpload.map((img) => {
-		// });
 	};
-
 	const handlePublish = (e) => {
 		e.preventDefault();
 		setLoading(true);
-		upload(imageUpload);
-		// const arr = photosURL.map((photo) => {
-		// 	return photo;
-		// });
-		// console.log(arr);
-		console.log(photosURL);
-		setTimeout(() => {
+		if (imageUpload) {
+			upload(imageUpload);
+		}
+		if (linkUrl) {
 			dispatch(
 				addStoryStart({
 					userThatPublished: displayName,
@@ -68,13 +117,33 @@ const AddStory = () => {
 					storyTitle: title,
 					storyCategory: category,
 					storyDetails: storyDetails,
-					storyPhotos: photosURL,
+					storyPhotos: linkUrl,
+					storyVideo: "",
 				})
 			);
-			setLoading(false);
-		}, 10000);
-		console.log(photosURL);
+		}
+		// dispatch(
+		// 	addStoryStart({
+		// 		userThatPublished: displayName,
+		// 		userthatPublishedProfilePic: profilePic,
+		// 		storyTitle: title,
+		// 		storyCategory: category,
+		// 		storyDetails: storyDetails,
+		// 		storyPhotos: photoURL,
+		// 	})
+		// );
+		// Promise.all(promises)
+		// 	.then(() => {
+		// 		setTrueState(true);
+		// 	})
+		// 	.catch((err) => console.log(err));
+		reset();
+		setTimeout(() => {
+			history.push("/");
+			// setLoading(false);
+		}, 2000);
 	};
+
 	const reset = () => {
 		setTitle("");
 		setCategory("");
@@ -85,26 +154,23 @@ const AddStory = () => {
 	const handleCancel = (e) => {
 		reset();
 	};
-	const handlePhotosChange = (e) => {
-		//for upload only
-		// for (let i = 0; i < e.target.files.length; i++) {
-		// 	const newImage = e.target.files[i];
-		// 	// newImage["id"] = Math.random();
-		// 	setImageUpload((prevImages) => [...prevImages, newImage]);
-		// }
+	// const handlePhotosChange = (e) => {
+	// 	// for upload only
+	// 	for (let i = 0; i < e.target.files.length; i++) {
+	// 		const newImage = e.target.files[i];
+	// 		// newImage["id"] = Math.random();
+	// 		setImageUpload((prevImages) => [...prevImages, newImage]);
+	// 	}
 
-		//for preview only
-		// const photosArr = Array.from(e.target.files).map((photo) =>
-		// 	URL.createObjectURL(photo)
-		// );
-		// setPhotos(photosArr);
-		// Array.from(e.target.files).map((photo) => URL.revokeObjectURL(photo));
-		setImageUpload(e.target.files[0]);
-	};
+	// 	// for preview only
+	// 	const photosArr = Array.from(e.target.files).map((photo) =>
+	// 		URL.createObjectURL(photo)
+	// 	);
+	// 	setPhotos(photosArr);
+	// 	Array.from(e.target.files).map((photo) => URL.revokeObjectURL(photo));
+	// 	// setImageUpload(e.target.files[0]);
+	// };
 
-	const configAuthWrapper = {
-		headline: "Share you story",
-	};
 	// const sourcePhotos = (source) => {
 	// 	return source.map((photo, index) => {
 	// 		return (
@@ -114,6 +180,9 @@ const AddStory = () => {
 	// 		);
 	// 	});
 	// };
+	const configAuthWrapper = {
+		headline: "Share you story",
+	};
 	return (
 		<div className="container">
 			<div className="card-content">
@@ -142,10 +211,10 @@ const AddStory = () => {
 								<span>Select</span>
 								<input
 									type="file"
-									// multiple={true}
+									multiple={true}
 									name="photos"
 									accept="image/jpg,image/png,image/gif,video/mp4"
-									onChange={handlePhotosChange}
+									onChange={(e) => setImageUpload(e.target.files[0])}
 								/>
 							</div>
 							<div className="file-path-wrapper">
@@ -157,6 +226,14 @@ const AddStory = () => {
 								/>
 							</div>
 						</div>
+						OR
+						<InputForm
+							type="text"
+							name="category"
+							placeholder="Drop image link here"
+							value={linkUrl}
+							handleChange={(e) => setLinkurl(e.target.value)}
+						/>
 						{/* {photos && sourcePhotos(photos)} */}
 						{imageUpload && (
 							<img
@@ -165,7 +242,10 @@ const AddStory = () => {
 								className="responsive-img"
 							/>
 						)}
-						{photos}
+						<div className="divider"></div>
+						{progress > 0 && (
+							<progress value={progress} id="uploader" max="100" />
+						)}
 						<div className="divider"></div>
 						Share your story in details:
 						<CKEditor

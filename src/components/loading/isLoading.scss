@@ -9,6 +9,7 @@
 		}
 		.chipimg {
 			width: 40px;
+			cursor: progress;
 			height: 40px;
 			border-radius: 50%;
 			background-color: gray;
@@ -21,6 +22,7 @@
 			.name {
 				padding: 0 5px;
 				width: 150px;
+				cursor: progress;
 				height: 15px;
 				background-color: gray;
 				border-radius: 20px;
@@ -29,6 +31,7 @@
 			.time {
 				margin-top: 5px;
 				width: 100px;
+				cursor: progress;
 				height: 15px;
 				background-color: gray;
 				border-radius: 20px;
@@ -41,6 +44,7 @@
 		.longest {
 			margin: 2rem;
 			width: 400px;
+			cursor: progress;
 			height: 20px;
 			background-color: gray;
 			border-radius: 20px;
@@ -49,6 +53,7 @@
 		.longer {
 			margin: 1rem;
 			width: 300px;
+			cursor: progress;
 			height: 20px;
 			background-color: gray;
 			border-radius: 20px;
@@ -56,6 +61,7 @@
 		}
 		.long {
 			margin: 2rem 0;
+			cursor: progress;
 			width: 450px;
 			height: 20px;
 			background-color: gray;
@@ -66,17 +72,38 @@
 			margin: 2rem;
 			width: 250px;
 			height: 20px;
+			cursor: progress;
+
 			background-color: gray;
 			border-radius: 20px;
 			animation: skeleton-loading 1s linear infinite alternate;
 		}
 		.image {
-			margin: 2rem;
+			margin: 2rem 1rem;
 			width: 400px;
-			height: 200px;
-			background-color: gray;
+			height: 250px;
+			cursor: progress;
+			position: relative;
 			border-radius: 20px;
-			animation: skeleton-loading 1s linear infinite alternate;
+			overflow: hidden;
+			background: rgb(196, 195, 195);
+			&::before {
+				content: "";
+				display: block;
+				position: absolute;
+				left: -150px;
+				top: 0;
+				height: 100%;
+				width: 150px;
+				background: linear-gradient(
+					to right,
+					transparent 0%,
+					#e8e8e8 50%,
+					transparent 100%
+				);
+				animation: skeleton-image-loading 1s cubic-bezier(0.4, 0, 0.2, 1)
+					infinite alternate;
+			}
 		}
 	}
 }
@@ -85,7 +112,17 @@
 	0% {
 		background-color: hsl(200, 20%, 63%);
 	}
+
 	100% {
 		background-color: hsl(200, 20%, 93%);
+	}
+}
+
+@keyframes skeleton-image-loading {
+	from {
+		left: -150px;
+	}
+	to {
+		left: 100%;
 	}
 }

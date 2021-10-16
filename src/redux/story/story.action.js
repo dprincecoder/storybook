@@ -29,3 +29,8 @@ export const setStory = (story) => ({
 	type: storyTypes.SET_STORY,
 	payload: story,
 });
+
+export const fetchUserStoriesStart = (filters = {}) => ({
+	type: storyTypes.FETCH_USER_STORIES_START,
+	payload: filters,
+});

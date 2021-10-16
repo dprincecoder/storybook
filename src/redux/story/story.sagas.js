@@ -6,6 +6,7 @@ import {
 	handleAddStory,
 	handleFetchStories,
 	handleFetchStory,
+	handleFetchUserStories,
 } from "./story.helpers";
 
 export function* addStory({ payload }) {
@@ -54,10 +55,25 @@ export function* fetchStory({ payload }) {
 export function* onFetchStoryStart() {
 	yield takeLatest(storyTypes.FETCH_STORY_START, fetchStory);
 }
+
+export function* fetchUserStories({ payload }) {
+	try {
+		const stories = yield handleFetchUserStories(payload);
+		yield put(setStories(stories));
+	} catch (error) {
+		console.log("this error occured while user fetching stories", error);
+	}
+}
+
+export function* onFetchUserStoriesStart() {
+	yield takeLatest(storyTypes.FETCH_USER_STORIES_START, fetchUserStories);
+}
+
 export default function* storySagas() {
 	yield all([
 		call(onAddStoryStart),
 		call(onFetchStoriesStart),
 		call(onFetchStoryStart),
+		call(onFetchUserStoriesStart),
 	]);
 }

@@ -42,11 +42,6 @@ const Home = () => {
 					return <HomeStory key={index} {...configStory} />;
 				})
 			)}
-			{!isLastPage && (
-				<div className="load-more" onClick={() => handleLoadMore()}>
-					Get new stories
-				</div>
-			)}
 		</div>
 	);
 };
