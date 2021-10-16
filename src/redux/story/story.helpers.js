@@ -69,20 +69,22 @@ export const handleFetchStory = (storyID) => {
 };
 
 export const handleFetchUserStories = ({
-	storyUserUID,
+	userId,
 	filterType,
 	startAfterDoc,
 	persistStories = [],
 }) => {
 	return new Promise((resolve, reject) => {
 		const pageSize = 5;
-		let ref = DB.collection("stories").orderBy("createdDate").limit(pageSize);
+		let ref = DB.collection("stories")
+			.orderBy("createdDate", "desc")
+			.limit(pageSize);
 
 		if (filterType) {
 			ref = ref.where("storyCategory", "==", filterType);
 		}
-		if (storyUserUID) {
-			ref = ref.where("storyUserUID", "==", storyUserUID);
+		if (userId) {
+			ref = ref.where("storyUserUID", "==", userId);
 		}
 
 		if (startAfterDoc) {
@@ -109,5 +111,17 @@ export const handleFetchUserStories = ({
 				});
 			})
 			.catch((err) => reject(err));
+	});
+};
+
+export const handleDeleteStory = (documentID) => {
+	return new Promise((resolve, reject) => {
+		DB.collection("stories")
+			.doc(documentID)
+			.delete()
+			.then(() => {
+				resolve();
+			})
+			.catch((error) => reject(error));
 	});
 };

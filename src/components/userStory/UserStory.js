@@ -18,7 +18,14 @@ const UserStory = () => {
 	const dispatch = useDispatch();
 	const { userId } = useParams();
 	useEffect(() => {
-		dispatch(fetchUserStoriesStart(userId));
+		dispatch(
+			fetchUserStoriesStart({
+				userId,
+				// filterType,
+				startAfterDoc: queryDoc,
+				persistStories: data,
+			})
+		);
 
 		return () => {
 			dispatch(setStory({}));
@@ -49,7 +56,7 @@ const UserStory = () => {
 				})
 			)}
 			{!isLastPage && (
-				<h7
+				<h6
 					className="load-more"
 					onClick={() => handleLoadMore()}
 					style={{
@@ -62,7 +69,7 @@ const UserStory = () => {
 						textAlign: "center",
 					}}>
 					Get More stories
-				</h7>
+				</h6>
 			)}
 		</div>
 	);

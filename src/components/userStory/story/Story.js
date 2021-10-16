@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
 	formatDate,
 	shortenText,
@@ -9,8 +9,14 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
 import { Delete } from "@material-ui/icons";
+import Button from "../../forms/button/Button";
+import { useDispatch } from "react-redux";
+import { deleteStoryStart } from "../../../redux/story/story.action";
 
 const Story = (story) => {
+	const dispatch = useDispatch();
+	const [del, setDel] = useState(false);
+	const [delSuccess, setDelSuccess] = useState(false);
 	const {
 		storyTitle,
 		createdDate,
@@ -33,11 +39,22 @@ const Story = (story) => {
 	// 	!liked ||
 	// 	!likeCount
 	// )return;
+	const handleDeleteStory = () => {
+		dispatch(deleteStoryStart(documentID));
+		setDelSuccess(true);
+		setDel(!del);
+		setTimeout(() => {
+			setDelSuccess(false);
+		}, 3000);
+	};
 
 	return (
 		<div className="col s12 m12">
+			{delSuccess && (
+				<p style={{ color: "green" }}>Story Deleted Successfully</p>
+			)}
 			<div className="card">
-				<div className="usrChip">
+				<div className={`usrChip ${del ? "open" : ""}`}>
 					<Avatar src={userthatPublishedProfilePic} alt={userThatPublished} />
 					<div className="userChipOptions">
 						<ul>
@@ -48,7 +65,29 @@ const Story = (story) => {
 						</ul>
 					</div>
 					<div className="delete">
-						<Delete />
+						<Delete
+							onClick={() => setDel(!del)}
+							style={{ color: "red", textAlign: "center", paddingTop: "3px" }}
+						/>
+					</div>
+					<div className="confirm">
+						<p>
+							Are you sure you want to delete this story? this action is
+							destructive and non reversible once confirmed.
+						</p>
+						<div className="btns">
+							<Button custom="btn red" onClick={handleDeleteStory}>
+								Confirm
+							</Button>
+							<Button
+								custom="btn green"
+								style={{
+									marginLeft: "1rem",
+								}}
+								onClick={() => setDel(!del)}>
+								Cancel
+							</Button>
+						</div>
 					</div>
 				</div>
 				<div className="divider"></div>

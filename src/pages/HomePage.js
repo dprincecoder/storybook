@@ -36,7 +36,7 @@ const HomePage = () => {
 						width: "150px",
 						cursor: "pointer",
 					}}>
-					Get new stories
+					Get More stories
 				</div>
 			)}
 		</>

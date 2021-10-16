@@ -53,7 +53,7 @@ const Dashboard = () => {
 	const handleUpdate = (e) => {
 		e.preventDefault();
 		handleUpdateUserDetails(
-			updateDisplayName,
+			updateDisplayName || displayName,
 			updateFirstName,
 			updateLastName,
 			updateCountry,
@@ -61,7 +61,9 @@ const Dashboard = () => {
 			userId
 		);
 		reset();
-		window.location.reload();
+		setTimeout(() => {
+			window.location.reload();
+		}, 2000);
 	};
 
 	const handleUpdateImage = () => {
@@ -87,7 +89,9 @@ const Dashboard = () => {
 					});
 			}
 		);
-		window.location.reload();
+		setTimeout(() => {
+			window.location.reload();
+		}, 5000);
 	};
 
 	handleUpdateUserImage(imageUrl, userId);

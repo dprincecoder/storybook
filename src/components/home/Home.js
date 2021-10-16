@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchStoriesStart } from "../../redux/story/story.action";
 import HomeStory from "./homeStory/HomeStory";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
+import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
 
 const mapState = ({ storiesData }) => ({
 	stories: storiesData.stories,
@@ -16,6 +17,7 @@ const mapState = ({ storiesData }) => ({
 const Home = () => {
 	const { stories } = useSelector(mapState);
 	const { data, isLastPage, queryDoc } = stories;
+
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(fetchStoriesStart());

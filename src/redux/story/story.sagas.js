@@ -4,6 +4,7 @@ import storyTypes from "./story.types";
 import { setStories, fetchStoriesStart, setStory } from "./story.action";
 import {
 	handleAddStory,
+	handleDeleteStory,
 	handleFetchStories,
 	handleFetchStory,
 	handleFetchUserStories,
@@ -69,11 +70,24 @@ export function* onFetchUserStoriesStart() {
 	yield takeLatest(storyTypes.FETCH_USER_STORIES_START, fetchUserStories);
 }
 
+export function* deleteStory({ payload }) {
+	try {
+		yield handleDeleteStory(payload);
+		yield put(fetchStoriesStart());
+	} catch (error) {
+		console.log("Failed to delete story");
+	}
+}
+
+export function* onDeleteStoryStart() {
+	yield takeLatest(storyTypes.DELETE_STORY_START, deleteStory);
+}
 export default function* storySagas() {
 	yield all([
 		call(onAddStoryStart),
 		call(onFetchStoriesStart),
 		call(onFetchStoryStart),
 		call(onFetchUserStoriesStart),
+		call(onDeleteStoryStart),
 	]);
 }
