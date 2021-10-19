@@ -2,6 +2,11 @@ import React from "react";
 import Home from "../components/home/Home";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStoriesStart } from "../redux/story/story.action";
+import { motion } from "framer-motion";
+import {
+	pageTransition,
+	pageVariants,
+} from "../components/animation/PageAnimations";
 
 const mapState = ({ storiesData }) => ({
 	stories: storiesData.stories,
@@ -21,8 +26,14 @@ const HomePage = () => {
 			})
 		);
 	};
+
 	return (
-		<>
+		<motion.div
+			initial="initial"
+			animate="in"
+			exit="out"
+			variants={pageVariants}
+			transition={pageTransition}>
 			<Home />
 			{!isLastPage && (
 				<div
@@ -39,7 +50,7 @@ const HomePage = () => {
 					Get More stories
 				</div>
 			)}
-		</>
+		</motion.div>
 	);
 };
 

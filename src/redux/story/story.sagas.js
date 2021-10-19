@@ -62,7 +62,7 @@ export function* fetchUserStories({ payload }) {
 		const stories = yield handleFetchUserStories(payload);
 		yield put(setStories(stories));
 	} catch (error) {
-		console.log("this error occured while user fetching stories", error);
+		console.log("this error occured while fetching user stories", error);
 	}
 }
 

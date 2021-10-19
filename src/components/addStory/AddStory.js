@@ -11,6 +11,7 @@ import firebase from "firebase/app";
 
 import "./addstory.scss";
 import { useHistory } from "react-router-dom";
+import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -184,92 +185,101 @@ const AddStory = () => {
 		headline: "Share you story",
 	};
 	return (
-		<div className="container">
-			<div className="card-content">
-				<AuthWrapper {...configAuthWrapper}>
-					<form onSubmit={handlePublish}>
-						Title:
-						<InputForm
-							type="text"
-							name="title"
-							placeholder="Enter your story Title"
-							value={title}
-							required
-							handleChange={(e) => setTitle(e.target.value)}
-						/>
-						Category:
-						<InputForm
-							type="text"
-							name="category"
-							placeholder="E.g marriage, family, relationship or vacation"
-							value={category}
-							required
-							handleChange={(e) => setCategory(e.target.value)}
-						/>
-						<div className="file-field input-field">
-							<div className="btn">
-								<span>Select</span>
-								<input
-									type="file"
-									multiple={true}
-									name="photos"
-									accept="image/jpg,image/png,image/gif,video/mp4"
-									onChange={(e) => setImageUpload(e.target.files[0])}
-								/>
-							</div>
-							<div className="file-path-wrapper">
-								<input
-									ref={inputRef}
-									className="file-path validate"
+		<>
+			{!displayName ? (
+				<IsLoadingSkeleton />
+			) : (
+				<div className="container">
+					<div className="card-content">
+						<AuthWrapper {...configAuthWrapper}>
+							<form onSubmit={handlePublish}>
+								Title:
+								<InputForm
 									type="text"
-									placeholder="Upload one or more files"
+									name="title"
+									placeholder="Enter your story Title"
+									value={title}
+									required
+									handleChange={(e) => setTitle(e.target.value)}
 								/>
-							</div>
-						</div>
-						OR
-						<InputForm
-							type="text"
-							name="category"
-							placeholder="Drop image link here"
-							value={linkUrl}
-							handleChange={(e) => setLinkurl(e.target.value)}
-						/>
-						{/* {photos && sourcePhotos(photos)} */}
-						{imageUpload && (
-							<img
-								src={URL.createObjectURL(imageUpload)}
-								alt=""
-								className="responsive-img"
-							/>
-						)}
-						<div className="divider"></div>
-						{progress > 0 && (
-							<progress value={progress} id="uploader" max="100" />
-						)}
-						<div className="divider"></div>
-						Share your story in details:
-						<CKEditor
-							required
-							onChange={(evt) => setStoryDetails(evt.editor.getData())}
-						/>
-						<div className="divider"></div>
-						<br />
-						<div className="section" style={{ display: "flex" }}>
-							<Button custom="blue" type="submit" disabled={loading || !title}>
-								publish
-							</Button>
-							{loading && <IsLoading />}
-						</div>
-					</form>
-					<br />
-					{title && (
-						<Button onClick={handleCancel} custom="red">
-							Cancel
-						</Button>
-					)}
-				</AuthWrapper>
-			</div>
-		</div>
+								Category:
+								<InputForm
+									type="text"
+									name="category"
+									placeholder="E.g marriage, family, relationship or vacation"
+									value={category}
+									required
+									handleChange={(e) => setCategory(e.target.value)}
+								/>
+								<div className="file-field input-field">
+									<div className="btn">
+										<span>Select</span>
+										<input
+											type="file"
+											multiple={true}
+											name="photos"
+											accept="image/jpg,image/png,image/gif,video/mp4"
+											onChange={(e) => setImageUpload(e.target.files[0])}
+										/>
+									</div>
+									<div className="file-path-wrapper">
+										<input
+											ref={inputRef}
+											className="file-path validate"
+											type="text"
+											placeholder="Upload one or more files"
+										/>
+									</div>
+								</div>
+								OR
+								<InputForm
+									type="text"
+									name="category"
+									placeholder="Drop image link here"
+									value={linkUrl}
+									handleChange={(e) => setLinkurl(e.target.value)}
+								/>
+								{/* {photos && sourcePhotos(photos)} */}
+								{imageUpload && (
+									<img
+										src={URL.createObjectURL(imageUpload)}
+										alt=""
+										className="responsive-img"
+									/>
+								)}
+								<div className="divider"></div>
+								{progress > 0 && (
+									<progress value={progress} id="uploader" max="100" />
+								)}
+								<div className="divider"></div>
+								Share your story in details:
+								<CKEditor
+									required
+									onChange={(evt) => setStoryDetails(evt.editor.getData())}
+								/>
+								<div className="divider"></div>
+								<br />
+								<div className="section" style={{ display: "flex" }}>
+									<Button
+										custom="blue"
+										type="submit"
+										disabled={loading || !title}>
+										publish
+									</Button>
+									{loading && <IsLoading />}
+								</div>
+							</form>
+							<br />
+							{title && (
+								<Button onClick={handleCancel} custom="red">
+									Cancel
+								</Button>
+							)}
+						</AuthWrapper>
+					</div>
+				</div>
+			)}
+		</>
 	);
 };
 

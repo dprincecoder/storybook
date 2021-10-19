@@ -8,9 +8,9 @@
 			display: flex;
 		}
 		.chipimg {
-			width: 40px;
+			width: 45px;
 			cursor: progress;
-			height: 40px;
+			height: 45px;
 			border-radius: 50%;
 			background-color: gray;
 			animation: skeleton-loading 1s linear infinite alternate;
@@ -21,7 +21,7 @@
 
 			.name {
 				padding: 0 5px;
-				width: 150px;
+				width: 200px;
 				cursor: progress;
 				height: 15px;
 				background-color: gray;
@@ -30,7 +30,7 @@
 			}
 			.time {
 				margin-top: 5px;
-				width: 100px;
+				width: 150px;
 				cursor: progress;
 				height: 15px;
 				background-color: gray;
@@ -43,7 +43,7 @@
 	.card-content {
 		.longest {
 			margin: 2rem;
-			width: 400px;
+			width: 450px;
 			cursor: progress;
 			height: 20px;
 			background-color: gray;
@@ -51,18 +51,19 @@
 			animation: skeleton-loading 1s linear infinite alternate;
 		}
 		.longer {
-			margin: 1rem;
-			width: 300px;
+			margin: 2rem;
+			width: 350px;
 			cursor: progress;
 			height: 20px;
 			background-color: gray;
 			border-radius: 20px;
 			animation: skeleton-loading 1s linear infinite alternate;
 		}
+
 		.long {
-			margin: 2rem 0;
+			margin: 2rem;
 			cursor: progress;
-			width: 450px;
+			width: 500px;
 			height: 20px;
 			background-color: gray;
 			border-radius: 20px;
@@ -80,7 +81,7 @@
 		}
 		.image {
 			margin: 2rem 1rem;
-			width: 400px;
+			width: 510px;
 			height: 250px;
 			cursor: progress;
 			position: relative;
@@ -104,6 +105,22 @@
 				animation: skeleton-image-loading 1s cubic-bezier(0.4, 0, 0.2, 1)
 					infinite alternate;
 			}
+		}
+	}
+}
+@media screen and (max-width: 500px) {
+	.card-content {
+		.longest {
+			width: 360px !important;
+		}
+		.longer {
+			width: 320px !important;
+		}
+		.long {
+			width: 370px !important;
+		}
+		.image {
+			width: 380px !important;
 		}
 	}
 }

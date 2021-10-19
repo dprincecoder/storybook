@@ -1,4 +1,5 @@
 import DB from "../../firebase/functions";
+import firebase from "firebase/app";
 export const handleAddStory = (story) => {
 	if (!story) return;
 	return new Promise((resolve, reject) => {
@@ -68,35 +69,29 @@ export const handleFetchStory = (storyID) => {
 	});
 };
 
-export const handleFetchUserStories = ({
-	userId,
-	filterType,
-	startAfterDoc,
-	persistStories = [],
-}) => {
+export const handleFetchUserStories = (userId) => {
 	return new Promise((resolve, reject) => {
-		const pageSize = 5;
+		// const pageSize = 5;
 		let ref = DB.collection("stories")
-			.orderBy("createdDate", "desc")
-			.limit(pageSize);
+			.where("storyUserUID", "==", userId)
+			.orderBy("createdDate", "asc");
 
-		if (filterType) {
-			ref = ref.where("storyCategory", "==", filterType);
-		}
-		if (userId) {
-			ref = ref.where("storyUserUID", "==", userId);
-		}
+		// if (filterType) {
+		// 	ref = ref.where("storyCategory", "==", filterType);
+		// }
+		// if (userId) {
+		// 	ref = ref.where("storyUserUID", "==", userId);
+		// }
 
-		if (startAfterDoc) {
-			ref = ref.startAfter(startAfterDoc);
-		}
+		// if (startAfterDoc) {
+		// 	ref = ref.startAfter(startAfterDoc);
+		// }
 
 		ref
 			.get()
 			.then((snapshot) => {
 				const totalCount = snapshot.size;
 				const data = [
-					...persistStories,
 					...snapshot.docs.map((doc) => {
 						return {
 							...doc.data(),
@@ -124,4 +119,37 @@ export const handleDeleteStory = (documentID) => {
 			})
 			.catch((error) => reject(error));
 	});
+};
+
+export const handleLikeStory = (displayName, documentID) => {
+	const likeDocument = DB.collection("likes");
+	const increment = firebase.firestore.FieldValue.increment(+1);
+	const story = DB.collection("stories").doc(documentID);
+	likeDocument.doc().set({
+		displayName,
+		documentID,
+	});
+	story.update({
+		likeCount: increment,
+		liked: true,
+	});
+	return likeDocument;
+};
+
+export const handleUnLikeStory = (documentID) => {
+	const likeDocument = DB.collection("likes");
+	const decrement = firebase.firestore.FieldValue.increment(-1);
+	const story = DB.collection("stories").doc(documentID);
+	// const storyDoc = await story.get();
+	likeDocument
+		.doc(documentID)
+		.delete()
+		.then(() => {
+			console.log("unlike success");
+		});
+	story.update({
+		likeCount: decrement,
+		liked: false,
+	});
+	return likeDocument;
 };

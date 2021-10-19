@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import usrA from "./PhotoGrid_Plus_1605606730565.png";
 import Button from "../forms/button/Button";
 import AuthWrapper from "../authwrapper/Authwraper";
 import InputForm from "../forms/inputs/InputForm";
@@ -67,9 +66,8 @@ const Dashboard = () => {
 	};
 
 	const handleUpdateImage = () => {
-		let uploadTask = storage
-			.ref(`userImages/${updateImage.name}`)
-			.put(updateImage);
+		const newImageName = new Date().toISOString() + updateImage.name;
+		let uploadTask = storage.ref(`userImages/${newImageName}`).put(updateImage);
 		uploadTask.on(
 			"state_changed",
 			(snapshot) => {
@@ -81,20 +79,22 @@ const Dashboard = () => {
 			async () => {
 				await storage
 					.ref("userImages")
-					.child(updateImage.name)
+					.child(newImageName)
 					.getDownloadURL()
 					.then((firebaseUrl) => {
 						// const newUrl = (prevURl) => ({ ...prevURl, imgUrl: firebaseUrl });
-						setImageUrl(firebaseUrl);
+						handleUpdateUserImage(firebaseUrl, userId);
+						// setImageUrl(firebaseUrl);
+						setTimeout(() => {
+							window.location.reload();
+						}, 2000);
 					});
 			}
 		);
-		setTimeout(() => {
-			window.location.reload();
-		}, 5000);
+		// setTimeout(() => {
+		// 	window.location.reload();
+		// }, 10000);
 	};
-
-	handleUpdateUserImage(imageUrl, userId);
 
 	const handleLogout = () => {
 		dispatch(signOutUserStart());

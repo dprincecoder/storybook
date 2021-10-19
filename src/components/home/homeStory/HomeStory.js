@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
 	formatDate,
 	shortenText,
@@ -8,8 +8,23 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	handleLikeStory,
+	handleUnLikeStory,
+} from "../../../redux/story/story.helpers";
+import { fetchStoriesStart } from "../../../redux/story/story.action";
+
+const mapState = ({ storiesData }) => ({
+	stories: storiesData.stories,
+});
 
 const HomeStory = (story) => {
+	const dispatch = useDispatch();
+	const { stories } = useSelector(mapState);
+	const { data, isLastPage, queryDoc } = stories;
 	const {
 		storyTitle,
 		createdDate,
@@ -33,8 +48,31 @@ const HomeStory = (story) => {
 	// 	!likeCount
 	// )return;
 
+	useEffect(() => {
+		Aos.init({ duration: 2000 });
+	}, []);
+	const likeStory = () => {
+		handleLikeStory(userThatPublished, documentID);
+		// dispatch(
+		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
+		// );
+		setTimeout(() => {
+			window.location.reload();
+		}, 2000);
+	};
+
+	const unlikeStory = () => {
+		handleUnLikeStory(documentID);
+		// dispatch(
+		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
+		// );
+		setTimeout(() => {
+			window.location.reload();
+		}, 2000);
+	};
+
 	return (
-		<div className="col s12 m12">
+		<div className="col s12 m12" data-aos="fade-up">
 			<div className="card">
 				<div className="usrChip">
 					<Avatar src={userthatPublishedProfilePic} alt="" />
@@ -63,16 +101,16 @@ const HomeStory = (story) => {
 					</Link>
 					<div className="divider"></div>
 					<div className="optionsCount">
-						{likeCount > 0 && <div className="btn blue">{likeCount}</div>}
+						{likeCount > 0 && <div className="btn blue">{likeCount} Likes</div>}
 						{/* <div className="btn blue">0 Comments</div> */}
 					</div>
 					<div className="divider"></div>
 					<div className="options">
 						<div className="like">
 							{liked ? (
-								<ThumbUpIcon className="liked" />
+								<ThumbUpIcon className="liked" onClick={unlikeStory} />
 							) : (
-								<ThumbUpAltOutlinedIcon />
+								<ThumbUpAltOutlinedIcon onClick={likeStory} />
 							)}
 						</div>
 						<div className="snapIcon">Snap Share</div>

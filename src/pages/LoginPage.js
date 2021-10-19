@@ -1,7 +1,21 @@
-import React from 'react'
-import Login from '../components/login/Login'
+import { motion } from "framer-motion";
+import React from "react";
+import {
+	pageTransition,
+	pageVariants,
+} from "../components/animation/PageAnimations";
+import Login from "../components/login/Login";
 const LoginPage = () => {
-    return (<Login /> )
-}
+	return (
+		<motion.div
+			initial="initial"
+			animate="in"
+			exit="out"
+			variants={pageVariants}
+			transition={pageTransition}>
+			<Login />
+		</motion.div>
+	);
+};
 
-export default LoginPage
+export default LoginPage;

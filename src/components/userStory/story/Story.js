@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	formatDate,
 	shortenText,
@@ -12,6 +12,13 @@ import { Delete } from "@material-ui/icons";
 import Button from "../../forms/button/Button";
 import { useDispatch } from "react-redux";
 import { deleteStoryStart } from "../../../redux/story/story.action";
+import { AutoStoriesSharp } from "@mui/icons-material";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import {
+	handleLikeStory,
+	handleUnLikeStory,
+} from "../../../redux/story/story.helpers";
 
 const Story = (story) => {
 	const dispatch = useDispatch();
@@ -39,6 +46,9 @@ const Story = (story) => {
 	// 	!liked ||
 	// 	!likeCount
 	// )return;
+	useEffect(() => {
+		Aos.init({ duration: 2000 });
+	}, []);
 	const handleDeleteStory = () => {
 		dispatch(deleteStoryStart(documentID));
 		setDelSuccess(true);
@@ -49,7 +59,7 @@ const Story = (story) => {
 	};
 
 	return (
-		<div className="col s12 m12">
+		<div data-aos="fade-up" className="col s12 m12">
 			{delSuccess && (
 				<p style={{ color: "green" }}>Story Deleted Successfully</p>
 			)}
@@ -113,9 +123,14 @@ const Story = (story) => {
 					<div className="options">
 						<div className="like">
 							{liked ? (
-								<ThumbUpIcon className="liked" />
+								<ThumbUpIcon
+									className="liked"
+									onClick={() => handleUnLikeStory(documentID)}
+								/>
 							) : (
-								<ThumbUpAltOutlinedIcon />
+								<ThumbUpAltOutlinedIcon
+									onClick={() => handleLikeStory(userThatPublished, documentID)}
+								/>
 							)}
 						</div>
 						<div className="snapIcon">Snap Share</div>

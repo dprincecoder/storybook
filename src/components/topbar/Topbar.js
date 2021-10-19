@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import "./topbar.scss";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
@@ -37,6 +39,22 @@ const Topbar = () => {
 					<li className="name">
 						<Link to="/">storybook</Link>
 					</li>
+					<div className="user-info">
+						{!userId ? (
+							<IsLoading />
+						) : (
+							<>
+								<li className="tab usr-name">
+									<Link to={`/users/${userId}/dashboard`}>{displayName}</Link>
+								</li>
+								<li className="tab">
+									<Link to={`/users/${userId}/dashboard`}>
+										<Avatar src={profilePic} />
+									</Link>
+								</li>
+							</>
+						)}
+					</div>
 				</ul>
 			</div>
 			<nav className={`blue nav-extended`}>
@@ -50,33 +68,24 @@ const Topbar = () => {
 							</li>
 							<li className="tab icon">
 								<Link to={`/users/${userId}/stories`}>
-									<AutoStoriesIcon />
+									<AutoStoriesIcon />{" "}
 								</Link>
 							</li>
-							{/* <li className="tab icon">
+							<li className="tab icon">
 								<Link to={`/stories/notification`}>
 									<CircleNotificationsIcon />
 								</Link>
-							</li> */}
+							</li>
 							<li className="tab icon">
 								<Link to={`/users/story/post`}>
 									<AddBoxIcon />
 								</Link>
 							</li>
-							{!userId ? (
-								<IsLoading />
-							) : (
-								<>
-									<li className="tab">
-										<Link to={`/users/${userId}/dashboard`}>{displayName}</Link>
-									</li>
-									<li className="tab usr">
-										<Link to={`/users/${userId}/dashboard`}>
-											<Avatar src={profilePic} />
-										</Link>
-									</li>
-								</>
-							)}
+							<li className="tab icon">
+								<Link to={`/users/story/post`}>
+									<VideoLibraryIcon />
+								</Link>
+							</li>
 						</ul>
 					</div>
 				</div>
