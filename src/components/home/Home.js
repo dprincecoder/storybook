@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchStoriesStart } from "../../redux/story/story.action";
 import HomeStory from "./homeStory/HomeStory";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
+import LoadMore from "../forms/button/LoadMore";
 
 const mapState = ({ storiesData }) => ({
 	stories: storiesData.stories,
@@ -22,18 +23,30 @@ const Home = () => {
 		);
 	}, []);
 
+	if (!data || data.length < 0) {
+		return <IsLoadingSkeleton />;
+	}
+	const handleLoadMore = () => {
+		dispatch(
+			fetchStoriesStart({
+				// filterType,
+				startAfterDoc: queryDoc,
+				persistStories: data,
+			})
+		);
+	};
+	const configLoadMore = {
+		onLoadMoreEvt: handleLoadMore,
+	};
 	return (
 		<div className="row">
-			{!data || data.length < 1 ? (
-				<IsLoadingSkeleton />
-			) : (
-				data.map((story, index) => {
-					const configStory = {
-						...story,
-					};
-					return <HomeStory key={index} {...configStory} />;
-				})
-			)}
+			{data.map((story, index) => {
+				const configStory = {
+					...story,
+				};
+				return <HomeStory key={index} {...configStory} />;
+			})}
+			{!isLastPage && <LoadMore {...configLoadMore} />}
 		</div>
 	);
 };

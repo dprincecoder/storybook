@@ -1,12 +1,11 @@
-import React from "react";
-import Home from "../components/home/Home";
 import { motion } from "framer-motion";
+import React from "react";
 import {
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";
 
-const HomePage = () => {
+const VideoPage = () => {
 	return (
 		<motion.div
 			initial="initial"
@@ -14,9 +13,9 @@ const HomePage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			<Home />
+			<h4>Page under Construction...</h4>
 		</motion.div>
 	);
 };
 
-export default HomePage;
+export default VideoPage;

@@ -18,6 +18,8 @@ import { useLocation } from "react-router-dom";
 
 import { NetworkDetector } from "./components/network/NetworkDetector";
 import UserStoryPage from "./pages/UserStoryPage";
+import VideoPage from "./pages/VideoPage";
+import NotificationsPage from "./pages/NotificationsPage";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
@@ -68,6 +70,16 @@ const App = () => {
 							<Route exact path="/users/:userId/stories">
 								<WithAuth>
 									<UserStoryPage />
+								</WithAuth>
+							</Route>
+							<Route exact path="/videos">
+								<WithAuth>
+									<VideoPage />
+								</WithAuth>
+							</Route>
+							<Route exact path="/notifications">
+								<WithAuth>
+									<NotificationsPage />
 								</WithAuth>
 							</Route>
 						</Switch>

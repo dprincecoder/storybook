@@ -182,7 +182,7 @@ const AddStory = () => {
 	// 	});
 	// };
 	const configAuthWrapper = {
-		headline: "Share you story",
+		headline: "Share your story",
 	};
 	return (
 		<>

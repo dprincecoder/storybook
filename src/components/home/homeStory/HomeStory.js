@@ -24,7 +24,7 @@ const mapState = ({ storiesData }) => ({
 const HomeStory = (story) => {
 	const dispatch = useDispatch();
 	const { stories } = useSelector(mapState);
-	const { data, isLastPage, queryDoc } = stories;
+	const { data, queryDoc } = stories;
 	const {
 		storyTitle,
 		createdDate,
@@ -53,22 +53,16 @@ const HomeStory = (story) => {
 	}, []);
 	const likeStory = () => {
 		handleLikeStory(userThatPublished, documentID);
-		// dispatch(
-		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
-		// );
-		setTimeout(() => {
-			window.location.reload();
-		}, 2000);
+		dispatch(
+			fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
+		);
 	};
 
 	const unlikeStory = () => {
 		handleUnLikeStory(documentID);
-		// dispatch(
-		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
-		// );
-		setTimeout(() => {
-			window.location.reload();
-		}, 2000);
+		dispatch(
+			fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
+		);
 	};
 
 	return (
@@ -113,7 +107,12 @@ const HomeStory = (story) => {
 								<ThumbUpAltOutlinedIcon onClick={likeStory} />
 							)}
 						</div>
-						<div className="snapIcon">Snap Share</div>
+						<div
+							className="snapchat-creative-kit-share snapchat-share-button share-button share-button-grid"
+							data-theme="dark"
+							data-size="small"
+							data-share-url="https://express-the-moment.web.app"
+						/>
 					</div>
 				</div>
 			</div>

@@ -69,29 +69,34 @@ export const handleFetchStory = (storyID) => {
 	});
 };
 
-export const handleFetchUserStories = (userId) => {
+export const handleFetchUserStories = ({
+	userId,
+	startAfterDoc,
+	persistStories = [],
+}) => {
 	return new Promise((resolve, reject) => {
-		// const pageSize = 5;
+		const pageSize = 5;
 		let ref = DB.collection("stories")
-			.where("storyUserUID", "==", userId)
-			.orderBy("createdDate", "asc");
+			.orderBy("createdDate", "asc")
+			.limit(pageSize);
 
 		// if (filterType) {
 		// 	ref = ref.where("storyCategory", "==", filterType);
 		// }
-		// if (userId) {
-		// 	ref = ref.where("storyUserUID", "==", userId);
-		// }
+		if (userId) {
+			ref = ref.where("storyUserUID", "==", userId);
+		}
 
-		// if (startAfterDoc) {
-		// 	ref = ref.startAfter(startAfterDoc);
-		// }
+		if (startAfterDoc) {
+			ref = ref.startAfter(startAfterDoc);
+		}
 
 		ref
 			.get()
 			.then((snapshot) => {
 				const totalCount = snapshot.size;
 				const data = [
+					...persistStories,
 					...snapshot.docs.map((doc) => {
 						return {
 							...doc.data(),

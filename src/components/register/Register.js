@@ -14,7 +14,7 @@ import { useHistory } from "react-router-dom";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
-	userError: user.userError
+	userError: user.userError,
 });
 const Register = () => {
 	const dispatch = useDispatch();
@@ -35,10 +35,8 @@ const Register = () => {
 
 	useEffect(() => {
 		if (currentUser) {
-			reset()
-			setTimeout(() => {
-				history.push("/");
-			}, 5000);
+			reset();
+			history.push("/");
 		}
 	}, [currentUser]);
 
@@ -59,7 +57,6 @@ const Register = () => {
 		setLastName("");
 		setCountry("");
 		setCity("");
-
 	};
 
 	const handleEmailRegister = async (e) => {

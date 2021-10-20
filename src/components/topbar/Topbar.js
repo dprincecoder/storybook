@@ -8,7 +8,6 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
-import usrA from "./PhotoGrid_Plus_1605606730565.png";
 import { useDispatch } from "react-redux";
 import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
@@ -20,7 +19,6 @@ const mapState = ({ user }) => ({
 });
 const Topbar = () => {
 	const dispatch = useDispatch();
-	const [loading, setLoading] = useState(true);
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
 	const { profilePic, displayName } = userData;
@@ -72,7 +70,7 @@ const Topbar = () => {
 								</Link>
 							</li>
 							<li className="tab icon">
-								<Link to={`/stories/notification`}>
+								<Link to={`/notifications`}>
 									<CircleNotificationsIcon />
 								</Link>
 							</li>
@@ -82,7 +80,7 @@ const Topbar = () => {
 								</Link>
 							</li>
 							<li className="tab icon">
-								<Link to={`/users/story/post`}>
+								<Link to={`/videos`}>
 									<VideoLibraryIcon />
 								</Link>
 							</li>
@@ -90,7 +88,6 @@ const Topbar = () => {
 					</div>
 				</div>
 			</nav>
-			<div className="divider"></div>
 		</div>
 	);
 };
