@@ -126,35 +126,57 @@ export const handleDeleteStory = (documentID) => {
 	});
 };
 
-export const handleLikeStory = (displayName, documentID) => {
-	const likeDocument = DB.collection("likes");
-	const increment = firebase.firestore.FieldValue.increment(+1);
-	const story = DB.collection("stories").doc(documentID);
-	likeDocument.doc().set({
-		displayName,
-		documentID,
-	});
-	story.update({
-		likeCount: increment,
-		liked: true,
-	});
+export const handleLikeStory = async (userId, displayName, documentID) => {
+	let likeDocument = DB.collection("likes");
+
+	let likeDocu = DB.collection("likes")
+		.where("userId", "==", userId)
+		.where("documentID", "==", documentID)
+		.limit(1);
+
+	let increment = firebase.firestore.FieldValue.increment(+1);
+	const decrement = firebase.firestore.FieldValue.increment(-1);
+
+	let story = DB.collection("stories").doc(documentID);
+	let likeDoc = await likeDocu.get();
+
+	if (likeDoc.empty) {
+		likeDocument.doc(documentID).set({
+			userId,
+			displayName,
+			documentID,
+		});
+		story.update({
+			likeCount: increment,
+		});
+	} else {
+		likeDocument
+			.doc(documentID)
+			.delete()
+			.then(() => {
+				console.log("unlike success");
+			});
+		story.update({
+			likeCount: decrement,
+		});
+	}
 	return likeDocument;
 };
 
-export const handleUnLikeStory = (documentID) => {
-	const likeDocument = DB.collection("likes");
-	const decrement = firebase.firestore.FieldValue.increment(-1);
-	const story = DB.collection("stories").doc(documentID);
-	// const storyDoc = await story.get();
-	likeDocument
-		.doc(documentID)
-		.delete()
-		.then(() => {
-			console.log("unlike success");
-		});
-	story.update({
-		likeCount: decrement,
-		liked: false,
-	});
-	return likeDocument;
-};
+// export const handleUnLikeStory = (documentID) => {
+// 	const likeDocument = DB.collection("likes");
+// 	const decrement = firebase.firestore.FieldValue.increment(-1);
+// 	const story = DB.collection("stories").doc(documentID);
+// 	// const storyDoc = await story.get();
+// 	likeDocument
+// 		.doc(documentID)
+// 		.delete()
+// 		.then(() => {
+// 			console.log("unlike success");
+// 		});
+// 	story.update({
+// 		likeCount: decrement,
+// 		liked: false,
+// 	});
+// 	return likeDocument;
+// };

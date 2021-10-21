@@ -18,7 +18,6 @@ export function* addStory({ payload }) {
 			...payload,
 			storyUserUID: auth.currentUser.uid,
 			createdDate: timestamp,
-			liked: false,
 			likeCount: 0,
 		});
 		yield put(fetchStoriesStart());

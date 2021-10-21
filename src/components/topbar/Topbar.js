@@ -22,9 +22,9 @@ const Topbar = () => {
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
 	const { profilePic, displayName } = userData;
-
+	const d = uid || userId;
 	useEffect(() => {
-		dispatch(fetchUserDataStart(uid));
+		dispatch(fetchUserDataStart(d));
 
 		return () => {
 			dispatch(setUserData({}));
@@ -59,7 +59,7 @@ const Topbar = () => {
 				<div className="nav-wrapper">
 					<div className="nav-content">
 						<ul className="tabs tabs-transparent">
-							<li className="tab icon">
+							<li className="tab icon i">
 								<Link to="/">
 									<HomeIcon />
 								</Link>

@@ -23,7 +23,7 @@ const Home = () => {
 		);
 	}, []);
 
-	if (!data || data.length < 0) {
+	if (!data || data.length < 1) {
 		return <IsLoadingSkeleton />;
 	}
 	const handleLoadMore = () => {

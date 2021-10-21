@@ -57,7 +57,7 @@ export const fetchUserDataStart = (userId) => ({
 	payload: userId,
 });
 
-export const setUserData = userData => ({
+export const setUserData = (userData) => ({
 	type: userTypes.SET_USER_DATA,
 	payload: userData,
 });

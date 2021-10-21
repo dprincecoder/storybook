@@ -19,8 +19,6 @@ const Dashboard = () => {
 	const dispatch = useDispatch();
 	const { userData } = useSelector(mapState);
 	const [showEditInput, setShowEditInput] = useState(false);
-	const [loading, setLoading] = useState(true);
-	const [errors, setErrors] = useState([]);
 	const [updateDisplayName, setUpdateDisplayName] = useState("");
 	const [updateImage, setUpdateImage] = useState(null);
 	const [updateCountry, setUpdateCountry] = useState("");
@@ -106,6 +104,7 @@ const Dashboard = () => {
 			) : (
 				<>
 					<div className="col s12 m12">
+						<h5>My Dashboard</h5>
 						<div className="card">
 							<div className="card-image">
 								<img src={profilePic} alt={displayName} />

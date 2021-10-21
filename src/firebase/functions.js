@@ -34,6 +34,8 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 				country: country || "",
 				city: city || "",
 				profilePic,
+				bio: "",
+				areaOfExpertise: "",
 				createdDate: timestamp,
 				userId: uid,
 				...additionalData,

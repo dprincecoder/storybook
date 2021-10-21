@@ -13,18 +13,21 @@ import "aos/dist/aos.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	handleLikeStory,
-	handleUnLikeStory,
+	// handleUnLikeStory,
 } from "../../../redux/story/story.helpers";
 import { fetchStoriesStart } from "../../../redux/story/story.action";
 
-const mapState = ({ storiesData }) => ({
+const mapState = ({ user, storiesData }) => ({
+	userData: user.userData,
 	stories: storiesData.stories,
 });
 
 const HomeStory = (story) => {
 	const dispatch = useDispatch();
-	const { stories } = useSelector(mapState);
+	const { stories, userData } = useSelector(mapState);
+	const { userId, displayName } = userData;
 	const { data, queryDoc } = stories;
+
 	const {
 		storyTitle,
 		createdDate,
@@ -32,9 +35,8 @@ const HomeStory = (story) => {
 		storyDetails,
 		userThatPublished,
 		userthatPublishedProfilePic,
-		documentID,
-		liked,
 		likeCount,
+		documentID,
 	} = story;
 	// if (
 	// 	!userThatPublished ||
@@ -51,15 +53,14 @@ const HomeStory = (story) => {
 	useEffect(() => {
 		Aos.init({ duration: 2000 });
 	}, []);
-	const likeStory = () => {
-		handleLikeStory(userThatPublished, documentID);
-		dispatch(
-			fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
-		);
-	};
+	const conf = () => {};
+	// likeArr.map((item) => {
+	// 	setLikeCount(item.data.likeCount);
+	// 	console.log(item.data);
+	// }
 
-	const unlikeStory = () => {
-		handleUnLikeStory(documentID);
+	const likeStory = () => {
+		handleLikeStory(userId, displayName, documentID);
 		dispatch(
 			fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
 		);
@@ -95,24 +96,24 @@ const HomeStory = (story) => {
 					</Link>
 					<div className="divider"></div>
 					<div className="optionsCount">
-						{likeCount > 0 && <div className="btn blue">{likeCount} Likes</div>}
 						{/* <div className="btn blue">0 Comments</div> */}
 					</div>
-					<div className="divider"></div>
 					<div className="options">
-						<div className="like">
-							{liked ? (
-								<ThumbUpIcon className="liked" onClick={unlikeStory} />
+						<div className="like" onClick={likeStory}>
+							{likeCount > 0 ? (
+								<React.Fragment>
+									<ThumbUpIcon className="liked" /> &nbsp; &nbsp;
+									{likeCount}
+								</React.Fragment>
 							) : (
-								<ThumbUpAltOutlinedIcon onClick={likeStory} />
+								<ThumbUpAltOutlinedIcon />
 							)}
 						</div>
 						<div
-							className="snapchat-creative-kit-share snapchat-share-button share-button share-button-grid"
+							class="snapchat-creative-kit-share snapchat-share-button share-button share-button-grid"
 							data-theme="dark"
-							data-size="small"
-							data-share-url="https://express-the-moment.web.app"
-						/>
+							data-size="large"
+							data-share-url="https://express-the-moment.web.app"></div>
 					</div>
 				</div>
 			</div>

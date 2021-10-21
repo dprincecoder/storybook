@@ -14,7 +14,6 @@ import { checkUserSession } from "./redux/user/user.action";
 import WithAuth from "./hoc/withAuth";
 import Topbar from "./components/topbar/Topbar";
 import AddStoryPage from "./pages/AddStoryPage";
-import { useLocation } from "react-router-dom";
 
 import { NetworkDetector } from "./components/network/NetworkDetector";
 import UserStoryPage from "./pages/UserStoryPage";
@@ -27,7 +26,6 @@ const mapState = ({ user }) => ({
 
 const App = () => {
 	const { currentUser } = useSelector(mapState);
-	const location = useLocation();
 
 	const dispatch = useDispatch();
 	NetworkDetector();
