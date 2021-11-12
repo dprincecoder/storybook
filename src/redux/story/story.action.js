@@ -34,3 +34,8 @@ export const fetchUserStoriesStart = (filters = {}) => ({
 	type: storyTypes.FETCH_USER_STORIES_START,
 	payload: filters,
 });
+
+export const addCommentStart = (commentData) => ({
+	type: storyTypes.ADD_NEW_COMMENT_START,
+	payload: commentData,
+});

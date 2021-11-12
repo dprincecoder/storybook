@@ -229,7 +229,8 @@ const AddStory = () => {
 											type="text"
 											placeholder="Upload one or more files"
 										/>
-									</div>
+										</div>
+										
 								</div>
 								OR
 								<InputForm

@@ -35,7 +35,7 @@ const Topbar = () => {
 			<div className="app-name">
 				<ul className="app-info">
 					<li className="name">
-						<Link to="/">storybook</Link>
+						<Link to="/">TINXDAILYGIST</Link>
 					</li>
 					<div className="user-info">
 						{!userId ? (

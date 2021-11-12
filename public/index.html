@@ -5,18 +5,15 @@
 		<link rel="icon" href="%PUBLIC_URL%/storybook.jpg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="theme-color" content="#000000" />
+		<meta property="og:site_name" content="tinxdailygist" />
 		<meta
-			property="snap:app_id"
-			content="a0deec55-5795-4ecd-b9da-bed9ac4d3bf0"
+			name="keywords"
+			content="tinxdailygist, news, daily news, feed, post, trending"
 		/>
-		<meta property="og:site_name" content="dprincecoder's storybook" />
-		<meta name="keywords" content="storybook, news, daily news" />
-		<meta name="og:title" content="STORYBOOK" />
-		<meta
-			name="description"
-			content="Share you beautiful moment with your friends and family at that good
-						sunrise."
+		<meta name="description"
+			content="Share you beautiful moment with your friends and family at that good sunrise, also read news."
 		/>
+		<meta name="og:title" content="tinxdailygist" />
 		<link rel="apple-touch-icon" href="%PUBLIC_URL%/storybook.jpg" />
 		<link
 			rel="stylesheet"
@@ -28,53 +25,14 @@
 			integrity="sha256-46r060N2LrChLLb5zowXQ72/iKKNiw/lAmygmHExk/o="
 			crossorigin="anonymous"
 		/>
-		<!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
+		
 		<link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-		<title>STORY BOOK</title>
+		<title>Tinx DailyGist</title>
 	</head>
 	<body>
 		<noscript>You need to enable JavaScript to run this app.</noscript>
 		<div id="root"></div>
-		<!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-		<div
-			class="
-				snapchat-creative-kit-share snapchat-share-button
-				share-button share-button-grid
-			"
-			data-theme="dark"
-			data-size="large"
-			data-share-url="https://express-the-moment.web.app"
-		></div>
+		
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-		<script>
-			// Load the SDK asynchronously
-			(function (d, s, id) {
-				var js,
-					sjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) return;
-				js = d.createElement(s);
-				js.id = id;
-				js.src = "https://sdk.snapkit.com/js/v1/create.js";
-				sjs.parentNode.insertBefore(js, sjs);
-			})(document, "script", "snapkit-creative-kit-sdk");
-
-			window.snapKitInit = function () {
-				snap.creativekit.initalizeShareButtons(
-					document.getElementsByClassName("snapchat-share-button")
-				);
-			};
-		</script>
 	</body>
 </html>

@@ -95,13 +95,13 @@ const Register = () => {
 			<div className="welcome">
 				<h3>
 					<i className="fas fa-book-reader"></i>
-					Storybook
+					TINXDAILYGIST
 				</h3>
 
 				<div className="section">
 					<p className="lead">
-						Share you beautiful moment with your friends and family at that good
-						sunrise.
+						Share you beautiful story with your friends engage in conversation,
+						comments read new articles, news and let the world know your story.
 					</p>
 				</div>
 			</div>

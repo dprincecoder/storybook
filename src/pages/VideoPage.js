@@ -4,6 +4,7 @@ import {
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";
+import Videos from "../components/videos/Videos";
 
 const VideoPage = () => {
 	return (
@@ -13,7 +14,8 @@ const VideoPage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			<h4>Page under Construction...</h4>
+			{/* <Videos /> */}
+			<h4>Page under construction</h4>
 		</motion.div>
 	);
 };

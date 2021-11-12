@@ -5,14 +5,17 @@ import Button from "../forms/button/Button";
 // import "./register.scss";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { emailSignInStart, googleSignInStart } from "../../redux/user/user.action"
+import {
+	emailSignInStart,
+	googleSignInStart,
+} from "../../redux/user/user.action";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import IsLoading from "../loading/IsLoading";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
-	userError: user.userError
+	userError: user.userError,
 });
 
 const Login = () => {
@@ -27,7 +30,7 @@ const Login = () => {
 
 	useEffect(() => {
 		if (currentUser) {
-			reset()
+			reset();
 			history.push("/");
 		}
 	}, [currentUser]);
@@ -38,15 +41,15 @@ const Login = () => {
 		setPassword("");
 	};
 
-	const handleEmailLogin = async e => {
-		e.preventDefault()
+	const handleEmailLogin = async (e) => {
+		e.preventDefault();
 		setLoading2(true);
 		setTimeout(() => {
-			dispatch(emailSignInStart({ email, password }))
-			setLoading2(false)
+			dispatch(emailSignInStart({ email, password }));
+			setLoading2(false);
 		}, 5000);
-	}
-	
+	};
+
 	const handleGoogleLogin = () => {
 		setLoading(true);
 		setTimeout(() => {
@@ -63,13 +66,13 @@ const Login = () => {
 			<div className="welcome">
 				<h3>
 					<i className="fas fa-book-reader"></i>
-					Storybook
+					TINXDAILYGIST
 				</h3>
 
 				<div className="section">
 					<p className="lead">
-						Share you beautiful moment with your friends and family at that good
-						sunrise.
+						Share you beautiful story with your friends engage in conversation,
+						comments read new articles, news and let the world know your story.
 					</p>
 				</div>
 			</div>

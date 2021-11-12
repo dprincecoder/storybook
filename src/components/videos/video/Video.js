@@ -12,7 +12,7 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
-	handleLikeStory,
+	handleLikeVideo,
 	// handleUnLikeStory,
 } from "../../../redux/story/story.helpers";
 import { fetchStoriesStart } from "../../../redux/story/story.action";
@@ -36,8 +36,7 @@ const HomeStory = (story) => {
 		userThatPublished,
 		userthatPublishedProfilePic,
 		likeCount,
-		commentCount,
-		documentID,
+		videoID,
 	} = story;
 
 	useEffect(() => {
@@ -45,7 +44,7 @@ const HomeStory = (story) => {
 	}, []);
 
 	const likeStory = () => {
-		handleLikeStory(userId, displayName, documentID);
+		handleLikeVideo(userId, displayName, videoID);
 		// dispatch(
 		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
 		// );
@@ -67,7 +66,7 @@ const HomeStory = (story) => {
 				</div>
 				<div className="divider"></div>
 				<div className="card-content">
-					<Link to={`/stories/story/${documentID}`}>
+					<Link to={`/stories/story/${videoID}`}>
 						<h4>{storyTitle}</h4>
 						<div className="divider"></div>
 						<span>{stripHtmlTags(shortenText(storyDetails, 150))}</span>
@@ -81,38 +80,20 @@ const HomeStory = (story) => {
 					</Link>
 					<div className="divider"></div>
 					<div className="optionsCount">
-						<div>
-							{likeCount > 0 && (
-								<>
-									{likeCount === 1 ? (
-										<div className="comment-count">{likeCount} reacted</div>
-									) : (
-										<div className="comment-count">{likeCount} reaction's</div>
-									)}
-								</>
-							)}
-						</div>
-						<div>
-							{commentCount > 0 && (
-								<>
-									{commentCount === 1 ? (
-										<div className="comment-count">{commentCount} comment</div>
-									) : (
-										<div className="comment-count">{commentCount} comments</div>
-									)}
-								</>
-							)}
-						</div>
+						<div className="comment-count">0 Comments</div>
 					</div>
 					<div className="options">
 						<div className="like" onClick={likeStory}>
 							{likeCount > 0 ? (
-								<ThumbUpIcon className="liked" />
+								<React.Fragment>
+									<ThumbUpIcon className="liked" /> &nbsp; &nbsp;
+									{likeCount}
+								</React.Fragment>
 							) : (
 								<ThumbUpAltOutlinedIcon />
 							)}
 						</div>
-						<Link to={`/stories/story/${documentID}`}>Comments</Link>
+						<Link to={`/stories/story/${videoID}`}>Comments</Link>
 					</div>
 				</div>
 			</div>

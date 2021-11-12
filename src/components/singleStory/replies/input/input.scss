@@ -1,0 +1,39 @@
+.container {
+	margin: 15px 0 0 0;
+	border-radius: 15px;
+	background-color: white;
+	box-shadow: 0px 5px 7px -7px rgba(0, 0, 0, 0.4);
+	position: relative;
+	width: 100%;
+}
+
+.reply-details-header-details {
+	display: flex;
+	position: relative;
+	align-items: center;
+	width: 100%;
+	margin-left: 1rem;
+}
+
+.reply-details-header-avatar {
+	margin: 0 2px 0 0;
+	border: 2px solid #037fff !important;
+}
+
+.comment-input-field {
+	flex: 1;
+	border: 2px solid #037fff;
+	border-radius: 10px;
+	padding: 8px;
+}
+
+.reply-form {
+	display: flex;
+}
+
+.submit-comment-button {
+	border: none;
+	color: #037fff;
+	margin-left: 5px;
+	cursor: pointer;
+}
