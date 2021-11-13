@@ -59,7 +59,7 @@ export function* googleSignIn() {
 	}
 }
 
-export function* onGogleSignInStart() {
+export function* onGoogleSignInStart() {
 	yield takeLatest(userTypes.GOOGLE_SIGN_IN_START, googleSignIn);
 }
 
@@ -141,7 +141,7 @@ export function* onFetchUserDataStart() {
 
 export default function* userSagas() {
 	yield all([
-		call(onGogleSignInStart),
+		call(onGoogleSignInStart),
 		call(onCheckUserSession),
 		call(onSignOutUserStart),
 		call(onEmailSignUp),

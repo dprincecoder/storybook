@@ -23,7 +23,7 @@ const MainReply = ({
 					</ul>
 				</div>
 			</div>
-			<div className="comment-content">
+			<div className="main-content">
 				<p>{repliesMsg} </p>
 			</div>
 		</div>

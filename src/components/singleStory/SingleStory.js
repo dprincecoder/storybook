@@ -42,6 +42,7 @@ const SingleStory = () => {
 		likeCount,
 		userthatPublishedProfilePic,
 		userThatPublished,
+		commentCount,
 	} = story;
 	const dispatch = useDispatch();
 
@@ -74,8 +75,9 @@ const SingleStory = () => {
 				);
 			});
 	}, []);
+	// console.log(comments);
 
-	const toggle = (commentID) => {
+	const toggle = (commentID, commentN) => {
 		setToggleReplyBox(!toggleReplyBox);
 		setLocalCommentId(commentID);
 	};
@@ -96,6 +98,10 @@ const SingleStory = () => {
 					);
 				});
 		}
+		//clean up function
+		return () => {
+			setReplies([]);
+		};
 	}, [localCommentId]);
 
 	const likeStory = () => {
@@ -134,7 +140,6 @@ const SingleStory = () => {
 						<div className="card-image">
 							<img src={storyPhotos} alt={storyTitle} />
 						</div>
-						<div className="divider"></div>
 						<div className="optionsCount">
 							{likeCount > 0 && (
 								<>
@@ -145,7 +150,17 @@ const SingleStory = () => {
 									)}
 								</>
 							)}
+							{commentCount > 0 && (
+								<>
+									{commentCount === 1 ? (
+										<div className="comment-count">{commentCount} comment</div>
+									) : (
+										<div className="comment-count">{commentCount} comments</div>
+									)}
+								</>
+							)}
 						</div>
+						<div className="divider"></div>
 						<div className="options">
 							<div className="like" onClick={likeStory}>
 								{likeCount > 0 ? (
@@ -167,11 +182,22 @@ const SingleStory = () => {
 									<div
 										className="window-header"
 										onClick={() => setToggleReplyBox(!toggleReplyBox)}>
-										<CancelIcon />
+										<CancelIcon style={{ color: "red" }} />
 									</div>
 									<div className="replies">
 										<div className="main-replies">
-											<MainReply />
+											{comments
+												.filter((c) => c.commentID === localCommentId)
+												.map((e, i) => (
+													<MainReply
+														key={i}
+														profilePic={e.userThatCommentImage}
+														displayName={e.userThatCommentName}
+														createdDate={e.createdDate}
+														repliesMsg={e.commentMessage}
+														color={e.color}
+													/>
+												))}
 										</div>
 										<div className="divider"></div>
 										<div className="replies-list">
@@ -216,11 +242,32 @@ const SingleStory = () => {
 												<span onClick={() => likeComment(c.commentID)}>
 													like
 												</span>
-												<p onClick={() => toggle(c.commentID)}>reply</p>
+												<p
+													onClick={() =>
+														toggle(c.commentID, c.userThatCommentName)
+													}>
+													reply
+												</p>
 											</div>
 											<div className="count">
-												{c.likeCount > 0 && <span>{c.likeCount} likes</span>}
-												{c.replyCount > 0 && <p>{c.replyCount} replies</p>}
+												{c.likeCount > 0 && (
+													<>
+														{c.likeCount === 1 ? (
+															<span>{c.likeCount} like</span>
+														) : (
+															<span>{c.likeCount} likes</span>
+														)}
+													</>
+												)}
+												{c.replyCount > 0 && (
+													<div onClick={() => toggle(c.commentID)}>
+														{c.replyCount === 1 ? (
+															<span>{c.replyCount} reply</span>
+														) : (
+															<span>{c.replyCount} replies</span>
+														)}
+													</div>
+												)}
 											</div>
 										</div>
 									</div>

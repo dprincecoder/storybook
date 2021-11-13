@@ -11,7 +11,7 @@ export const shortenText = (string, length) => {
 		newString = string.substr(0, length);
 		newString = string.substr(0, newString.lastIndexOf(" "));
 		newString = newString.length > 0 ? newString : string.substr(0, length);
-		return newString + "...";
+		return newString + "... Read More";
 	}
 	return string;
 };

@@ -2,6 +2,7 @@ import React from "react";
 import { Avatar } from "@material-ui/core";
 import "./showcomment.scss";
 import { formatDate } from "../../../helpers/Helpers";
+// import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const Showcoment = ({
 	profilePic,
@@ -22,6 +23,7 @@ const Showcoment = ({
 						<li>{formatDate(createdDate)}</li>
 					</ul>
 				</div>
+				<div className="more-btn">{/* <MoreVertIcon /> */}</div>
 			</div>
 			<div className="comment-content">
 				<p>{commentMsg} </p>

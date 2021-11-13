@@ -71,15 +71,12 @@ const HomeStory = (story) => {
 						<h4>{storyTitle}</h4>
 						<div className="divider"></div>
 						<span>{stripHtmlTags(shortenText(storyDetails, 150))}</span>
-						<br />
-						<b>Read More</b>
 
 						<div className="divider"></div>
 						<div className="card-image">
 							<img src={storyPhotos} alt={storyTitle} />
 						</div>
 					</Link>
-					<div className="divider"></div>
 					<div className="optionsCount">
 						<div>
 							{likeCount > 0 && (
@@ -104,6 +101,8 @@ const HomeStory = (story) => {
 							)}
 						</div>
 					</div>
+					{/* <hr /> */}
+					<div className="divider"></div>
 					<div className="options">
 						<div className="like" onClick={likeStory}>
 							{likeCount > 0 ? (
