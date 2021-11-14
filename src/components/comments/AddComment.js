@@ -52,7 +52,6 @@ const Comments = ({ storyId }) => {
 							type="text"
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}
-							className="comment-input-field"
 							ref={inputRef}
 						/>
 						<Button
