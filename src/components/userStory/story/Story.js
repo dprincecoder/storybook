@@ -39,6 +39,7 @@ const Story = (story) => {
 		userthatPublishedProfilePic,
 		documentID,
 		likeCount,
+		commentCount,
 	} = story;
 	// if (
 	// 	!userThatPublished ||
@@ -60,15 +61,14 @@ const Story = (story) => {
 		setDel(!del);
 		setTimeout(() => {
 			setDelSuccess(false);
-			window.location.reload();
 		}, 3000);
 	};
 
 	const likeStory = () => {
 		handleLikeStory(userId, displayName, documentID);
-		dispatch(
-			fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
-		);
+		// dispatch(
+		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
+		// );
 	};
 
 	return (
@@ -129,25 +129,37 @@ const Story = (story) => {
 					</Link>
 					<div className="divider"></div>
 					<div className="optionsCount">
-						{/* <div className="btn blue">0 Comments</div> */}
+						{likeCount > 0 && (
+							<>
+								{likeCount === 1 ? (
+									<div className="comment-count">{likeCount} reacted</div>
+								) : (
+									<div className="comment-count">{likeCount} reaction's</div>
+								)}
+							</>
+						)}
+						{commentCount > 0 && (
+							<>
+								{commentCount === 1 ? (
+									<div className="comment-count">{commentCount} comment</div>
+								) : (
+									<div className="comment-count">{commentCount} comments</div>
+								)}
+							</>
+						)}
 					</div>
 					<div className="divider"></div>
 					<div className="options">
 						<div className="like" onClick={likeStory}>
-							{likeCount > 0 ? (
-								<React.Fragment>
-									<ThumbUpIcon className="liked" /> &nbsp; &nbsp;
-									{likeCount}
-								</React.Fragment>
-							) : (
-								<ThumbUpAltOutlinedIcon />
-							)}
+							<div className="like" onClick={likeStory}>
+								{likeCount > 0 ? (
+									<ThumbUpIcon className="liked" />
+								) : (
+									<ThumbUpAltOutlinedIcon />
+								)}
+							</div>
 						</div>
-						<div
-							className="snapchat-creative-kit-share snapchat-share-button share-button share-button-grid"
-							data-theme="dark"
-							data-size="small"
-							data-share-url="https://express-the-moment.web.app"></div>
+						<div className="comment">Comment</div>
 					</div>
 				</div>
 			</div>

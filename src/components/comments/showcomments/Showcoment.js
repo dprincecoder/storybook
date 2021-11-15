@@ -11,6 +11,7 @@ const Showcoment = ({
 	commentMsg,
 	color,
 }) => {
+	const [hide, setHide] = React.useState(false);
 	return (
 		<div className="show-a-comment">
 			<div className="comment-header">
@@ -23,7 +24,18 @@ const Showcoment = ({
 						<li>{formatDate(createdDate)}</li>
 					</ul>
 				</div>
-				<div className="more-btn"><MoreVertIcon /></div>
+				<div className="more-btn" onClick={() => setHide(!hide)}>
+					<MoreVertIcon />
+				</div>
+				{hide && (
+					<div className="more-options">
+						<ul className="collection">
+							<li className="collection-item">Edit</li>
+							<li className="collection-item">Delete</li>
+							<li className="collection-item">Report</li>
+						</ul>
+					</div>
+				)}
 			</div>
 			<div className="comment-content">
 				<p>{commentMsg} </p>

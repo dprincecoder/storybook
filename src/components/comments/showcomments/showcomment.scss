@@ -9,10 +9,26 @@
 	background-color: #dbdad9;
 	border-radius: 10px;
 	border-bottom-right-radius: 0;
+	position: relative;
 	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
 		rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
 	.comment-header-avatar {
 		margin-left: 5px;
+	}
+	.more-btn {
+		position: absolute;
+		right: 10px;
+		cursor: pointer;
+		&:hover {
+			color: #00bcd4;
+		}
+	}
+	.more-options {
+		position: absolute;
+		top: -5px;
+		right: 2rem;
+		z-index: 1;
+		cursor: pointer;
 	}
 	.comment-header-name {
 		padding-left: 5px;
@@ -30,13 +46,11 @@
 	max-width: 700px;
 	text-align: justify;
 	border-radius: 10px;
+	position: relative;
 	border-top-left-radius: 0;
 	background-color: #dbdad9;
 	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
 		rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-	.more-btn {
-		float: right;
-	}
 	p {
 		margin-bottom: 0;
 		padding: 1rem;
