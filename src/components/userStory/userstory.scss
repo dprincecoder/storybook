@@ -66,8 +66,12 @@
 			display: flex;
 			padding: 10px;
 			justify-content: space-around;
+			width: 100%;
 			.liked {
 				color: #037fff;
+			}
+			.comment {
+				cursor: pointer;
 			}
 		}
 		.optionsCount {

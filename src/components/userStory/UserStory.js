@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import "./userstory.scss";
 import { useDispatch, useSelector } from "react-redux";
+import DB from "../../firebase/functions";
 import {
 	fetchUserStoriesStart,
 	setStory,
@@ -12,36 +13,54 @@ import LoadMore from "../forms/button/LoadMore";
 
 const mapState = ({ user, storiesData }) => ({
 	currentUser: user.currentUser,
-	stories: storiesData.stories,
 });
 const UserStory = () => {
 	const { stories, currentUser } = useSelector(mapState);
-	const { data, isLastPage, queryDoc } = stories;
+	// const { data, isLastPage, queryDoc } = stories;
+	const [data, setData] = React.useState([]);
+	const [loading, setLoading] = React.useState(false);
 	const dispatch = useDispatch();
-	const { userId } = currentUser;
-	useEffect(() => {
-		dispatch(
-			fetchUserStoriesStart({
-				userId,
-			})
-		);
+	const { userId } = useParams();
 
+	useEffect(() => {
+		// dispatch(
+		// 	fetchUserStoriesStart({
+		// 		userId,
+		// 	})
+		// );
+		const fetchData = async () => {
+			setLoading(true);
+			DB.collection("stories")
+				.where("storyUserUID", "==", userId)
+				.orderBy("createdDate", "desc")
+				.onSnapshot((snapshot) => {
+					setData(
+						snapshot.docs.map((doc) => ({
+							...doc.data(),
+							documentID: doc.id,
+						}))
+					);
+					setLoading(false);
+				});
+		};
+
+		fetchData();
 		return () => {
-			dispatch(setStory({}));
+			setData([]);
 		};
 	}, []);
 
-	const handleLoadMore = () => {
-		dispatch(
-			fetchUserStoriesStart({
-				userId,
-				startAfterDoc: queryDoc,
-				persistStories: data,
-			})
-		);
-	};
-	if (!Array.isArray(data)) return null;
-	if (data.length < 1) {
+	// const handleLoadMore = () => {
+	// 	dispatch(
+	// 		fetchUserStoriesStart({
+	// 			userId,
+	// 			startAfterDoc: queryDoc,
+	// 			persistStories: data,
+	// 		})
+	// 	);
+	// };
+	// if (!Array.isArray(data)) return null;
+	if (!loading && data.length < 1) {
 		return (
 			<h6>
 				oh no :) <br /> Yours stories not found or slow internet connection, why
@@ -49,10 +68,13 @@ const UserStory = () => {
 			</h6>
 		);
 	}
+	if (loading) {
+		return <IsLoadingSkeleton />;
+	}
 
-	const configLoadMore = {
-		onLoadMoreEvt: handleLoadMore,
-	};
+	// const configLoadMore = {
+	// 	onLoadMoreEvt: handleLoadMore,
+	// };
 	return (
 		<div className="row">
 			<h5 style={{ textAlign: "center" }}>All Your Stories</h5>
@@ -62,7 +84,7 @@ const UserStory = () => {
 				};
 				return <Story key={index} {...configStory} />;
 			})}
-			{!isLastPage && <LoadMore {...configLoadMore} />}
+			{/* {!isLastPage && <LoadMore {...configLoadMore} />} */}
 		</div>
 	);
 };

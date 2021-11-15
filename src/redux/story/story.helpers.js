@@ -150,12 +150,7 @@ export const handleLikeStory = async (userId, displayName, documentID) => {
 			likeCount: increment,
 		});
 	} else {
-		likeDocument
-			.doc(documentID)
-			.delete()
-			.then(() => {
-				console.log("unlike success");
-			});
+		likeDocument.doc(documentID).delete();
 		story.update({
 			likeCount: decrement,
 		});
