@@ -25,7 +25,7 @@ const mapState = ({ user, storiesData }) => ({
 const HomeStory = (story) => {
 	const dispatch = useDispatch();
 	const { stories, userData } = useSelector(mapState);
-	const { userId, displayName } = userData;
+	const { userId, displayName, profilePic } = userData;
 	const { data, queryDoc } = stories;
 
 	const {
@@ -37,6 +37,7 @@ const HomeStory = (story) => {
 		userthatPublishedProfilePic,
 		likeCount,
 		commentCount,
+		storyUserUID,
 		documentID,
 	} = story;
 
@@ -45,7 +46,7 @@ const HomeStory = (story) => {
 	}, []);
 
 	const likeStory = () => {
-		handleLikeStory(userId, displayName, documentID);
+		handleLikeStory(userId, displayName, profilePic, storyTitle, documentID, storyUserUID);
 		// dispatch(
 		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
 		// );
@@ -82,9 +83,9 @@ const HomeStory = (story) => {
 							{likeCount > 0 && (
 								<>
 									{likeCount === 1 ? (
-										<div className="comment-count">{likeCount} reacted</div>
+										<div className="like-count">{likeCount} reacted</div>
 									) : (
-										<div className="comment-count">{likeCount} reaction's</div>
+										<div className="like-count">{likeCount} reaction's</div>
 									)}
 								</>
 							)}

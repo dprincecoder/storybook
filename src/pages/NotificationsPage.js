@@ -4,6 +4,7 @@ import {
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";
+import Notifications from "../components/notifications/Notifications";
 
 const VideoPage = () => {
 	return (
@@ -13,7 +14,7 @@ const VideoPage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			<h4>Page under Construction...</h4>
+			<Notifications />
 		</motion.div>
 	);
 };

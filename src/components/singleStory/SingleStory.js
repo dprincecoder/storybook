@@ -105,11 +105,25 @@ const SingleStory = () => {
 	}, [localCommentId]);
 
 	const likeStory = () => {
-		handleLikeStory(userId, displayName, storyId);
+		handleLikeStory(
+			userId,
+			displayName,
+			profilePic,
+			storyTitle,
+			storyId,
+			storyUserUID
+		);
 	};
 
-	const likeComment = (commentID) => {
-		handleLikeComment(userId, displayName, commentID);
+	const likeComment = (commentID, commentMsg) => {
+		handleLikeComment(
+			userId,
+			displayName,
+			profilePic,
+			commentMsg,
+			storyUserUID,
+			commentID
+		);
 	};
 	if (!story || !storyUserUID) {
 		return <IsLoadingSkeleton />;
@@ -144,9 +158,9 @@ const SingleStory = () => {
 							{likeCount > 0 && (
 								<>
 									{likeCount === 1 ? (
-										<div className="comment-count">{likeCount} reacted</div>
+										<div className="like-count">{likeCount} reacted</div>
 									) : (
-										<div className="comment-count">{likeCount} reaction's</div>
+										<div className="like-count">{likeCount} reaction's</div>
 									)}
 								</>
 							)}
@@ -235,11 +249,12 @@ const SingleStory = () => {
 											displayName={c.userThatCommentName}
 											createdDate={c.createdDate}
 											commentMsg={c.commentMessage}
+											userThatCommentId={c.userThatCommentId}
 											color={c.color}
 										/>
 										<div className="more">
 											<div className="action">
-												<span onClick={() => likeComment(c.commentID)}>
+												<span onClick={() => likeComment(c.commentID, c.commentMessage)}>
 													like
 												</span>
 												<p
