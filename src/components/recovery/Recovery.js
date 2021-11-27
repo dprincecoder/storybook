@@ -1,81 +1,64 @@
 import React, { useEffect, useState } from "react";
 import AuthWrapper from "../authwrapper/Authwraper";
+import { Link, useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import InputForm from "../forms/inputs/InputForm";
 import Button from "../forms/button/Button";
-import "./login.scss";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+
+import IsLoading from "../loading/IsLoading";
 import {
-	emailSignInStart,
-	googleSignInStart,
+	resetPasswordStart,
+	resetUserState,
 	userErrorStart,
 } from "../../redux/user/user.action";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import IsLoading from "../loading/IsLoading";
 import { Alert, AlertTitle } from "@mui/material";
 
 const mapState = ({ user }) => ({
-	currentUser: user.currentUser,
+	resetPasswordSuccess: user.resetPasswordSuccess,
 	userError: user.userError,
 });
-
-const Login = () => {
-	const { userError, currentUser } = useSelector(mapState);
+const Recovery = () => {
 	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [failedEmail, setFailedEmail] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [loading2, setLoading2] = useState(false);
-	const [errors, setErrors] = useState([userError]);
+	const [success, setSuccMsg] = useState("");
 
+	const { resetPasswordSuccess, userError } = useSelector(mapState);
 	const history = useHistory();
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (currentUser) {
-			reset();
-			history.push("/");
+		if (resetPasswordSuccess) {
+			setSuccMsg(
+				"We have have sent you password reset email link, please follow it to complete this action."
+			);
+			dispatch(resetUserState());
+			setTimeout(() => {
+				history.push("/users/login");
+			}, 3000);
 		}
-	}, [currentUser]);
-
-	useEffect(() => {
-		if (Array.isArray(userError) && userError.length > 0) {
-			setErrors(userError);
-		}
-	}, [userError]);
-
+	}, [resetPasswordSuccess]);
 	useEffect(() => {
 		return () => dispatch(userErrorStart({}));
 	}, []);
+	useEffect(() => {
+		if (Array.isArray(userError) && userError.length > 0) {
+			setFailedEmail(userError);
+		}
+	}, [userError]);
 
-	//reset form input
-	const reset = () => {
-		setEmail("");
-		setPassword("");
-	};
-
-	const handleEmailLogin = async (e) => {
+	const handleRecovery = async (e) => {
 		e.preventDefault();
-		setErrors([]);
 		dispatch(userErrorStart({}));
-		setLoading2(true);
-		setTimeout(() => {
-			dispatch(emailSignInStart({ email, password }));
-			setLoading2(false);
-		}, 5000);
-	};
-
-	const handleGoogleLogin = () => {
-		dispatch(userError);
 		setLoading(true);
 		setTimeout(() => {
-			dispatch(googleSignInStart());
+			dispatch(resetPasswordStart({ email }));
 			setLoading(false);
-		}, 5000);
+		}, 3000);
 	};
-	// console.log(errors);
+
 	const configAuthwrapper = {
-		headline: "Login",
+		headline: "Email Recovery",
 	};
 	return (
 		<div className="container">
@@ -103,7 +86,8 @@ const Login = () => {
 						))}
 					</>
 				)}
-				<form onSubmit={handleEmailLogin}>
+				{success && <li>{success}</li>}
+				<form onSubmit={handleRecovery}>
 					Email Address:
 					<InputForm
 						type="email"
@@ -114,43 +98,16 @@ const Login = () => {
 						handleChange={(e) => setEmail(e.target.value)}
 						value={email}
 					/>
-					Password:
-					<InputForm
-						type="password"
-						className="input-field"
-						placeholder="Enter your password"
-						name="password"
-						required
-						handleChange={(e) => setPassword(e.target.value)}
-						value={password}
-					/>
 					<div className="section" style={{ display: "flex" }}>
 						<Button custom="blue" type="submit" disabled={loading}>
-							Login
+							Recover
 						</Button>
-						{loading2 && <IsLoading />}
+						{loading && <IsLoading />}
 					</div>
-					or
 				</form>
-
-				<div style={{ display: "flex" }}>
-					<Button
-						custom="red darken-1"
-						onClick={handleGoogleLogin}
-						disabled={loading}>
-						<i className="fab fa-google left"></i>
-						Login with Google
-					</Button>
-					{loading && <IsLoading />}
-				</div>
 				<div className="section">
 					<span>
-						Don't Have an Account? &nbsp;
-						<Link to="/users/register">Register</Link>
-					</span>
-					<br />
-					<span>
-						<Link to="/users/recovery">Forgot Password?</Link>
+						<Link to="/users/login">Login Instead</Link>
 					</span>
 				</div>
 			</AuthWrapper>
@@ -158,4 +115,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default Recovery;

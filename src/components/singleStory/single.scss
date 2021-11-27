@@ -83,14 +83,7 @@
 }
 
 .show-comments::-webkit-scrollbar {
-	width: 4px;
-}
-.show-comments::-webkit-scrollbar-thumb {
-	background-color: white;
-	border-radius: 50px;
-}
-.show-comments::-webkit-scrollbar-track {
-	background-color: white;
+	display: none;
 }
 
 .show {
@@ -109,6 +102,7 @@
 	background-color: #f1f1f0;
 	left: 0;
 	position: absolute;
+	overflow: hidden;
 	.window-header {
 		float: right;
 		padding: 10px;
@@ -143,5 +137,5 @@
 	border-radius: 50px;
 }
 .replies-list::-webkit-scrollbar-track {
-	background-color: white;
+	background-color: #f1f1f0;
 }

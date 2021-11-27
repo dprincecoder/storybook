@@ -32,6 +32,7 @@ const SingleStory = () => {
 	const [comments, setComments] = useState([]);
 	const [toggleReplyBox, setToggleReplyBox] = useState(false);
 	const [localCommentId, setLocalCommentId] = useState("");
+	const [userThatCommentId, setUserThatCommentId] = useState("");
 	const [replies, setReplies] = useState([]);
 	const {
 		storyTitle,
@@ -77,9 +78,10 @@ const SingleStory = () => {
 	}, []);
 	// console.log(comments);
 
-	const toggle = (commentID, commentN) => {
+	const toggle = (commentID, userThatCommentId) => {
 		setToggleReplyBox(!toggleReplyBox);
 		setLocalCommentId(commentID);
+		setUserThatCommentId(userThatCommentId);
 	};
 
 	//useEffect to get replies from commentId
@@ -232,6 +234,7 @@ const SingleStory = () => {
 										<ReplyInput
 											storyId={storyId}
 											commentId={localCommentId}
+											userThatCommentId={userThatCommentId}
 										/>{" "}
 									</div>
 								</div>
@@ -254,12 +257,15 @@ const SingleStory = () => {
 										/>
 										<div className="more">
 											<div className="action">
-												<span onClick={() => likeComment(c.commentID, c.commentMessage)}>
+												<span
+													onClick={() =>
+														likeComment(c.commentID, c.commentMessage)
+													}>
 													like
 												</span>
 												<p
 													onClick={() =>
-														toggle(c.commentID, c.userThatCommentName)
+														toggle(c.commentID, c.userThatCommentId)
 													}>
 													reply
 												</p>

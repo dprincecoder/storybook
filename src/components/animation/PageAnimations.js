@@ -1,7 +1,7 @@
 export const pageTransition = {
-	duration: 1,
-	ease: "anticipate",
 	type: "tween",
+	ease: "anticipate",
+	duration: 1.2,
 };
 
 export const pageVariants = {
@@ -20,4 +20,8 @@ export const pageVariants = {
 		x: "100vw",
 		scale: 1.2,
 	},
+};
+
+export const pageStyle = {
+	position: "absolute",
 };

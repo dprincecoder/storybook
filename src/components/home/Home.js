@@ -23,16 +23,16 @@ const Home = () => {
 		// 		persistStories: data,
 		// 	})
 		// );
-			DB.collection("stories")
-				.orderBy("createdDate", "desc")
-				.onSnapshot((snapshot) => {
-					setData(
-						snapshot.docs.map((doc) => ({
-							...doc.data(),
-							documentID: doc.id,
-						}))
-					);
-				});
+		DB.collection("stories")
+			.orderBy("createdDate", "desc")
+			.onSnapshot((snapshot) => {
+				setData(
+					snapshot.docs.map((doc) => ({
+						...doc.data(),
+						documentID: doc.id,
+					}))
+				);
+			});
 	}, []);
 
 	if (!data || data.length < 1) {

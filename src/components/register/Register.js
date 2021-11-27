@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import AuthWrapper from "../authwrapper/Authwraper";
 import InputForm from "../forms/inputs/InputForm";
 import Button from "../forms/button/Button";
@@ -30,8 +30,16 @@ const Register = () => {
 	const [lastName, setLastName] = useState("");
 	const [loading, setLoading] = useState();
 	const [loading2, setLoading2] = useState();
+	const [suggestedChar, setSuggestedChar] = useState("");
+	const [modal, setModal] = useState(false);
+	const [focus, setFocus] = useState(false);
 
 	const history = useHistory();
+
+	const includeUpperRef = useRef();
+	const includeNumbersRef = useRef();
+	const includeSymbolsRef = useRef();
+	const inputRef = useRef();
 
 	useEffect(() => {
 		if (currentUser) {
@@ -87,6 +95,54 @@ const Register = () => {
 		}, 5000);
 	};
 
+	//to get a character at a specific position
+	const stringAt = (low, high) => {
+		const array = [];
+		for (let i = low; i <= high; i++) {
+			array.push(i);
+		}
+		return array;
+	};
+
+	//all posible of suggested values from characters in ASCII
+	const UPPERCASE_CHAR_CODES = stringAt(65, 90);
+	const LOWERCASE_CHAR_CODES = stringAt(97, 122);
+	const NUMBER_CHAR_CODES = stringAt(48, 57);
+	const SYMBOL_CHAR_CODES = stringAt(33, 47)
+		.concat(stringAt(58, 64))
+		.concat(stringAt(91, 96))
+		.concat(stringAt(123, 126));
+
+	//to always get value
+	// const syncCharAmount = (e) => {
+	// 	const { value } = e.target;
+	// 	charAmountNumber.value = value;
+	// 	charAmountRange.value = value;
+	// };
+
+	const generate = (e) => {
+		e.preventDefault();
+		const characterLength = 10;
+		const includeUppercase = includeUpperRef.current.checked;
+		const includeNumbers = includeNumbersRef.current.checked;
+		const includeSymbols = includeSymbolsRef.current.checked;
+
+		let charCodes = LOWERCASE_CHAR_CODES;
+		if (includeUppercase) charCodes = charCodes.concat(UPPERCASE_CHAR_CODES);
+		if (includeSymbols) charCodes = charCodes.concat(SYMBOL_CHAR_CODES);
+		if (includeNumbers) charCodes = charCodes.concat(NUMBER_CHAR_CODES);
+		const passwordChar = [];
+		for (let i = 0; i < characterLength; i++) {
+			const charCode = charCodes[Math.floor(Math.random() * charCodes.length)];
+			passwordChar.push(String.fromCharCode(charCode));
+		}
+		setSuggestedChar(passwordChar.join(""));
+	};
+
+	const suggest = () => {
+		setModal(!modal);
+	};
+
 	const configAuthwrapper = {
 		headline: "Register",
 	};
@@ -95,7 +151,7 @@ const Register = () => {
 			<div className="welcome">
 				<h3>
 					<i className="fas fa-book-reader"></i>
-					TINXDAILYGIST
+					STORYBOOK
 				</h3>
 
 				<div className="section">
@@ -105,7 +161,6 @@ const Register = () => {
 					</p>
 				</div>
 			</div>
-			<div className="divider"></div>
 			<AuthWrapper custom="row" {...configAuthwrapper}>
 				{errors.length > 0 && (
 					<ul>
@@ -160,7 +215,7 @@ const Register = () => {
 						required
 						handleChange={(e) => setCountry(e.target.value)}
 					/>
-					City:
+					City
 					<InputForm
 						type="text"
 						name="city"
@@ -169,14 +224,67 @@ const Register = () => {
 						required
 						handleChange={(e) => setCity(e.target.value)}
 					/>
-					Password:
+					Password:{" "}
+					{focus && (
+						<div className="suggest" onClick={suggest}>
+							Suggest Password
+						</div>
+					)}
+					{modal && (
+						<div className="modal">
+							<div className="val">{suggestedChar}</div>
+							<div className="options">
+								<label htmlFor="includeUpper">Include Uppercase</label>
+								<input
+									ref={includeUpperRef}
+									className="input-checkbox"
+									type="checkbox"
+									id="includeUpper"
+								/>
+
+								<label htmlFor="includeNumber">Include Numbers</label>
+								<input
+									ref={includeNumbersRef}
+									className="input-checkbox"
+									type="checkbox"
+									id="includeNumber"
+								/>
+
+								<label htmlFor="incSymbols">Include Symbols</label>
+								<input
+									ref={includeSymbolsRef}
+									className="input-checkbox"
+									type="checkbox"
+									id="includeSymbols"
+								/>
+							</div>
+							<div className="btn-opt">
+								<Button custom="blue" onClick={generate}>
+									Generate
+								</Button>
+								<Button
+									onClick={() => {
+										setPassword(suggestedChar);
+										setConfirmPassword(suggestedChar)
+										setModal(!modal);
+									}}
+									custom="green">
+									use
+								</Button>
+							</div>
+						</div>
+					)}
 					<InputForm
 						type="password"
 						name="password"
 						placeholder="Enter your password"
 						value={password}
 						required
-						handleChange={(e) => setPassword(e.target.value)}
+						handleChange={(e) => {
+							setPassword(e.target.value);
+							// setFocus(!focus);
+						}}
+						onFocus={() => setFocus(!focus)}
 					/>
 					Confirm Password:
 					<InputForm
@@ -193,7 +301,7 @@ const Register = () => {
 						</Button>
 						{loading2 && <IsLoading />}
 					</div>
-					OR
+					or
 				</form>
 				<div style={{ display: "flex" }}>
 					<Button

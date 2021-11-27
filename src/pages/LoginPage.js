@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import {
+	pageStyle,
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";

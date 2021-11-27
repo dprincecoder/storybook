@@ -37,8 +37,8 @@ const HomeStory = (story) => {
 		userthatPublishedProfilePic,
 		likeCount,
 		commentCount,
-		storyUserUID,
 		documentID,
+		storyUserUID,
 	} = story;
 
 	useEffect(() => {
@@ -46,11 +46,20 @@ const HomeStory = (story) => {
 	}, []);
 
 	const likeStory = () => {
-		handleLikeStory(userId, displayName, profilePic, storyTitle, documentID, storyUserUID);
+		handleLikeStory(
+			userId,
+			displayName,
+			profilePic,
+			storyTitle,
+			documentID,
+			storyUserUID
+		);
 		// dispatch(
 		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
 		// );
 	};
+
+	// console.log(storyUserUID);
 
 	return (
 		<div className="col s12 m12" data-aos="fade-up">

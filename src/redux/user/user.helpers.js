@@ -1,4 +1,4 @@
-import DB from "../../firebase/functions";
+import DB, {auth} from "../../firebase/functions";
 
 //helper function to fetch products from database
 export const handleFetchUser = (userId) => {
@@ -40,5 +40,23 @@ export const handleUpdateUserDetails = (
 		lastName: lastName,
 		country: country,
 		city: city,
+	});
+};
+
+export const handleResetPasswordAPI = (email) => {
+	//redirect users to login page after they sent reset email
+	const redirectUrl = { url: "http://localhost:3001/users/login" };
+
+	return new Promise((resolve, reject) => {
+		auth
+			.sendPasswordResetEmail(email, redirectUrl)
+			.then(() => {
+
+				resolve();
+			})
+			.catch((err) => {
+				const resetPasswordErr = [err.message];
+				reject(resetPasswordErr);
+			});
 	});
 };

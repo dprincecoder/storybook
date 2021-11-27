@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import {
+	pageStyle,
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";
@@ -14,7 +15,8 @@ const VideoPage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			<Notifications />
+			{/* <Notifications /> */}
+			page under construction
 		</motion.div>
 	);
 };

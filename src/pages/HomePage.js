@@ -2,6 +2,7 @@ import React from "react";
 import Home from "../components/home/Home";
 import { motion } from "framer-motion";
 import {
+	pageStyle,
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";

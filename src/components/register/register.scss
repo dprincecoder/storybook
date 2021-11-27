@@ -8,10 +8,53 @@
 		border: 1px solid rgb(151, 149, 149);
 		padding: 10px;
 		margin-top: 1rem;
-        
+		position: relative;
+		overflow: hidden;
 	}
-    a{
-        color: black;
-        
-    }
+	a {
+		color: black;
+	}
+	margin-bottom: 5rem;
+	height: 100%;
+}
+
+.modal {
+	display: block;
+	padding: 5px;
+	.options {
+		display: grid;
+		grid-template-columns: 10rem auto;
+		row-gap: 5px;
+		.input-checkbox {
+			opacity: 9;
+			position: relative;
+			pointer-events: fill;
+		}
+	}
+	.val {
+		background-color: #fff;
+		color: black;
+		padding: 1rem;
+		border: 1px solid #333;
+		height: 2rem;
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		word-break: break-all;
+		border-radius: 1rem;
+		margin-bottom: 5px;
+	}
+	.btn-opt {
+		display: flex;
+		justify-content: space-between;
+	}
+}
+
+.suggest{
+	cursor: pointer;
+	position: absolute;
+	right: 1rem;
+	color: #333fff;
+	border-bottom: 2px solid #037fff;
 }

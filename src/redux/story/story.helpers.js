@@ -126,7 +126,14 @@ export const handleDeleteStory = (documentID) => {
 	});
 };
 
-export const handleLikeStory = async (userId, displayName, profilePic, storyTitle, storyId, storyUserUID) => {
+export const handleLikeStory = async (
+	userId,
+	displayName,
+	profilePic,
+	storyTitle,
+	storyId,
+	storyUserUID
+) => {
 	let likeDocument = DB.collection("storyLikes");
 	let date = new Date().toISOString();
 	let likeDocu = DB.collection("storyLikes")
@@ -141,7 +148,7 @@ export const handleLikeStory = async (userId, displayName, profilePic, storyTitl
 	let likeDoc = await likeDocu.get();
 
 	if (likeDoc.empty) {
-		likeDocument.doc(storyId).set({
+		likeDocument.doc(`${userId}~${storyId}`).set({
 			userId,
 			displayName,
 			storyId,
@@ -149,29 +156,32 @@ export const handleLikeStory = async (userId, displayName, profilePic, storyTitl
 		story.update({
 			likeCount: increment,
 		});
+		if (userId === storyUserUID) {
+			return;
+		} else {
+			DB.collection("notifications")
+				.doc(`${userId}~${storyId}`)
+				.set({
+					displayName,
+					storyId,
+					userThatLikedId: userId,
+					type: "like",
+					createDate: date,
+					read: false,
+					profilePic,
+					storyTitle,
+					storyUserUID: storyUserUID || "",
+				});
+		}
 	} else {
-		likeDocument.doc(storyId).delete();
+		likeDocument.doc(`${userId}~${storyId}`).delete();
 		story.update({
 			likeCount: decrement,
 		});
+
+		DB.collection("notifications").doc(`${userId}~${storyId}`).delete();
 	}
-	if (userId === storyUserUID) {
-		return;
-	} else {
-		DB.collection("Notifications")
-			.doc(storyId)
-			.set({
-				userId,
-				displayName,
-				storyId,
-				type: "like",
-				createDate: date,
-				profilePic,
-				storyTitle,
-				storyUserUID,
-			});
-	}
-	
+
 	return likeDocument;
 };
 
@@ -216,7 +226,15 @@ export const handleAddComment = (comments) => {
 	});
 };
 
-export const handleLikeComment = async (userId, displayName, profilePic, commentMsg, commentOwnerId, commentID) => {
+export const handleLikeComment = async (
+	userId,
+	displayName,
+	profilePic,
+	userThatLikeComment,
+	commentMsg,
+	commentOwnerId,
+	commentID
+) => {
 	let likeDocument = DB.collection("commentLikes");
 	let increment = firebase.firestore.FieldValue.increment(+1);
 	let likeDocu = DB.collection("commentLikes")
@@ -227,7 +245,7 @@ export const handleLikeComment = async (userId, displayName, profilePic, comment
 	let comment = DB.collection("comments").doc(commentID);
 	let likeDoc = await likeDocu.get();
 	if (likeDoc.empty) {
-		likeDocument.doc(commentID).set({
+		likeDocument.doc(`${userId}~${commentID}`).set({
 			userId,
 			displayName,
 			commentID,
@@ -235,25 +253,25 @@ export const handleLikeComment = async (userId, displayName, profilePic, comment
 		comment.update({
 			likeCount: increment,
 		});
-	} else {
-		likeDocument.doc(commentID).delete();
-		comment.update({
-			likeCount: decrement,
-		});
-	}
-	if (userId === commentOwnerId) {
-		return;
-	} else {
-		DB.collection("Notifications")
-			.doc(commentID)
-			.set({
+		if (userId === commentOwnerId) {
+			return;
+		} else {
+			DB.collection("notifications").doc(`${userId}~${commentID}`).set({
 				userId,
 				displayName,
 				commentID,
+				userThatLikeComment,
 				type: "likeComment",
 				profilePic,
 				commentMsg,
 			});
+		}
+	} else {
+		likeDocument.doc(`${userId}~${commentID}`).delete();
+		comment.update({
+			likeCount: decrement,
+		});
+		DB.collection("notifications").doc(`${userId}~${commentID}`).delete();
 	}
 
 	return likeDocument;

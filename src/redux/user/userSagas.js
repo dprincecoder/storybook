@@ -9,9 +9,10 @@ import {
 	setUserData,
 	signInSuccess,
 	signOutUserSuccess,
-	userError,
+	userErrorStart,
+	resetPasswordSuccess,
 } from "./user.action";
-import { handleFetchUser } from "./user.helpers";
+import { handleFetchUser, handleResetPasswordAPI } from "./user.helpers";
 import userTypes from "./user.types";
 
 //listen for a change in user
@@ -92,13 +93,12 @@ export function* emailSignUp({
 }) {
 	if (password !== confirmPassword) {
 		const newError = ["Password don't match try again"];
-		yield put(userError(newError));
+		yield put(userErrorStart(newError));
 		return;
 	}
 
 	try {
 		const { user } = yield auth.createUserWithEmailAndPassword(email, password);
-		console.log(user);
 
 		yield localStorage.setItem("currentUser", JSON.stringify(user));
 		const additionalData = { displayName, firstName, lastName, country, city };
@@ -117,8 +117,33 @@ export function* emailLogin({ payload: { email, password } }) {
 		const { user } = yield auth.signInWithEmailAndPassword(email, password);
 		yield localStorage.setItem("currentUser", JSON.stringify(user));
 		yield getSnapshotFromUserAuth(user);
-	} catch (error) {
-		console.log(error);
+	} catch (e) {
+		switch (e.code) {
+			case "auth/user-not-found":
+				yield put(
+					userErrorStart([
+						{
+							title: "User not found",
+							message:
+								"No user with this credentials found in our database, please try again. code: 404",
+						},
+					])
+				);
+				break;
+			case "auth/wrong-password":
+				yield put(
+					userErrorStart([
+						{
+							title: "Incorrect Password",
+							message:
+								"Your password is incorrect, please try again. code: 403",
+						},
+					])
+				);
+				break;
+			default:
+				yield put(userErrorStart([e]));
+		}
 	}
 }
 
@@ -135,6 +160,28 @@ export function* fetchUserData({ payload }) {
 	}
 }
 
+export function* resetPassword({ payload: { email } }) {
+	try {
+		yield call(handleResetPasswordAPI, email);
+		yield put(resetPasswordSuccess());
+	} catch (e) {
+		yield put(
+			userErrorStart([
+				{
+					title: "Email not found",
+					message:
+						"No user with this credentials found in our database, please try again. code: 404",
+				},
+			])
+		);
+		console.log(e);
+	}
+}
+
+export function* onResetPasswordStart() {
+	yield takeLatest(userTypes.RESET_PASSWORD_START, resetPassword);
+}
+
 export function* onFetchUserDataStart() {
 	yield takeLatest(userTypes.FETCH_USER_DATA, fetchUserData);
 }
@@ -147,5 +194,6 @@ export default function* userSagas() {
 		call(onEmailSignUp),
 		call(onEmailLogin),
 		call(onFetchUserDataStart),
+		call(onResetPasswordStart),
 	]);
 }

@@ -5,9 +5,9 @@ import {
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";
-import Register from "../components/register/Register";
+import Recovery from "../components/recovery/Recovery";
 
-const RegisterPage = () => {
+const RecoveryPage = () => {
 	return (
 		<motion.div
 			initial="initial"
@@ -15,9 +15,9 @@ const RegisterPage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			<Register />
+			<Recovery />
 		</motion.div>
 	);
 };
 
-export default RegisterPage;
+export default RecoveryPage;

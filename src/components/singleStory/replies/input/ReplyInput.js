@@ -1,4 +1,5 @@
 import React from "react";
+import InputEmoji from "react-input-emoji";
 import { Avatar, Button } from "@material-ui/core";
 import { useState } from "react";
 import "./input.scss";
@@ -13,8 +14,9 @@ const mapState = ({ user }) => ({
 	userData: user.userData,
 });
 
-const ReplyInput = ({ storyId, commentId }) => {
+const ReplyInput = ({ storyId, commentId, userThatCommentId }) => {
 	const [replyMsg, setCommentMsg] = useState("");
+	const [text, setText] = useState("");
 	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
 	const dispatch = useDispatch();
@@ -25,16 +27,39 @@ const ReplyInput = ({ storyId, commentId }) => {
 
 	const sendReply = (e) => {
 		e.preventDefault();
-		DB.collection("comments").doc(commentId).collection("replies").doc().set({
-			storyId: storyId,
-			commentId: commentId,
-			replyMessage: replyMsg,
-			userThatReplyName: displayName,
-			userThatReplyImage: profilePic,
-			userThatReplyId: userId,
-			createdAt: timestamp,
-			color: randomColor,
-		});
+		DB.collection("comments")
+			.doc(commentId)
+			.collection("replies")
+			.doc()
+			.set({
+				storyId: storyId,
+				commentId: commentId,
+				replyMessage: replyMsg,
+				userThatReplyName: displayName,
+				userThatReplyImage: profilePic,
+				userThatReplyId: userId,
+				userThatCommentId,
+				createdAt: timestamp,
+				color: randomColor,
+			})
+			.then(() => {
+				if (userId === userThatCommentId) {
+					return;
+				} else {
+					DB.collection("notifications").doc(`${userId}~${commentId}`).set({
+						storyId: storyId,
+						commentId: commentId,
+						replyMessage: replyMsg,
+						userThatReplyName: displayName,
+						userThatReplyImage: profilePic,
+						userThatReplyId: userId,
+						createdAt: timestamp,
+						type: "replyComment",
+						userThatCommentId,
+						read: false,
+					});
+				}
+			});
 
 		const comment = DB.collection("comments").doc(commentId);
 		const increment = firebase.firestore.FieldValue.increment(+1);
@@ -44,18 +69,31 @@ const ReplyInput = ({ storyId, commentId }) => {
 		inputRef.current.value = "";
 	};
 
+	function handleOnEnter(text) {
+		console.log("enter", text);
+	}
+
 	return (
 		<div className="">
 			<div className="reply-details-header">
 				<form className="reply-form">
 					<Avatar src={profilePic} className="reply-details-header-avatar" />
 					<div className="reply-details-header-details">
-						<input
+						{/* <input
 							type="text"
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}
 							className="reply-input-field"
 							ref={inputRef}
+						/> */}
+						<InputEmoji
+							value={text}
+							onChange={setText}
+							cleanOnEnter
+							onEnter={handleOnEnter}
+							placeholder={`Join the conversation ${
+								displayName || ""
+							} press enter to send`}
 						/>
 						<Button
 							className="submit-reply-button"

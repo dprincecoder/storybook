@@ -8,6 +8,7 @@ import CenteredLayout from "./layouts/CenteredLayout";
 import LoginPage from "./pages/LoginPage";
 import SingleStoryPage from "./pages/SingleStoryPage";
 import DashboardPage from "./pages/DashboardPage";
+import RecoveryPage from "./pages/RecoveryPage";
 
 import { useDispatch, useSelector } from "react-redux";
 import { checkUserSession } from "./redux/user/user.action";
@@ -19,6 +20,7 @@ import { NetworkDetector } from "./components/network/NetworkDetector";
 import UserStoryPage from "./pages/UserStoryPage";
 import VideoPage from "./pages/VideoPage";
 import NotificationsPage from "./pages/NotificationsPage";
+import { useLocation } from "react-router-dom";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
@@ -26,6 +28,7 @@ const mapState = ({ user }) => ({
 
 const App = () => {
 	const { currentUser } = useSelector(mapState);
+	const location = useLocation();
 
 	const dispatch = useDispatch();
 	NetworkDetector();
@@ -36,9 +39,9 @@ const App = () => {
 		<div className="App">
 			<CenteredLayout>
 				<AnimatePresence>
-					<React.Fragment key="1">
+					<>
 						{currentUser && <Topbar />}
-						<Switch>
+						<Switch location={location} key={location.pathname}>
 							<Route exact path="/">
 								<WithAuth>
 									<HomePage />
@@ -49,6 +52,9 @@ const App = () => {
 							</Route>
 							<Route exact path="/users/login">
 								<LoginPage />
+							</Route>
+							<Route exact path="/users/recovery">
+								<RecoveryPage />
 							</Route>
 							<Route exact path="/stories/story/:storyId">
 								<WithAuth>
@@ -81,7 +87,7 @@ const App = () => {
 								</WithAuth>
 							</Route>
 						</Switch>
-					</React.Fragment>
+					</>
 				</AnimatePresence>
 			</CenteredLayout>
 		</div>

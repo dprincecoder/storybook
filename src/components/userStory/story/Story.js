@@ -40,6 +40,7 @@ const Story = (story) => {
 		documentID,
 		likeCount,
 		commentCount,
+		storyUserUID,
 	} = story;
 	// if (
 	// 	!userThatPublished ||
@@ -65,7 +66,14 @@ const Story = (story) => {
 	};
 
 	const likeStory = () => {
-		handleLikeStory(userId, displayName, documentID);
+		handleLikeStory(
+			userId,
+			displayName,
+			profilePic,
+			storyTitle,
+			documentID,
+			storyUserUID
+		);
 		// dispatch(
 		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
 		// );
@@ -151,7 +159,7 @@ const Story = (story) => {
 					<div className="divider"></div>
 					<div className="options">
 						<div className="like" onClick={likeStory}>
-							<div className="like" onClick={likeStory}>
+							<div className="like">
 								{likeCount > 0 ? (
 									<ThumbUpIcon className="liked" />
 								) : (
@@ -159,7 +167,7 @@ const Story = (story) => {
 								)}
 							</div>
 						</div>
-						<div className="comment">Comment</div>
+						<Link to={`/stories/story/${documentID}`}>Comments</Link>
 					</div>
 				</div>
 			</div>

@@ -29,28 +29,28 @@
 .pulse {
 	width: 10px;
 	height: 10px;
-	border: 5px solid rgb(238, 55, 55);
+	border: 5px solid #037fff;
 	-webkit-border-radius: 30px;
 	-moz-border-radius: 30px;
 	border-radius: 30px;
 	background-color: #716f42;
 	z-index: 10;
 	position: absolute;
-    top: -5px;
-    right: -5px;
+	top: -5px;
+	right: -5px;
 }
 
 .dot {
-	border: 10px solid #ff5e01;
+	border: 10px solid #037fff;
 	background: transparent;
 	-webkit-border-radius: 60px;
 	-moz-border-radius: 60px;
 	border-radius: 60px;
 	height: 50px;
 	width: 50px;
-	-webkit-animation: pulse 1s ease-out;
-	-moz-animation: pulse 1s ease-out;
-	animation: pulse 1s ease-out;
+	-webkit-animation: pulse 3s ease-out;
+	-moz-animation: pulse 3s ease-out;
+	animation: pulse 3s ease-out;
 	-webkit-animation-iteration-count: infinite;
 	-moz-animation-iteration-count: infinite;
 	animation-iteration-count: infinite;
