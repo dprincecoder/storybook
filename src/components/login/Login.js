@@ -66,7 +66,7 @@ const Login = () => {
 	};
 
 	const handleGoogleLogin = () => {
-		dispatch(userError);
+		dispatch(userErrorStart({}));
 		setLoading(true);
 		setTimeout(() => {
 			dispatch(googleSignInStart());
@@ -125,7 +125,10 @@ const Login = () => {
 						value={password}
 					/>
 					<div className="section" style={{ display: "flex" }}>
-						<Button custom="blue" type="submit" disabled={loading}>
+						<Button
+							custom="blue"
+							type="submit"
+							disabled={loading || !email || !password}>
 							Login
 						</Button>
 						{loading2 && <IsLoading />}

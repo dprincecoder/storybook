@@ -14,13 +14,20 @@ const mapState = ({ user }) => ({
 	userData: user.userData,
 });
 
-const Comments = ({ storyId }) => {
+const Comments = ({
+	storyId,
+	// displayName,
+	// profilePic,
+	storyTitle,
+	storyUserUID,
+}) => {
 	const [commentMsg, setCommentMsg] = useState("");
 	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
 	const dispatch = useDispatch();
 	const inputRef = React.useRef();
 	const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
+	let date = new Date().toISOString();
 
 	const sendComment = (e) => {
 		e.preventDefault();
@@ -34,6 +41,25 @@ const Comments = ({ storyId }) => {
 				color: randomColor,
 			})
 		);
+		if (userId === storyUserUID) {
+			return;
+		} else {
+			DB.collection("storyCommentsNotifications")
+				.doc(`${userId}~${storyUserUID}`)
+				.set({
+					userThatNotifyName: displayName,
+					storyId,
+					userThatNotifyId: userId,
+					type: "commented on your",
+					method: "story",
+					createDate: date,
+					read: false,
+					seen: false,
+					userThatNotifyPic: profilePic,
+					notifyMsg: commentMsg,
+					storyUserUID: storyUserUID || "",
+				});
+		}
 		const story = DB.collection("stories").doc(storyId);
 		const increment = firebase.firestore.FieldValue.increment(+1);
 

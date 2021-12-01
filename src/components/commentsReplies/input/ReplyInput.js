@@ -8,13 +8,18 @@ import firebase from "firebase";
 import TelegramIcon from "@material-ui/icons/Telegram";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import DB from "../../../../firebase/functions";
+import DB from "../../../firebase/functions";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
 });
 
-const ReplyInput = ({ storyId, commentId, userThatCommentId }) => {
+const ReplyInput = ({
+	storyId,
+	commentId,
+	userThatCommentId,
+	storyUserUID,
+}) => {
 	const [replyMsg, setCommentMsg] = useState("");
 	const [text, setText] = useState("");
 	const { userData } = useSelector(mapState);
@@ -30,34 +35,38 @@ const ReplyInput = ({ storyId, commentId, userThatCommentId }) => {
 		DB.collection("comments")
 			.doc(commentId)
 			.collection("replies")
-			.doc()
-			.set({
+			.add({
 				storyId: storyId,
 				commentId: commentId,
 				replyMessage: replyMsg,
 				userThatReplyName: displayName,
 				userThatReplyImage: profilePic,
 				userThatReplyId: userId,
-				userThatCommentId,
+				userThatCommentId: userThatCommentId || "",
 				createdAt: timestamp,
 				color: randomColor,
 			})
 			.then(() => {
-				if (userId === userThatCommentId) {
+				if (userId === userThatCommentId || userId === storyUserUID) {
 					return;
 				} else {
-					DB.collection("notifications").doc(`${userId}~${commentId}`).set({
-						storyId: storyId,
-						commentId: commentId,
-						replyMessage: replyMsg,
-						userThatReplyName: displayName,
-						userThatReplyImage: profilePic,
-						userThatReplyId: userId,
-						createdAt: timestamp,
-						type: "replyComment",
-						userThatCommentId,
-						read: false,
-					});
+					DB.collection("replyCommentNotifications")
+						.doc(`${userId}~${commentId}`)
+						.set({
+							storyId: storyId,
+							commentId: commentId,
+							notifyMsg: replyMsg,
+							userThatNotifyName: displayName,
+							userThatNotifyPic: profilePic,
+							userThatNotifyId: userId,
+							createdAt: timestamp,
+							type: "replied to your",
+							method: "comment",
+							userThatCommentId: userThatCommentId || "",
+							storyUserUID,
+							read: false,
+							seen: false,
+						});
 				}
 			});
 
@@ -69,31 +78,18 @@ const ReplyInput = ({ storyId, commentId, userThatCommentId }) => {
 		inputRef.current.value = "";
 	};
 
-	function handleOnEnter(text) {
-		console.log("enter", text);
-	}
-
 	return (
-		<div className="">
+		<div className="container-o">
 			<div className="reply-details-header">
 				<form className="reply-form">
 					<Avatar src={profilePic} className="reply-details-header-avatar" />
 					<div className="reply-details-header-details">
-						{/* <input
+						<input
 							type="text"
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}
 							className="reply-input-field"
 							ref={inputRef}
-						/> */}
-						<InputEmoji
-							value={text}
-							onChange={setText}
-							cleanOnEnter
-							onEnter={handleOnEnter}
-							placeholder={`Join the conversation ${
-								displayName || ""
-							} press enter to send`}
 						/>
 						<Button
 							className="submit-reply-button"

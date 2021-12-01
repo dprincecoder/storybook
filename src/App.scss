@@ -20,13 +20,61 @@ body,
 .centerEverything {
 	background-color: #fff;
 	width: 40rem;
+	max-width: 40rem;
 	overflow: hidden;
-	overflow-y: scroll;
+	position: relative;
+	// overflow-y: scroll;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+	z-index: 99;
 }
 
 .centerEverything::-webkit-scrollbar {
 	display: none;
+}
+
+@media screen and (min-width: 200px) and (max-width: 560px) {
+	.centerEverything {
+		width: 100%;
+		overflow: hidden;
+		position: relative;
+
+		height: 100%;
+	}
+}
+
+@media screen and (min-width: 560px) and (max-width: 900px) {
+	.centerEverything {
+		width: 100%;
+		overflow: hidden;
+		position: relative;
+
+		height: 100%;
+	}
+}
+
+.topbar {
+	position: fixed;
+	top: 0;
+	z-index: 1;
+	width: 44%;
+	height: 6rem;
+}
+
+@media screen and (min-width: 200px) and (max-width: 560px) {
+	.topbar {
+		width: 100%;
+	}
+}
+
+@media screen and (min-width: 560px) and (max-width: 900px) {
+	.topbar {
+		width: 100%;
+	}
+}
+
+.main {
+	margin-top: 7rem !important;
+	padding: 10px;
 }
 
 a {

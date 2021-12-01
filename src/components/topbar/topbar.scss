@@ -1,15 +1,20 @@
+.fixed {
+	background-color: #fff;
+}
 .nav-extended .nav-wrapper {
 	min-height: 35px !important;
 	width: 100%;
-
-	.tabs .usr {
-		margin-top: 5px;
-	}
-	.tabs .tab {
-		margin: 7px 1rem;
-	}
-	.tabs .i {
-		margin-left: 30px;
+	.tabs {
+		.usr {
+			margin-top: 5px;
+		}
+		.tab {
+			position: relative;
+			margin: 7px 1rem;
+		}
+		.i {
+			margin-left: 30px;
+		}
 	}
 }
 

@@ -51,7 +51,7 @@ const Home = () => {
 		// onLoadMoreEvt: handleLoadMore,
 	};
 	return (
-		<div className="row">
+		<div className="container">
 			{data.map((story, index) => {
 				const configStory = {
 					...story,

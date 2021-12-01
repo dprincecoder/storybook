@@ -13,6 +13,7 @@ export const dd = [
 		notifyAction: "likes",
 		notificationId: "4y28uncsmobdge",
 		readNotification: false,
+		seen: false,
 	},
 	{
 		notifyName: "comment",
@@ -28,6 +29,7 @@ export const dd = [
 		notifyAction: "commented on",
 		notificationId: "4y28uncsmobdgesd",
 		readNotification: true,
+		seen: true,
 	},
 	{
 		notifyName: "comment",
@@ -43,5 +45,6 @@ export const dd = [
 		notifyAction: "replied to",
 		notificationId: "4y28uncsmobdgesd",
 		readNotification: false,
+		seen: true,
 	},
 ];

@@ -1,0 +1,16 @@
+.badge-count {
+	width: fit-content;
+	height: 1.2rem;
+	border-radius: 20px;
+	background-color: red;
+	color: white;
+	border: 1px solid white;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 5px;
+	right: 10px;
+	font-size: 10px;
+	top: 0;
+}

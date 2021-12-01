@@ -17,9 +17,9 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import { formatDate } from "../../helpers/Helpers";
 import DB from "../../firebase/functions";
-import MainReply from "./replies/main/MainReply";
-import ReplyInput from "./replies/input/ReplyInput";
-import AllReplies from "./replies/allReplies/AllReplies";
+import MainReply from "../commentsReplies/other/MainReply";
+import AllReplies from "../commentsReplies/allReplies/AllReplies";
+import ReplyInput from "../commentsReplies/input/ReplyInput";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -131,7 +131,7 @@ const SingleStory = () => {
 		return <IsLoadingSkeleton />;
 	}
 	return (
-		<div className="row">
+		<div className={`container ${toggleReplyBox ? "animate-in" : ""}`}>
 			<div className="col s12 m12">
 				<div className="card">
 					<div className="usrChip">
@@ -191,15 +191,22 @@ const SingleStory = () => {
 
 					<div className="divider"></div>
 
-					<div className={`row ${toggleReplyBox ? "show" : "hide"}`}>
+					<div
+						className={`replies-main-window ${
+							toggleReplyBox ? "show" : "hide"
+						}`}>
 						<div className="col s12 m12">
 							<div className="card-content">
-								<div className="window">
-									<div
-										className="window-header"
-										onClick={() => setToggleReplyBox(!toggleReplyBox)}>
-										<CancelIcon style={{ color: "red" }} />
+								<div className="body">
+									<div className="head">
+										<span>Replies</span>
+										<div
+											className="close-btn"
+											onClick={() => setToggleReplyBox(!toggleReplyBox)}>
+											<i className="material-icons">close</i>
+										</div>
 									</div>
+
 									<div className="replies">
 										<div className="main-replies">
 											{comments
@@ -235,6 +242,7 @@ const SingleStory = () => {
 											storyId={storyId}
 											commentId={localCommentId}
 											userThatCommentId={userThatCommentId}
+											storyUserUID={storyUserUID}
 										/>{" "}
 									</div>
 								</div>
@@ -298,7 +306,15 @@ const SingleStory = () => {
 							<p className="empty">Be the first to start the conversation.</p>
 						)}
 						<div className="comment-input">
-							<AddComment storyId={storyId} />
+							<AddComment
+								storyId={storyId}
+								userId={userId}
+								displayName={displayName}
+								profilePic={profilePic}
+								storyTitle={storyTitle}
+								storyId={storyId}
+								storyUserUID={storyUserUID}
+							/>
 						</div>
 					</div>
 				</div>

@@ -3,39 +3,63 @@ import { Link } from "react-router-dom";
 import "./topbar.scss";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import { NetworkDetector } from "../network/NetworkDetector";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
+import Badge from "@mui/material/Badge";
 import { useDispatch } from "react-redux";
 import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
+import Wrapper from "../notificationwrap/Wrapper";
+import DB from "../../firebase/functions";
 const { useSelector } = require("react-redux");
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
-const Topbar = () => {
+const Topbar = ({ allNotifications, notificationCount }) => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
 	const { profilePic, displayName } = userData;
-	const d = uid || userId;
+	const d = userId || uid;
+	const isDisconnected = NetworkDetector();
+	console.log(allNotifications);
+
+	const unseenNotifications = allNotifications.filter(
+		(not) => not.seen === false
+	).length;
+
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
+
+		if (isDisconnected === "offline") alert("offline");
 
 		return () => {
 			dispatch(setUserData({}));
 		};
 	}, []);
+
+	const seenNotifications = () => {
+		let batch = DB.batch();
+		allNotifications.forEach((not) => {
+			const notification = DB.collection("storyLikesNotifications").doc(
+				not.notificationID
+			);
+			batch.update(notification, { seen: true });
+		});
+		batch.commit();
+	};
 	return (
-		<div>
+		<div className="fixed">
 			<div className="app-name">
 				<ul className="app-info">
 					<li className="name">
-						<Link to="/">TINXDAILYGIST</Link>
+						<Link to="/">STORYBOOK</Link>
 					</li>
 					<div className="user-info">
 						{!userId ? (
@@ -70,9 +94,13 @@ const Topbar = () => {
 								</Link>
 							</li>
 							<li className="tab icon">
-								<Link to={`/notifications`}>
-									<CircleNotificationsIcon />
-								</Link>
+								<Wrapper badgeContent={Number(unseenNotifications)}>
+									<Link to={`/notifications`}>
+										<CircleNotificationsIcon
+											onClick={() => seenNotifications()}
+										/>
+									</Link>
+								</Wrapper>
 							</li>
 							<li className="tab icon">
 								<Link to={`/users/story/post`}>

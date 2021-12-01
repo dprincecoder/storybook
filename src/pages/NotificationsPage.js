@@ -15,8 +15,8 @@ const VideoPage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			{/* <Notifications /> */}
-			page under construction
+			<Notifications />
+			{/* page under construction */}
 		</motion.div>
 	);
 };
