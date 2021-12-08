@@ -9,6 +9,7 @@ import {
 	emailSignInStart,
 	googleSignInStart,
 	userErrorStart,
+	userSuccessStart,
 } from "../../redux/user/user.action";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -18,16 +19,15 @@ import { Alert, AlertTitle } from "@mui/material";
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userError: user.userError,
+	userSuccess: user.userSuccess,
 });
 
 const Login = () => {
-	const { userError, currentUser } = useSelector(mapState);
+	const { userError, currentUser, userSuccess } = useSelector(mapState);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [loading2, setLoading2] = useState(false);
-	const [errors, setErrors] = useState([userError]);
-
 	const history = useHistory();
 	const dispatch = useDispatch();
 
@@ -37,12 +37,6 @@ const Login = () => {
 			history.push("/");
 		}
 	}, [currentUser]);
-
-	useEffect(() => {
-		if (Array.isArray(userError) && userError.length > 0) {
-			setErrors(userError);
-		}
-	}, [userError]);
 
 	useEffect(() => {
 		return () => dispatch(userErrorStart({}));
@@ -56,8 +50,8 @@ const Login = () => {
 
 	const handleEmailLogin = async (e) => {
 		e.preventDefault();
-		setErrors([]);
 		dispatch(userErrorStart({}));
+		dispatch(userSuccessStart({}));
 		setLoading2(true);
 		setTimeout(() => {
 			dispatch(emailSignInStart({ email, password }));
@@ -67,6 +61,8 @@ const Login = () => {
 
 	const handleGoogleLogin = () => {
 		dispatch(userErrorStart({}));
+		dispatch(userSuccessStart({}));
+
 		setLoading(true);
 		setTimeout(() => {
 			dispatch(googleSignInStart());
@@ -99,6 +95,16 @@ const Login = () => {
 							<Alert severity="error" key={index}>
 								<AlertTitle>{err.title}</AlertTitle>
 								{err.message}
+							</Alert>
+						))}
+					</>
+				)}
+				{userSuccess.length > 0 && (
+					<>
+						{userSuccess.map((success, index) => (
+							<Alert severity="success" key={index}>
+								<AlertTitle>{success.title}</AlertTitle>
+								{success.message}
 							</Alert>
 						))}
 					</>

@@ -11,6 +11,7 @@ import {
 	signOutUserSuccess,
 	userErrorStart,
 	resetPasswordSuccess,
+	userSuccessStart,
 } from "./user.action";
 import { handleFetchUser, handleResetPasswordAPI } from "./user.helpers";
 import userTypes from "./user.types";
@@ -55,8 +56,29 @@ export function* googleSignIn() {
 		const { user } = yield auth.signInWithPopup(provider);
 		yield localStorage.setItem("currentUser", JSON.stringify(user));
 		yield getSnapshotFromUserAuth(user);
-	} catch (error) {
-		console.log(error);
+		if (user)
+			yield put(
+				userSuccessStart([
+					{
+						title: "Successfully",
+						message:
+							"Welcome to the community start sharing and start engaging you will be redirected automatically.",
+					},
+				])
+			);
+	} catch (e) {
+		if (e.code === "auth/popup-blocked") {
+			yield put(
+				userErrorStart([
+					{
+						title: "Popup Blocked",
+						message:
+							"Your browser or extension has blocked the popup for authentication. Please allow popups for this site in your browser",
+					},
+				])
+			);
+		}
+		console.log(e);
 	}
 }
 
@@ -103,6 +125,16 @@ export function* emailSignUp({
 		yield localStorage.setItem("currentUser", JSON.stringify(user));
 		const additionalData = { displayName, firstName, lastName, country, city };
 		yield getSnapshotFromUserAuth(user, additionalData);
+		if (user)
+			yield put(
+				userSuccessStart([
+					{
+						title: "Registration Successfully",
+						message:
+							"Welcome to your new account and to the community start sharing and start engaging you will be redirected automatically.",
+					},
+				])
+			);
 	} catch (error) {
 		console.log(error);
 	}
@@ -117,6 +149,15 @@ export function* emailLogin({ payload: { email, password } }) {
 		const { user } = yield auth.signInWithEmailAndPassword(email, password);
 		yield localStorage.setItem("currentUser", JSON.stringify(user));
 		yield getSnapshotFromUserAuth(user);
+		yield put(
+			userSuccessStart([
+				{
+					title: "Login Successfully",
+					message:
+						"Welcome back to the community you will be redirected automatically.",
+				},
+			])
+		);
 	} catch (e) {
 		switch (e.code) {
 			case "auth/user-not-found":

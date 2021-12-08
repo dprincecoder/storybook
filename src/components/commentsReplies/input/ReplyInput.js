@@ -8,6 +8,7 @@ import firebase from "firebase";
 import TelegramIcon from "@material-ui/icons/Telegram";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import ExpandInput from "../../forms/expandForm/ExpandInput";
 import DB from "../../../firebase/functions";
 
 const mapState = ({ user }) => ({
@@ -19,13 +20,14 @@ const ReplyInput = ({
 	commentId,
 	userThatCommentId,
 	storyUserUID,
+	userThatCommentName,
 }) => {
-	const [replyMsg, setCommentMsg] = useState("");
+	const [replyMsg, setReplyMsg] = useState("");
 	const [text, setText] = useState("");
 	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
 	const dispatch = useDispatch();
-	const inputRef = React.useRef();
+	const inputRef = React.createRef();
 	const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 	let today = new Date();
 	let timestamp = today.toISOString();
@@ -47,22 +49,23 @@ const ReplyInput = ({
 				color: randomColor,
 			})
 			.then(() => {
-				if (userId === userThatCommentId || userId === storyUserUID) {
+				if (userId === userThatCommentId) {
 					return;
 				} else {
-					DB.collection("replyCommentNotifications")
+					DB.collection("Notifications")
 						.doc(`${userId}~${commentId}`)
 						.set({
 							storyId: storyId,
 							commentId: commentId,
-							notifyMsg: replyMsg,
-							userThatNotifyName: displayName,
-							userThatNotifyPic: profilePic,
-							userThatNotifyId: userId,
+							notificationMsg: replyMsg,
+							userThatSentNotificationName: displayName,
+							userThatSentNotificationPic: profilePic,
+							userThatSentNotificationId: userId,
 							createdAt: timestamp,
 							type: "replied to your",
 							method: "comment",
-							userThatCommentId: userThatCommentId || "",
+							userThatOwnNotificationId: userThatCommentId || "",
+							userThatOwnNotificationName: userThatCommentName || "",
 							storyUserUID,
 							read: false,
 							seen: false,
@@ -84,11 +87,10 @@ const ReplyInput = ({
 				<form className="reply-form">
 					<Avatar src={profilePic} className="reply-details-header-avatar" />
 					<div className="reply-details-header-details">
-						<input
-							type="text"
-							onChange={(e) => setCommentMsg(e.target.value)}
-							placeholder={`Join the conversation ${displayName || ""}`}
-							className="reply-input-field"
+						<ExpandInput
+							onChange={(e) => setReplyMsg(e.target.value)}
+							placeholder="Write a public reply"
+							value={replyMsg}
 							ref={inputRef}
 						/>
 						<Button

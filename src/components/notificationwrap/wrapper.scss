@@ -4,13 +4,23 @@
 	border-radius: 20px;
 	background-color: red;
 	color: white;
-	border: 1px solid white;
+	border: 1px solid rgb(212, 212, 212);
 	position: absolute;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	padding: 5px;
 	right: 10px;
-	font-size: 10px;
+	font-size: 15px;
 	top: 0;
+}
+
+@media screen and (min-width: 460px) and (max-width: 968px) {
+	.badge-count {
+		// right: 0;
+		top: 0;
+		// left: 0;
+		bottom: 0;
+		transform: translateX(-50%);
+	}
 }

@@ -1,112 +1,88 @@
-import React, { useEffect, useState } from "react";
+import { Alert, AlertTitle } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
-import "./App.scss";
-import { Switch, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
-import CenteredLayout from "./layouts/CenteredLayout";
-import LoginPage from "./pages/LoginPage";
-import SingleStoryPage from "./pages/SingleStoryPage";
-import DashboardPage from "./pages/DashboardPage";
-import { dd } from "./Dd";
-import RecoveryPage from "./pages/RecoveryPage";
-
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUserSession } from "./redux/user/user.action";
-import WithAuth from "./hoc/withAuth";
-import Topbar from "./components/topbar/Topbar";
-import AddStoryPage from "./pages/AddStoryPage";
-
+import { Route, Switch, useLocation } from "react-router-dom";
+import "./App.scss";
 import { NetworkDetector } from "./components/network/NetworkDetector";
-import UserStoryPage from "./pages/UserStoryPage";
-import VideoPage from "./pages/VideoPage";
-import NotificationsPage from "./pages/NotificationsPage";
-import { useLocation } from "react-router-dom";
+import Topbar from "./components/topbar/Topbar";
 import DB from "./firebase/functions";
+import WithAuth from "./hoc/withAuth";
+import CenteredLayout from "./layouts/CenteredLayout";
+import AddStoryPage from "./pages/AddStoryPage";
+import ChatsPage from "./pages/ChatsPage";
+import DashboardPage from "./pages/DashboardPage";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import RecoveryPage from "./pages/RecoveryPage";
+import RegisterPage from "./pages/RegisterPage";
+import SingleStoryPage from "./pages/SingleStoryPage";
+import VideoPage from "./pages/VideoPage";
+import { checkUserSession } from "./redux/user/user.action";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
-	userData: user.userData,
 });
 
 const App = () => {
-	const { currentUser, userData } = useSelector(mapState);
-	const uid = !currentUser.uid ? null : currentUser.uid;
-	const { userId } = userData;
+	const { currentUser } = useSelector(mapState);
 	const location = useLocation();
-	const d = userId || uid;
-	// const [notificationCount, setNotificationCount] = useState(0);
-	const [storyLikesNotifications, setStoryLikesNotifications] = useState([]);
-	const [commentsLikesNotifications, setCommentsLikesNotifications] = useState(
-		[]
-	);
-	const [storyCommentsNotifications, setStoryCommentsNotifications] = useState(
-		[]
-	);
-	const [replyCommentNotifications, setReplyCommentNotifications] = useState(
-		[]
-	);
+	const [Notifications, setNotifications] = useState([]);
+	const [stories, setStories] = useState([]);
 
 	const dispatch = useDispatch();
-	NetworkDetector();
+	const isDisconnected = NetworkDetector();
+
 	useEffect(() => {
 		dispatch(checkUserSession());
-		DB.collection("storyLikesNotifications")
-			.where("storyUserUID", "==", d)
-			.onSnapshot((snapshot) => {
-				setStoryLikesNotifications(
-					snapshot.docs.map((doc) => ({
-						...doc.data(),
-						notificationID: doc.id,
-					}))
-				);
-			});
-
-		DB.collection("commentsLikesNotifications")
-			.where("storyUserUID", "==", d)
-			.onSnapshot((snapshot) => {
-				setCommentsLikesNotifications(
-					snapshot.docs.map((doc) => ({
-						...doc.data(),
-						notificationID: doc.id,
-					}))
-				);
-			});
-
-		DB.collection("storyCommentsNotifications")
-			.where("storyUserUID", "==", d)
-			.onSnapshot((snapshot) => {
-				setStoryCommentsNotifications(
-					snapshot.docs.map((doc) => ({
-						...doc.data(),
-						notificationID: doc.id,
-					}))
-				);
-			});
-
-		DB.collection("replyCommentNotifications")
-			.where("storyUserUID", "==", d)
-			.onSnapshot((snapshot) => {
-				setReplyCommentNotifications(
-					snapshot.docs.map((doc) => ({
-						...doc.data(),
-						notificationID: doc.id,
-					}))
-				);
-			});
+		DB.collection("Notifications").onSnapshot((snapshot) => {
+			setNotifications(
+				snapshot.docs.map((doc) => ({
+					...doc.data(),
+					notificationID: doc.id,
+				}))
+			);
+		});
+		DB.collection("stories").onSnapshot((snapshot) => {
+			setStories(
+				snapshot.docs.map((doc) => ({
+					...doc.data(),
+					storyID: doc.id,
+				}))
+			);
+		});
 	}, []);
-	const allNotifications = storyLikesNotifications
-		.concat(commentsLikesNotifications)
-		.concat(replyCommentNotifications)
-		.concat(storyCommentsNotifications);
+	const allNotifications = Notifications;
 
 	return (
 		<div className="App">
 			<CenteredLayout>
 				<AnimatePresence>
 					<>
+						{isDisconnected === "offline" && (
+							<Alert
+								style={{
+									position: "absolute",
+									top: 0,
+									zIndex: 3,
+									width: "100%",
+									maxWidth: "100%",
+								}}
+								severity="error">
+								<AlertTitle>You are offline</AlertTitle>
+								Try:{" "}
+								<ul>
+									<li>Checking the network cables, modem and router</li>
+									<li>Reconnecting to Wi-Fi</li>
+								</ul>
+								DNS_PROBE_FINISHED_NO_INTERNET
+							</Alert>
+						)}
 						<div className="topbar">
-							{currentUser && <Topbar allNotifications={allNotifications} />}
+							{currentUser && (
+								<Topbar allNotifications={allNotifications} stories={stories} />
+							)}
 						</div>
 						<div className="main">
 							<Switch location={location} key={location.pathname}>
@@ -139,9 +115,9 @@ const App = () => {
 										<AddStoryPage />
 									</WithAuth>
 								</Route>
-								<Route exact path="/users/:userId/stories">
+								<Route exact path="/users/chats">
 									<WithAuth>
-										<UserStoryPage />
+										<ChatsPage />
 									</WithAuth>
 								</Route>
 								<Route exact path="/videos">

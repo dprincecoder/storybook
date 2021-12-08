@@ -53,9 +53,6 @@ const Story = (story) => {
 	// 	!liked ||
 	// 	!likeCount
 	// )return;
-	useEffect(() => {
-		Aos.init({ duration: 2000 });
-	}, []);
 	const handleDeleteStory = () => {
 		dispatch(deleteStoryStart(documentID));
 		setDelSuccess(true);
@@ -80,7 +77,7 @@ const Story = (story) => {
 	};
 
 	return (
-		<div data-aos="fade-up" className="col s12 m12">
+		<div className="col s12 m12">
 			{delSuccess && (
 				<p style={{ color: "green" }}>Story Deleted Successfully</p>
 			)}

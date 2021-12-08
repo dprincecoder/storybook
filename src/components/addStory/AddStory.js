@@ -1,17 +1,14 @@
-import { CKEditor } from "ckeditor4-react";
 import React, { useRef, useState } from "react";
-import AuthWrapper from "../authwrapper/Authwraper";
-import InputForm from "../forms/inputs/InputForm";
-import Button from "../forms/button/Button";
-import { useSelector, useDispatch } from "react-redux";
-import { addStoryStart } from "../../redux/story/story.action";
-import { storage } from "../../firebase/functions";
-import IsLoading from "../loading/IsLoading";
-import firebase from "firebase/app";
-
-import "./addstory.scss";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { storage } from "../../firebase/functions";
+import { addStoryStart } from "../../redux/story/story.action";
+import AuthWrapper from "../authwrapper/Authwraper";
+import Button from "../forms/button/Button";
+import InputForm from "../forms/inputs/InputForm";
+import IsLoading from "../loading/IsLoading";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
+import "./addstory.scss";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -229,8 +226,7 @@ const AddStory = () => {
 											type="text"
 											placeholder="Upload one or more files"
 										/>
-										</div>
-										
+									</div>
 								</div>
 								OR
 								<InputForm
@@ -254,10 +250,15 @@ const AddStory = () => {
 								)}
 								<div className="divider"></div>
 								Share your story in details:
-								<CKEditor
-									required
-									onChange={(evt) => setStoryDetails(evt.editor.getData())}
-								/>
+								<textarea
+									name="storyDetails"
+									placeholder="Start Typing"
+									id="story-details"
+									value={storyDetails}
+									className="add-story-textarea"
+									onChange={(evt) =>
+										setStoryDetails(evt.target.value)
+									}></textarea>
 								<div className="divider"></div>
 								<br />
 								<div className="section" style={{ display: "flex" }}>

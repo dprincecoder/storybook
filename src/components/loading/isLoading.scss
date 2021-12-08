@@ -80,14 +80,14 @@
 			animation: skeleton-loading 1s linear infinite alternate;
 		}
 		.image {
-			margin: 2rem 1rem;
-			width: 510px;
+			margin: 2rem 1rem 0;
+			width: 500px;
 			height: 250px;
 			cursor: progress;
 			position: relative;
 			border-radius: 20px;
 			overflow: hidden;
-			background: rgb(196, 195, 195);
+			background: rgb(202, 202, 202);
 			&::before {
 				content: "";
 				display: block;
@@ -99,7 +99,7 @@
 				background: linear-gradient(
 					to right,
 					transparent 0%,
-					#e8e8e8 50%,
+					#fcf8f8 50%,
 					transparent 100%
 				);
 				animation: skeleton-image-loading 1s cubic-bezier(0.4, 0, 0.2, 1)
@@ -108,19 +108,54 @@
 		}
 	}
 }
-@media screen and (max-width: 500px) {
+// @media screen and (max-width: 500px) {
+// 	.card-content {
+// 		.longest {
+// 			width: 360px !important;
+// 		}
+// 		.longer {
+// 			width: 320px !important;
+// 		}
+// 		.long {
+// 			width: 370px !important;
+// 		}
+// 		.image {
+// 			width: 380px !important;
+// 		}
+// 	}
+// }
+
+@media screen and (min-width: 200px) and (max-width: 560px) {
 	.card-content {
 		.longest {
-			width: 360px !important;
+			width: 280px !important;
 		}
 		.longer {
-			width: 320px !important;
+			width: 300px !important;
 		}
 		.long {
-			width: 370px !important;
+			width: 290px !important;
 		}
 		.image {
-			width: 380px !important;
+			width: 330px !important;
+		}
+	}
+}
+
+@media screen and (min-width: 560px) and (max-width: 900px) {
+	.card-content {
+		.longest {
+			width: 580px !important;
+		}
+		.longer {
+			width: 500px !important;
+		}
+		.long {
+			width: 560px !important;
+		}
+		.image {
+			width: 650px !important;
+			height: 400px !important;
 		}
 	}
 }

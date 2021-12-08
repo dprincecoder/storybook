@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from "react";
-
 export const NetworkDetector = () => {
-	const [isDisconnected, setIsDisconnected] = useState("");
-	const handleConnectionChange = () => {
+	let isDisconnected;
+	const ConnectionChange = () => {
 		const condition = navigator.onLine ? "online" : "offline";
-		setIsDisconnected(condition);
-		console.log(isDisconnected);
-		localStorage.setItem("networkcondition", isDisconnected);
+
+		// if (navigator.connection.downlink === 10) {
+		// 	condition = "off";
+		// } else if (navigator.connection.downlink === 1.2) {
+		//     condition = "no internet connection";
+		// } else {
+		// 	condition = "connection active";
+		// }
+		// console.log(navigator);
+		isDisconnected = condition;
 	};
 
-	window.addEventListener("online", handleConnectionChange);
-	window.addEventListener("offline", handleConnectionChange);
+	window.addEventListener("online", ConnectionChange);
+	window.addEventListener("offline", ConnectionChange);
 
-	useEffect(() => {
-		handleConnectionChange();
-		return () => {
-			window.removeEventListener("online", handleConnectionChange);
-			window.removeEventListener("offline", handleConnectionChange);
-		};
-	}, [isDisconnected]);
-
+	ConnectionChange();
 	return isDisconnected;
 };

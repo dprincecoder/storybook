@@ -3,17 +3,16 @@ import { Link } from "react-router-dom";
 import "./topbar.scss";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
-import { NetworkDetector } from "../network/NetworkDetector";
 import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
-import Badge from "@mui/material/Badge";
+import ChatIcon from "@mui/icons-material/Chat";
 import { useDispatch } from "react-redux";
 import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
-import Wrapper from "../notificationwrap/Wrapper";
+import BadgeWrapper from "../notificationwrap/Wrapper";
 import DB from "../../firebase/functions";
 const { useSelector } = require("react-redux");
 
@@ -21,36 +20,45 @@ const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
-const Topbar = ({ allNotifications, notificationCount }) => {
+const Topbar = ({ allNotifications, stories }) => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
 	const { profilePic, displayName } = userData;
 	const d = userId || uid;
-	const isDisconnected = NetworkDetector();
-	console.log(allNotifications);
 
-	const unseenNotifications = allNotifications.filter(
-		(not) => not.seen === false
-	).length;
-
+	const unseenNotifications = allNotifications
+		.filter((id) => id.userThatOwnNotificationId === userId)
+		.filter((not) => not.seen === false).length;
+	const unseenStories = stories.filter((id) => id.seen === false).length;
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
-
-		if (isDisconnected === "offline") alert("offline");
 
 		return () => {
 			dispatch(setUserData({}));
 		};
 	}, []);
 
-	const seenNotifications = () => {
+	const markNotificationsSeen = () => {
 		let batch = DB.batch();
-		allNotifications.forEach((not) => {
-			const notification = DB.collection("storyLikesNotifications").doc(
-				not.notificationID
-			);
-			batch.update(notification, { seen: true });
+		allNotifications
+			.filter((not) => not.userThatOwnNotificationId === userId)
+			.forEach((not) => {
+				const notificationIDS = not.notificationID;
+				const notification =
+					DB.collection("Notifications").doc(notificationIDS);
+
+				batch.update(notification, { seen: true });
+			});
+		batch.commit();
+	};
+
+	const markStoriesSeen = () => {
+		let batch = DB.batch();
+		stories.forEach((story) => {
+			const storyID = story.storyID;
+			const storyDoc = DB.collection("stories").doc(storyID);
+			batch.update(storyDoc, { seen: true });
 		});
 		batch.commit();
 	};
@@ -84,23 +92,25 @@ const Topbar = ({ allNotifications, notificationCount }) => {
 					<div className="nav-content">
 						<ul className="tabs tabs-transparent">
 							<li className="tab icon i">
-								<Link to="/">
-									<HomeIcon />
+								<BadgeWrapper badgeContent={Number(unseenStories)}>
+									<Link to="/">
+										<HomeIcon onClick={markStoriesSeen} />
+									</Link>
+								</BadgeWrapper>
+							</li>
+							<li className="tab icon">
+								<Link to={`/users/chats`}>
+									<ChatIcon />{" "}
 								</Link>
 							</li>
 							<li className="tab icon">
-								<Link to={`/users/${userId}/stories`}>
-									<AutoStoriesIcon />{" "}
-								</Link>
-							</li>
-							<li className="tab icon">
-								<Wrapper badgeContent={Number(unseenNotifications)}>
+								<BadgeWrapper badgeContent={Number(unseenNotifications)}>
 									<Link to={`/notifications`}>
 										<CircleNotificationsIcon
-											onClick={() => seenNotifications()}
+											onClick={() => markNotificationsSeen()}
 										/>
 									</Link>
-								</Wrapper>
+								</BadgeWrapper>
 							</li>
 							<li className="tab icon">
 								<Link to={`/users/story/post`}>

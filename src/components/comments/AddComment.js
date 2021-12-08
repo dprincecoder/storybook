@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import DB from "../../firebase/functions";
 import { useDispatch } from "react-redux";
 import { addCommentStart } from "../../redux/story/story.action";
-
+import ExpandInput from "../forms/expandForm/ExpandInput";
 const mapState = ({ user }) => ({
 	userData: user.userData,
 });
@@ -19,13 +19,14 @@ const Comments = ({
 	// displayName,
 	// profilePic,
 	storyTitle,
+	userthatPublished,
 	storyUserUID,
 }) => {
 	const [commentMsg, setCommentMsg] = useState("");
 	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
 	const dispatch = useDispatch();
-	const inputRef = React.useRef();
+	const inputRef = React.createRef();
 	const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 	let date = new Date().toISOString();
 
@@ -44,20 +45,21 @@ const Comments = ({
 		if (userId === storyUserUID) {
 			return;
 		} else {
-			DB.collection("storyCommentsNotifications")
+			DB.collection("Notifications")
 				.doc(`${userId}~${storyUserUID}`)
 				.set({
-					userThatNotifyName: displayName,
+					userThatSentNotificationName: displayName,
 					storyId,
-					userThatNotifyId: userId,
+					userThatSentNotificationId: userId,
 					type: "commented on your",
 					method: "story",
 					createDate: date,
 					read: false,
 					seen: false,
-					userThatNotifyPic: profilePic,
-					notifyMsg: commentMsg,
-					storyUserUID: storyUserUID || "",
+					userThatSentNotificationPic: profilePic,
+					notificationMsg: commentMsg,
+					userThatOwnNotificationId: storyUserUID || "",
+					userThatOwnNotificationName: userthatPublished || "",
 				});
 		}
 		const story = DB.collection("stories").doc(storyId);
@@ -74,8 +76,9 @@ const Comments = ({
 				<form className="post-form">
 					<Avatar src={profilePic} className="post-details-header-avatar" />
 					<div className="post-details-header-details">
-						<input
+						<ExpandInput
 							type="text"
+							value={commentMsg}
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}
 							ref={inputRef}

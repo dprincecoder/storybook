@@ -1,21 +1,16 @@
-import React, { useEffect } from "react";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import { Avatar } from "@mui/material";
+import "aos/dist/aos.css";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
 	formatDate,
 	shortenText,
 	stripHtmlTags,
 } from "../../../helpers/Helpers";
-import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { Link } from "react-router-dom";
-import { Avatar } from "@mui/material";
-import Aos from "aos";
-import "aos/dist/aos.css";
-import { useDispatch, useSelector } from "react-redux";
-import {
-	handleLikeStory,
-	// handleUnLikeStory,
-} from "../../../redux/story/story.helpers";
-import { fetchStoriesStart } from "../../../redux/story/story.action";
+import { handleLikeStory } from "../../../redux/story/story.helpers";
 
 const mapState = ({ user, storiesData }) => ({
 	userData: user.userData,
@@ -41,10 +36,6 @@ const HomeStory = (story) => {
 		storyUserUID,
 	} = story;
 
-	useEffect(() => {
-		Aos.init({ duration: 1500 });
-	}, []);
-
 	const likeStory = () => {
 		handleLikeStory(
 			userId,
@@ -62,7 +53,7 @@ const HomeStory = (story) => {
 	// console.log(storyUserUID);
 
 	return (
-		<div className="col s12 m12" data-aos="fade-up">
+		<div className="col s12 m12">
 			<div className="card">
 				<div className="usrChip">
 					<Avatar src={userthatPublishedProfilePic} alt="" />
@@ -83,8 +74,8 @@ const HomeStory = (story) => {
 						<span>{stripHtmlTags(shortenText(storyDetails, 150))}</span>
 
 						<div className="divider"></div>
-						<div className="card-image">
-							<img src={storyPhotos} alt={storyTitle} />
+						<div className="home-image-container">
+							<img src={storyPhotos} alt={storyTitle} className="home-image" />
 						</div>
 					</Link>
 					<div className="optionsCount">

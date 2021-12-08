@@ -1,6 +1,6 @@
 import React from "react";
 import "./wrapper.scss";
-const Wrapper = ({ children, badgeContent }) => {
+const BadgeWrapper = ({ children, badgeContent }) => {
 	let badgeValue;
 	if (badgeContent > 9) {
 		badgeValue = `${9}+`;
@@ -8,11 +8,11 @@ const Wrapper = ({ children, badgeContent }) => {
 		badgeValue = badgeContent;
 	}
 	return (
-		<div>
+		<>
 			{badgeContent > 0 && <div className="badge-count">{badgeValue}</div>}
 			{children}
-		</div>
+		</>
 	);
 };
 
-export default Wrapper;
+export default BadgeWrapper;

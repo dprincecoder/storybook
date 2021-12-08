@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { signOutUserStart } from "../../redux/user/user.action";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import { storage } from "../../firebase/functions.js";
+import UserStory from "../userStory/UserStory";
+
 import {
 	handleUpdateUserImage,
 	handleUpdateUserDetails,
@@ -236,6 +238,10 @@ const Dashboard = () => {
 									</div>
 								</AuthWrapper>
 							</div>
+						</div>
+						<span>Your Stories</span>
+						<div className="my-stories">
+							<UserStory userId={userId} />
 						</div>
 					</div>
 				</>

@@ -1,3 +1,7 @@
+.container {
+	margin-bottom: 1rem;
+}
+
 .card {
 	.usrChip {
 		display: flex;
@@ -35,11 +39,14 @@
 			margin: 10px;
 		}
 
-		.card-image {
-			padding: 1px 0;
-			height: 100% !important;
-			img {
-				height: 500px;
+		.single-image-container {
+			width: 100%;
+			.single-image {
+				display: block;
+				height: auto;
+				width: 100%;
+				object-fit: cover;
+				// max-width: 100%;
 			}
 		}
 	}
@@ -74,6 +81,9 @@
 				margin-right: 10px;
 			}
 		}
+		.space {
+			margin-bottom: 1rem;
+		}
 	}
 	.comment-input {
 		position: absolute;
@@ -98,7 +108,7 @@
 // }
 
 .replies-main-window {
-	height: 100%;
+	height: auto;
 	// top: 45%;
 	width: 100%;
 	bottom: -70%;
@@ -107,20 +117,22 @@
 	left: 0;
 	transition: 0.5s;
 	transition-property: bottom;
-	position: fixed;
-	overflow: absolute;
+	position: absolute;
+	overflow: hidden;
 	.head {
 		display: flex;
 		height: 3rem;
 		width: 100%;
 		justify-content: space-between;
-		box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 		span {
 			color: #0037ff;
-			font-size: 2rem;
+			font-size: 1.5rem;
+			opacity: 0.5;
+			text-align: center !important;
 		}
 		.close-btn {
-			float: right;
+			// float: right;
+			height: 10px;
 			padding: 10px;
 			cursor: pointer;
 			color: red;
@@ -139,14 +151,15 @@
 			// padding: 10px;
 		}
 		.replies-list {
-			height: 350px;
+			height: auto;
 			// margin-bottom: 10rem;
 			padding: 10px;
+			overflow-y: scroll;
 		}
 	}
 	.replies-input {
-		position: absolute;
-		bottom: 0;
+		background-color: white;
+		position: relative;
 		width: 100%;
 	}
 }
@@ -156,10 +169,10 @@
 }
 
 .replies-list::-webkit-scrollbar {
-	width: 4px;
+	width: 5px;
 }
 .replies-list::-webkit-scrollbar-thumb {
-	background-color: white;
+	background-color: #037fff;
 	border-radius: 50px;
 }
 .replies-list::-webkit-scrollbar-track {

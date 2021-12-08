@@ -5,20 +5,24 @@ import Button from "../forms/button/Button";
 import {
 	googleSignInStart,
 	signUpUserStart,
+	userErrorStart,
+	userSuccessStart,
 } from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
 import "./register.scss";
 import { Link, withRouter } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { Alert, AlertTitle } from "@mui/material";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userError: user.userError,
+	userSuccess: user.userSuccess,
 });
 const Register = () => {
 	const dispatch = useDispatch();
-	const { userError, currentUser } = useSelector(mapState);
+	const { userError, currentUser, userSuccess } = useSelector(mapState);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
@@ -48,12 +52,6 @@ const Register = () => {
 		}
 	}, [currentUser]);
 
-	useEffect(() => {
-		if (Array.isArray(userError) && userError.length > 0) {
-			setErrors(userError);
-		}
-	}, [userError]);
-
 	//reset form input
 	const reset = () => {
 		setEmail("");
@@ -67,8 +65,15 @@ const Register = () => {
 		setCity("");
 	};
 
+	useEffect(() => {
+		return () => dispatch(userErrorStart({}));
+	}, []);
+
 	const handleEmailRegister = async (e) => {
 		e.preventDefault();
+		dispatch(userErrorStart({}));
+		dispatch(userSuccessStart({}));
+
 		setLoading2(true);
 		setTimeout(() => {
 			dispatch(
@@ -89,6 +94,9 @@ const Register = () => {
 
 	const handleGoogleRegister = () => {
 		setLoading(true);
+		dispatch(userErrorStart({}));
+		dispatch(userSuccessStart({}));
+
 		setTimeout(() => {
 			dispatch(googleSignInStart());
 			setLoading(false);
@@ -162,12 +170,25 @@ const Register = () => {
 				</div>
 			</div>
 			<AuthWrapper custom="row" {...configAuthwrapper}>
-				{errors.length > 0 && (
-					<ul>
-						{errors.map((err, index) => (
-							<li key={index}> {err}</li>
+				{userError.length > 0 && (
+					<>
+						{userError.map((err, index) => (
+							<Alert severity="error" key={index}>
+								<AlertTitle>{err.title}</AlertTitle>
+								{err.message}
+							</Alert>
 						))}
-					</ul>
+					</>
+				)}
+				{userSuccess.length > 0 && (
+					<>
+						{userSuccess.map((success, index) => (
+							<Alert severity="success" key={index}>
+								<AlertTitle>{success.title}</AlertTitle>
+								{success.message}
+							</Alert>
+						))}
+					</>
 				)}
 				<form onSubmit={handleEmailRegister}>
 					Display Name:
@@ -265,11 +286,18 @@ const Register = () => {
 								<Button
 									onClick={() => {
 										setPassword(suggestedChar);
-										setConfirmPassword(suggestedChar)
+										setConfirmPassword(suggestedChar);
 										setModal(!modal);
 									}}
 									custom="green">
 									use
+								</Button>
+								<Button
+									onClick={() => {
+										setModal(!modal);
+									}}
+									custom="red">
+									Cancel
 								</Button>
 							</div>
 						</div>
