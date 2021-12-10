@@ -1,8 +1,8 @@
 import React from "react";
-import Chat from "../components/chats/Chat";
+import Chats from "../components/chats/Chats";
 
 const ChatsPage = () => {
-	return <Chat />;
+	return <Chats />;
 };
 
 export default ChatsPage;

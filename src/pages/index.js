@@ -1,0 +1,11 @@
+export { default as AddStoryPage } from "./AddStoryPage";
+export { default as ChatsPage } from "./ChatsPage";
+export { default as DashboardPage } from "./DashboardPage";
+export { default as HomePage } from "./HomePage";
+export { default as LoginPage } from "./LoginPage";
+export { default as NotificationsPage } from "./NotificationsPage";
+export { default as RecoveryPage } from "./RecoveryPage";
+export { default as RegisterPage } from "./RegisterPage";
+export { default as SingleStoryPage } from "./SingleStoryPage";
+export { default as VideoPage } from "./VideoPage";
+export { default as ChatPage } from "./ChatPage";

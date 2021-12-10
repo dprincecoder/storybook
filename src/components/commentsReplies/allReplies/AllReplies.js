@@ -2,6 +2,7 @@ import React from "react";
 import { Avatar } from "@material-ui/core";
 import "./allreplies.scss";
 import { formatDate, detectLinks } from "../../../helpers/Helpers";
+import _ from "lodash";
 
 const MainReply = ({
 	profilePic,

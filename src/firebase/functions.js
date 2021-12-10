@@ -37,11 +37,14 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 				bio: "",
 				areaOfExpertise: "",
 				createdDate: timestamp,
+				following: [],
+				followers: [],
+				online: true,
 				userId: uid,
 				...additionalData,
 			});
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 		}
 	}
 	return userRef;
