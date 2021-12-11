@@ -1,11 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import "./chats.scss";
 import { formatDate, shortenMsgText } from "../../helpers/Helpers";
 import { Link } from "react-router-dom";
+import DB from "../../firebase/functions";
+import { useSelector } from "react-redux";
+import IsLoading from "../../components/loading/IsLoading";
+
+const mapState = ({ user }) => ({
+	userData: user.userData,
+	currentUser: user.currentUser,
+});
+
 const Chat = () => {
-	let tt =
-		"Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio ipsam ipsa ipsum quos asperiores velit ea cumque eum, aperiam minus eveniet. Nisi, temporibus qui. Aperiam veniam animi cum magnam modi. Maiores eveniet sapiente iste commodi, impedit eum error soluta debitis at ea aspernatur, fugit hic quidem ipsum perspiciatis excepturi sed";
+	const [messages, setMessages] = useState([]);
+	const { userData, currentUser } = useSelector(mapState);
+	const [loading, setLoading] = useState(true);
+	const { userId } = userData;
+	const { uid } = currentUser;
+	const d = userId || uid;
+	useEffect(() => {
+		DB.collection("messages")
+			.where("userThatOwnMessage", "==", "324")
+			.orderBy("createdDate", "desc")
+			.onSnapshot((snapshot) => {
+				setMessages(
+					snapshot.docs.map((doc) => ({
+						messageID: doc.id,
+						...doc.data(),
+					}))
+				);
+				setLoading(false);
+			});
+	}, [d]);
 	return (
 		<div className="row">
 			<div className="s12 m12">
@@ -24,29 +51,51 @@ const Chat = () => {
 				</div>
 				<div className="divider"></div>
 				<div className="msg-body">
-					{[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-						<Link to="/users/chats/123" className="col s12 m12" key={item}>
-							<div className="card-body">
-								<div className="msg-left">
-									<Avatar />
-								</div>
-								<div className="msg-right">
-									<div className="msg-center-top">
-										<h4>Dprincecoder</h4>
-										<div className="msg-center-content">
-											{shortenMsgText(tt, 50)}
+					{messages.length > 0 && !loading ? (
+						messages.map((m) => (
+							<Link
+								to={`/users/chats/${m?.userThatSentMessageId}`}
+								className="col s12 m12"
+								key={m.messageID}>
+								<div className="card-body">
+									<div className="msg-left">
+										<Avatar
+											src={m?.userThatSentMessagePic}
+											alt={m?.userThatSentMessageName}
+										/>
+									</div>
+									<div className="msg-right">
+										<div className="msg-center-top">
+											<h4>{m?.userThatSentMessageName}</h4>
+											<div className="msg-center-content">
+												{shortenMsgText(m?.message, 50)}
+											</div>
+										</div>
+										<div className="msg-right-end">
+											<div className="msg-right-time">
+												{formatDate(m?.createdDate)}
+											</div>
+											{m?.seen && (
+												<p className="status">
+													<i className="material-icons circle">done</i>
+												</p>
+											)}
 										</div>
 									</div>
-									<div className="msg-right-end">
-										<div className="msg-right-time">2 hours ago</div>
-										<p className="status">
-											<i className="material-icons circle">done</i>
-										</p>
-									</div>
 								</div>
-							</div>
-						</Link>
-					))}
+							</Link>
+						))
+					) : (
+						<>
+							{loading ? (
+								<div className="lo">
+									<IsLoading />
+								</div>
+							) : (
+								<p className="center">No Messages</p>
+							)}{" "}
+						</>
+					)}
 				</div>
 			</div>
 		</div>
