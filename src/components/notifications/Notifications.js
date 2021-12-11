@@ -16,7 +16,7 @@ const mapState = ({ user }) => ({
 const Notifications = () => {
 	const [notifications, setNotifications] = useState([]);
 
-	const [loading, setLoading] = React.useState(false);
+	const [loading, setLoading] = React.useState(true);
 	const { userData, currentUser } = useSelector(mapState);
 	const { uid } = currentUser;
 	const { userId } = userData;
@@ -24,10 +24,7 @@ const Notifications = () => {
 	const d = userId || uid;
 
 	useEffect(() => {
-		setLoading(true);
-
 		DB.collection("Notifications")
-			.where("userThatOwnNotificationId", "==", d)
 			.orderBy("createdDate", "desc")
 			.onSnapshot((snapshot) => {
 				setNotifications(
