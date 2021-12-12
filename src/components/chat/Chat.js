@@ -46,7 +46,7 @@ const Chat = () => {
 			});
 
 		scrollInToView();
-		return () => scrollInToView();
+		return () => divRef.current?.removeEventListener("scroll", scrollInToView);
 	}, [userChatId]);
 
 	useEffect(() => {

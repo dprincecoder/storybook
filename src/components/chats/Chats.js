@@ -21,7 +21,7 @@ const Chat = () => {
 	const d = userId || uid;
 	useEffect(() => {
 		DB.collection("messages")
-			.where("userThatOwnMessage", "==", "324")
+			.where("userThatOwnMessageId", "==", d)
 			.orderBy("createdDate", "desc")
 			.onSnapshot((snapshot) => {
 				setMessages(
