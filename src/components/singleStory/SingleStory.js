@@ -188,7 +188,9 @@ const SingleStory = () => {
 						<div className="userChipOptions">
 							<ul>
 								<li>
-									<Link to="">{userThatPublished}</Link>
+									<Link to={`/users/user/${storyUserUID}/profile`}>
+										{userThatPublished}
+									</Link>
 								</li>
 								<li className="late">{formatDate(createdDate)}</li>
 							</ul>

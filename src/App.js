@@ -61,6 +61,7 @@ const App = () => {
 
 	return (
 		<div className="App">
+			<div className="main-left" />
 			<CenteredLayout>
 				<AnimatePresence>
 					<>
@@ -149,6 +150,7 @@ const App = () => {
 					</>
 				</AnimatePresence>
 			</CenteredLayout>
+			<div className="main-right" />
 		</div>
 	);
 };

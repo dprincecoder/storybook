@@ -40,13 +40,13 @@
 		}
 
 		.single-image-container {
-			width: 100%;
+			display: flex;
+			justify-content: center;
+			position: relative;
 			.single-image {
-				display: block;
-				height: auto;
+				max-height: 550px;
 				width: 100%;
-				object-fit: cover;
-				// max-width: 100%;
+				object-fit: contain;
 			}
 		}
 	}

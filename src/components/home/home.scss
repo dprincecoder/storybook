@@ -41,12 +41,13 @@
 		}
 
 		.home-image-container {
-			width: 100%;
+			display: flex;
+			justify-content: center;
+			position: relative;
 			.home-image {
-				display: block;
-				height: auto;
+				max-height: 550px;
 				width: 100%;
-				object-fit: cover;
+				object-fit: contain;
 				// max-width: 100%;
 			}
 		}
