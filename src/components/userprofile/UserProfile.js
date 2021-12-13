@@ -23,11 +23,13 @@ const UserProfile = () => {
 	const d = userId || uid;
 	const { userProfileId } = useParams();
 
+	const uniqId =
+		d > userProfileId ? `${d}${userProfileId}` : `${userProfileId}${d}`;
 	const submit = (e) => {
 		e.preventDefault();
 		// setShowInput(!showInput);
 		DB.collection("messages")
-			.doc(`${userProfileId}~${d}`)
+			.doc(uniqId)
 			.set({
 				message,
 				userThatOwnMessageId: userProfileId,
@@ -39,20 +41,17 @@ const UserProfile = () => {
 				userThatSentMessagePic: profilePic,
 			})
 			.then(() => {
-				DB.collection("messages")
-					.doc(`${userProfileId}~${d}`)
-					.collection("chat")
-					.doc()
-					.set({
-						message,
-						userThatOwnChatId: userProfileId,
-						userThatSentChatId: d,
-						createdDate: new Date().toISOString(),
-						seen: false,
-						read: false,
-						userThatSentChatName: displayName,
-						userThatSentChatPic: profilePic,
-					});
+				DB.collection("messages").doc(uniqId).collection("chat").doc().set({
+					message,
+					userThatOwnChatId: userProfileId,
+					userThatOwnChatName: userProfile?.displayName,
+					userThatSentChatId: d,
+					createdDate: new Date().toISOString(),
+					seen: false,
+					read: false,
+					userThatSentChatName: displayName,
+					userThatSentChatPic: profilePic,
+				});
 			})
 			.then(() => {
 				setMessage("");
