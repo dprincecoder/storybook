@@ -29,8 +29,7 @@ const ReplyInput = ({
 	const dispatch = useDispatch();
 	const inputRef = React.createRef();
 	const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
-	let today = new Date();
-	let timestamp = today.toISOString();
+	let today = new Date().toISOString();
 
 	const sendReply = (e) => {
 		e.preventDefault();
@@ -61,7 +60,7 @@ const ReplyInput = ({
 							userThatSentNotificationName: displayName,
 							userThatSentNotificationPic: profilePic,
 							userThatSentNotificationId: userId,
-							createdAt: timestamp,
+							createdDate: date,
 							type: "replied to your",
 							method: "comment",
 							userThatOwnNotificationId: userThatCommentId || "",

@@ -53,7 +53,7 @@ const Comments = ({
 					userThatSentNotificationId: userId,
 					type: "commented on your",
 					method: "story",
-					createDate: date,
+					createdDate: date,
 					read: false,
 					seen: false,
 					userThatSentNotificationPic: profilePic,

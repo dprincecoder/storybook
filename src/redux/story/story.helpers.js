@@ -168,7 +168,7 @@ export const handleLikeStory = async (
 					userThatSentNotificationId: userId,
 					type: "likes your",
 					method: "story",
-					createDate: date,
+					createdDate: date,
 					read: false,
 					seen: false,
 					userThatSentNotificationPic: profilePic,
