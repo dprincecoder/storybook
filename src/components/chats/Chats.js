@@ -23,6 +23,7 @@ const Chat = () => {
 	useEffect(() => {
 		DB.collection("messages")
 			.where("betweenUsers", "array-contains", d)
+
 			.orderBy("createdDate", "desc")
 			.onSnapshot((snapshot) => {
 				setMessages(

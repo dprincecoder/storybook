@@ -9,3 +9,4 @@ export { default as RegisterPage } from "./RegisterPage";
 export { default as SingleStoryPage } from "./SingleStoryPage";
 export { default as VideoPage } from "./VideoPage";
 export { default as ChatPage } from "./ChatPage";
+export { default as UserProfilePage } from "./UserProfilePage";

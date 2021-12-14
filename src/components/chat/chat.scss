@@ -41,20 +41,32 @@
 }
 
 .chat-body {
-	height: auto;
+	// height: auto;
 	width: 100%;
-	overflow: hidden;
 
 	.chat-body-center {
-		height: 100%;
+		height: 90vh;
 		width: 100%;
 		position: relative;
-		margin: 1rem 0;
+		margin: 1rem 0 0 0;
+		overflow-y: scroll;
+		.chat-hod {
+			display: flex;
+			.chat-img {
+				margin-right: 0.5rem;
+			}
+		}
+		.lo {
+			display: flex;
+			justify-content: center;
+		}
+		.no-msg {
+			text-align: center;
+		}
 		.my-chat {
 			border-radius: 10px;
 			margin-left: auto;
-			padding: 10px;
-			text-align: left;
+			padding: 5px;
 			width: fit-content;
 			margin-bottom: 10px;
 			color: white;
@@ -64,7 +76,7 @@
 			background-color: rgb(138, 39, 39);
 			border-radius: 10px;
 			color: white;
-			padding: 10px;
+			padding: 5px;
 			width: fit-content;
 			margin-bottom: 10px;
 		}
@@ -73,22 +85,31 @@
 			text-align: center;
 		}
 	}
-
+	.chat-body-center::-webkit-scrollbar {
+		width: 0.5rem;
+	}
 	.chat-body-bottom {
-		// position: absolute;
-		bottom: 5px;
+		position: absolute;
+		bottom: 0;
 		width: 100%;
 		height: 3rem;
-		margin: 2rem 0;
-		background-color: #fdd3d3;
+		margin: 2rem 0 0.5rem 0;
+		background-color: rgb(82, 133, 82);
 		border-radius: 5rem;
 		display: flex;
 		justify-content: space-between;
 		padding: 0 1rem;
-		input {
+		.chat-body-text {
+			resize: none;
+			outline: none;
+			border: none;
+			padding: 0.5rem;
 			&::placeholder {
 				color: white;
 			}
+		}
+		.chat-body-text::-webkit-scrollbar {
+			display: none;
 		}
 		.submit-btn {
 			cursor: pointer;
@@ -101,6 +122,13 @@
 			font-weight: bold;
 			outline: none;
 			transition: all 0.3s ease-in-out;
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+			&:disabled:hover {
+				background-color: gray;
+			}
 			&:hover {
 				background-color: #037fff;
 				color: #fff;

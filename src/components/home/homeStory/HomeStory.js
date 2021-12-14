@@ -60,7 +60,9 @@ const HomeStory = (story) => {
 					<div className="userChipOptions">
 						<ul>
 							<li>
-								<Link to="/stories/user/">{userThatPublished}</Link>
+								<Link to={`/users/user/${storyUserUID}/profile`}>
+									{userThatPublished}
+								</Link>
 							</li>
 							<li className="late">{formatDate(createdDate)}</li>
 						</ul>

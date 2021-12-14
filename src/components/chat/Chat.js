@@ -32,7 +32,9 @@ const Chat = () => {
 
 	useEffect(() => {
 		DB.collection("messages")
+
 			.doc(userChatId + d)
+
 			.collection("chat")
 			.orderBy("createdDate", "asc")
 			.onSnapshot((snapshot) => {
@@ -46,7 +48,9 @@ const Chat = () => {
 			});
 
 		scrollInToView();
+
 		return () => divRef.current?.removeEventListener("scroll", scrollInToView);
+
 	}, [userChatId]);
 
 	useEffect(() => {

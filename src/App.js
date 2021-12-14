@@ -20,6 +20,7 @@ import {
 	RecoveryPage,
 	RegisterPage,
 	SingleStoryPage,
+	UserProfilePage,
 	VideoPage,
 } from "./pages";
 import { checkUserSession } from "./redux/user/user.action";
@@ -60,6 +61,7 @@ const App = () => {
 
 	return (
 		<div className="App">
+			<div className="main-left" />
 			<CenteredLayout>
 				<AnimatePresence>
 					<>
@@ -123,7 +125,7 @@ const App = () => {
 										<ChatsPage />
 									</WithAuth>
 								</Route>
-								<Route exact path="/users/chats/:id">
+								<Route exact path="/users/chats/:userChatId">
 									<WithAuth>
 										<ChatPage />
 									</WithAuth>
@@ -138,11 +140,17 @@ const App = () => {
 										<NotificationsPage />
 									</WithAuth>
 								</Route>
+								<Route exact path="/users/user/:userProfileId/profile">
+									<WithAuth>
+										<UserProfilePage />
+									</WithAuth>
+								</Route>
 							</Switch>
 						</div>
 					</>
 				</AnimatePresence>
 			</CenteredLayout>
+			<div className="main-right" />
 		</div>
 	);
 };

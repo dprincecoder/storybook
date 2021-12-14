@@ -15,6 +15,13 @@ export const shortenText = (string, length) => {
 	return string;
 };
 
+export const truncateString = (str, num) => {
+	if (str.length <= num) {
+		return str;
+	}
+	return str.slice(0, num);
+};
+
 export const shortenMsgText = (string, length) => {
 	if (string.length > length && string.length > 0) {
 		let newString = string + "";
