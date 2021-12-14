@@ -27,9 +27,8 @@ const UserProfile = () => {
 		d > userProfileId ? `${d}${userProfileId}` : `${userProfileId}${d}`;
 	const submit = (e) => {
 		e.preventDefault();
-		// setShowInput(!showInput);
 		DB.collection("messages")
-			.doc(uniqId)
+			.doc()
 			.set({
 				message,
 				userThatOwnMessageId: userProfileId,
@@ -39,6 +38,7 @@ const UserProfile = () => {
 				read: false,
 				userThatSentMessageName: displayName,
 				userThatSentMessagePic: profilePic,
+				betweenUsers: [userProfileId, d],
 			})
 			.then(() => {
 				DB.collection("messages").doc(uniqId).collection("chat").doc().set({
