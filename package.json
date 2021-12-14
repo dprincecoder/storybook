@@ -19,6 +19,7 @@
 		"ckeditor4-react": "^2.0.1",
 		"firebase": "^7.20.0",
 		"framer-motion": "^4.1.17",
+		"lodash": "^4.17.21",
 		"mdbreact": "^5.0.1",
 		"moment": "^2.29.1",
 		"node-sass": "^4.14.1",

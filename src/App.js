@@ -9,16 +9,19 @@ import Topbar from "./components/topbar/Topbar";
 import DB from "./firebase/functions";
 import WithAuth from "./hoc/withAuth";
 import CenteredLayout from "./layouts/CenteredLayout";
-import AddStoryPage from "./pages/AddStoryPage";
-import ChatsPage from "./pages/ChatsPage";
-import DashboardPage from "./pages/DashboardPage";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import NotificationsPage from "./pages/NotificationsPage";
-import RecoveryPage from "./pages/RecoveryPage";
-import RegisterPage from "./pages/RegisterPage";
-import SingleStoryPage from "./pages/SingleStoryPage";
-import VideoPage from "./pages/VideoPage";
+import {
+	AddStoryPage,
+	ChatPage,
+	ChatsPage,
+	DashboardPage,
+	HomePage,
+	LoginPage,
+	NotificationsPage,
+	RecoveryPage,
+	RegisterPage,
+	SingleStoryPage,
+	VideoPage,
+} from "./pages";
 import { checkUserSession } from "./redux/user/user.action";
 
 const mapState = ({ user }) => ({
@@ -118,6 +121,11 @@ const App = () => {
 								<Route exact path="/users/chats">
 									<WithAuth>
 										<ChatsPage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/chats/:id">
+									<WithAuth>
+										<ChatPage />
 									</WithAuth>
 								</Route>
 								<Route exact path="/videos">
