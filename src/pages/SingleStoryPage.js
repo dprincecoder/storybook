@@ -1,22 +1,8 @@
-import { motion } from "framer-motion";
 import React from "react";
-import {
-	pageTransition,
-	pageVariants,
-} from "../components/animation/PageAnimations";
 import SingleStory from "../components/singleStory/SingleStory";
 
 const SingleStoryPage = () => {
-	return (
-		<motion.div
-			initial="initial"
-			animate="in"
-			exit="out"
-			variants={pageVariants}
-			transition={pageTransition}>
-			<SingleStory />
-		</motion.div>
-	);
+	return <SingleStory />;
 };
 
 export default SingleStoryPage;

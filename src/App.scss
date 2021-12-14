@@ -20,8 +20,42 @@ body,
 .centerEverything {
 	background-color: #fff;
 	width: 40rem;
+	height: 100vh;
+	// max-width: 40rem;
 	overflow: hidden;
+	position: relative;
+	overflow-y: scroll;
 	box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+}
+
+.centerEverything::-webkit-scrollbar {
+	display: none;
+}
+
+@media screen and (min-width: 200px) and (max-width: 560px) {
+	.centerEverything {
+		width: 100% !important;
+		overflow: hidden;
+		position: relative;
+
+		height: 100%;
+	}
+}
+
+@media screen and (min-width: 560px) and (max-width: 900px) {
+	.centerEverything {
+		width: 100% !important;
+		overflow: hidden;
+		position: relative;
+
+		height: 100%;
+	}
+}
+
+.main {
+	height: calc(100% - 6rem);
+	padding: 10px;
+	margin: 0 auto;
 }
 
 a {
@@ -31,7 +65,7 @@ a {
 }
 
 body::-webkit-scrollbar {
-	width: 4px;
+	width: 5px;
 }
 body::-webkit-scrollbar-thumb {
 	background-color: #037fff;

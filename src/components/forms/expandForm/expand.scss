@@ -1,0 +1,16 @@
+.text-expand {
+	display: block;
+	box-sizing: padding-box;
+	overflow: hidden;
+	margin-bottom: 10px;
+	padding: 5px;
+	width: 100%;
+	font-size: 14px;
+	border-radius: 15px;
+	border: 0;
+
+	&:focus {
+		border: 1px solid #037fff;
+		outline: none;
+	}
+}

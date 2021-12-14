@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
 import "./allreplies.scss";
-import { formatDate } from "../../../../helpers/Helpers";
+import { formatDate, detectLinks } from "../../../helpers/Helpers";
 
 const MainReply = ({
 	profilePic,
@@ -10,8 +10,15 @@ const MainReply = ({
 	repliesMsg,
 	color,
 }) => {
+	const divRef = React.useRef();
+	React.useEffect(() => {
+		divRef.current.innerHTML = detectLinks(repliesMsg);
+		return () => {
+			divRef.current.innerHTML = "";
+		};
+	}, []);
 	return (
-		<div className="show-main">
+		<div className="he">
 			<div className="main-header">
 				<Avatar src={profilePic} className="main-header-avatar" />
 				<div className="main-header-name">
@@ -23,9 +30,7 @@ const MainReply = ({
 					</ul>
 				</div>
 			</div>
-			<div className="main-content">
-				<p>{repliesMsg} </p>
-			</div>
+			<div className="main-content" ref={divRef}></div>
 		</div>
 	);
 };

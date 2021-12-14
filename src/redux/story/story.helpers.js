@@ -126,35 +126,66 @@ export const handleDeleteStory = (documentID) => {
 	});
 };
 
-export const handleLikeStory = async (userId, displayName, documentID) => {
+export const handleLikeStory = async (
+	userId,
+	displayName,
+	profilePic,
+	storyTitle,
+	storyId,
+	storyUserUID
+) => {
 	let likeDocument = DB.collection("storyLikes");
-
-	let likeDocu = DB.collection("storyLikes")
+	let date = new Date().toISOString();
+	let doc = DB.collection("storyLikes")
 		.where("userId", "==", userId)
-		.where("documentID", "==", documentID)
+		.where("storyId", "==", storyId)
 		.limit(1);
 
 	let increment = firebase.firestore.FieldValue.increment(+1);
 	const decrement = firebase.firestore.FieldValue.increment(-1);
 
-	let story = DB.collection("stories").doc(documentID);
-	let likeDoc = await likeDocu.get();
+	let story = DB.collection("stories").doc(storyId);
+	let likeDoc = await doc.get();
 
 	if (likeDoc.empty) {
-		likeDocument.doc(documentID).set({
+		likeDocument.doc(`${userId}~${storyId}`).set({
 			userId,
 			displayName,
-			documentID,
+			profilePic,
+			storyId,
 		});
 		story.update({
 			likeCount: increment,
 		});
+		if (userId === storyUserUID) {
+			return;
+		} else {
+			DB.collection("Notifications")
+				.doc(`${userId}~${storyId}`)
+				.set({
+					userThatSentNotificationName: displayName,
+					storyId,
+					userThatSentNotificationId: userId,
+					type: "likes your",
+					method: "story",
+					createdDate: date,
+					read: false,
+					seen: false,
+					userThatSentNotificationPic: profilePic,
+					notificationMsg: storyTitle,
+					userThatOwnStoryId: storyUserUID || "",
+					userThatOwnNotificationId: storyUserUID,
+				});
+		}
 	} else {
-		likeDocument.doc(documentID).delete();
+		likeDocument.doc(`${userId}~${storyId}`).delete();
 		story.update({
 			likeCount: decrement,
 		});
+
+		DB.collection("Notifications").doc(`${userId}~${storyId}`).delete();
 	}
+
 	return likeDocument;
 };
 
@@ -199,30 +230,62 @@ export const handleAddComment = (comments) => {
 	});
 };
 
-export const handleLikeComment = async (userId, displayName, commentID) => {
-	let likeDocument = DB.collection("commentLikes");
-	let increment = firebase.firestore.FieldValue.increment(+1);
-	let likeDocu = DB.collection("commentLikes")
-		.where("userId", "==", userId)
-		.where("commentID", "==", commentID)
-		.limit(1);
-	let decrement = firebase.firestore.FieldValue.increment(-1);
-	let comment = DB.collection("comments").doc(commentID);
-	let likeDoc = await likeDocu.get();
-	if (likeDoc.empty) {
-		likeDocument.doc(commentID).set({
-			userId,
-			displayName,
-			commentID,
-		});
-		comment.update({
-			likeCount: increment,
-		});
-	} else {
-		likeDocument.doc(commentID).delete();
-		comment.update({
-			likeCount: decrement,
-		});
-	}
-	return likeDocument;
-};
+// export const handleLikeComment = async (
+// 	userId,
+// 	displayName,
+// 	profilePic,
+// 	userThatLikeComment,
+// 	commentMsg,
+// 	commentOwnerId,
+// 	commentID
+// ) => {
+// 	let likeDocument = DB.collection("commentLikes");
+// 	let inc = firebase.firestore.FieldValue.increment(+1);
+// 	let likeDocu = DB.collection("commentLikes")
+// 		.where("commentID", "==", commentID)
+// 		.where("userId", "==", userId)
+// 		.limit(1);
+// 	let decr = firebase.firestore.FieldValue.increment(-1);
+// 	let comment = DB.collection("comments").doc(commentID);
+// 	let likeDoc = await likeDocu.get();
+// 	if (likeDoc.empty) {
+// 		likeDocument.doc(`${userId}~${commentID}`).set({
+// 			userId,
+// 			displayName,
+// 			commentID,
+// 		});
+// 		comment.update({
+// 			likeCount: inc,
+// 		});
+// 		if (userId === commentOwnerId) {
+// 			return;
+// 		} else {
+// 			DB.collection("Notifications")
+// 				.doc(`${userId}~${commentID}`)
+// 				.set({
+// 					userThatSentNotificationName: displayName,
+// 					storyId,
+// 					userThatSentNotificationId: userId,
+// 					type: "likes your",
+// 					method: "story",
+// 					createDate: date,
+// 					read: false,
+// 					seen: false,
+// 					userThatSentNotificationPic: profilePic,
+// 					notificationMsg: storyTitle,
+// 					userThatOwnStoryId: storyUserUID || "",
+// 					userThatOwnNotificationId: storyUserUID,
+// 				});
+// 		}
+// 	} else {
+// 		likeDocument.doc(`${userId}~${commentID}`).delete();
+// 		comment.update({
+// 			likeCount: decr,
+// 		});
+// 		DB.collection("commentsLikesNotifications")
+// 			.doc(`${userId}~${commentID}`)
+// 			.delete();
+// 	}
+
+// 	return likeDocument;
+// };

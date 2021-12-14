@@ -8,21 +8,29 @@ import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
+import ChatIcon from "@mui/icons-material/Chat";
 import { useDispatch } from "react-redux";
 import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
+import BadgeWrapper from "../notificationwrap/Wrapper";
+import DB from "../../firebase/functions";
 const { useSelector } = require("react-redux");
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
-const Topbar = () => {
+const Topbar = ({ allNotifications, stories }) => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
 	const { profilePic, displayName } = userData;
-	const d = uid || userId;
+	const d = userId || uid;
+
+	const unseenNotifications = allNotifications
+		.filter((id) => id.userThatOwnNotificationId === userId)
+		.filter((not) => not.seen === false).length;
+	const unseenStories = stories.filter((id) => id.seen === false).length;
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
 
@@ -30,12 +38,36 @@ const Topbar = () => {
 			dispatch(setUserData({}));
 		};
 	}, []);
+
+	const markNotificationsSeen = () => {
+		let batch = DB.batch();
+		allNotifications
+			.filter((not) => not.userThatOwnNotificationId === userId)
+			.forEach((not) => {
+				const notificationIDS = not.notificationID;
+				const notification =
+					DB.collection("Notifications").doc(notificationIDS);
+
+				batch.update(notification, { seen: true });
+			});
+		batch.commit();
+	};
+
+	const markStoriesSeen = () => {
+		let batch = DB.batch();
+		stories.forEach((story) => {
+			const storyID = story.storyID;
+			const storyDoc = DB.collection("stories").doc(storyID);
+			batch.update(storyDoc, { seen: true });
+		});
+		batch.commit();
+	};
 	return (
-		<div>
+		<div className="fixed">
 			<div className="app-name">
 				<ul className="app-info">
 					<li className="name">
-						<Link to="/">TINXDAILYGIST</Link>
+						<Link to="/">STORYBOOK</Link>
 					</li>
 					<div className="user-info">
 						{!userId ? (
@@ -60,19 +92,25 @@ const Topbar = () => {
 					<div className="nav-content">
 						<ul className="tabs tabs-transparent">
 							<li className="tab icon i">
-								<Link to="/">
-									<HomeIcon />
+								<BadgeWrapper badgeContent={Number(unseenStories)}>
+									<Link to="/">
+										<HomeIcon onClick={markStoriesSeen} />
+									</Link>
+								</BadgeWrapper>
+							</li>
+							<li className="tab icon">
+								<Link to={`/users/chats`}>
+									<ChatIcon />{" "}
 								</Link>
 							</li>
 							<li className="tab icon">
-								<Link to={`/users/${userId}/stories`}>
-									<AutoStoriesIcon />{" "}
-								</Link>
-							</li>
-							<li className="tab icon">
-								<Link to={`/notifications`}>
-									<CircleNotificationsIcon />
-								</Link>
+								<BadgeWrapper badgeContent={Number(unseenNotifications)}>
+									<Link to={`/notifications`}>
+										<CircleNotificationsIcon
+											onClick={() => markNotificationsSeen()}
+										/>
+									</Link>
+								</BadgeWrapper>
 							</li>
 							<li className="tab icon">
 								<Link to={`/users/story/post`}>

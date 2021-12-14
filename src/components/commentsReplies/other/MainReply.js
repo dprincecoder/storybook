@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar } from "@material-ui/core";
 import "./replies.scss";
-import { formatDate } from "../../../../helpers/Helpers";
+import { formatDate } from "../../../helpers/Helpers";
 
 const MainReply = ({
 	profilePic,
@@ -11,7 +11,7 @@ const MainReply = ({
 	color,
 }) => {
 	return (
-		<div className="show-main">
+		<>
 			<div className="main-header">
 				<Avatar src={profilePic} className="main-header-avatar" />
 				<div className="main-header-name">
@@ -26,7 +26,7 @@ const MainReply = ({
 			<div className="main-content">
 				<p>{repliesMsg} </p>
 			</div>
-		</div>
+		</>
 	);
 };
 

@@ -2,29 +2,32 @@ import React, { useEffect, useState } from "react";
 import AuthWrapper from "../authwrapper/Authwraper";
 import InputForm from "../forms/inputs/InputForm";
 import Button from "../forms/button/Button";
-// import "./register.scss";
+import "./login.scss";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
 	emailSignInStart,
 	googleSignInStart,
+	userErrorStart,
+	userSuccessStart,
 } from "../../redux/user/user.action";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import IsLoading from "../loading/IsLoading";
+import { Alert, AlertTitle } from "@mui/material";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userError: user.userError,
+	userSuccess: user.userSuccess,
 });
 
 const Login = () => {
+	const { userError, currentUser, userSuccess } = useSelector(mapState);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [loading2, setLoading2] = useState(false);
-
-	const { currentUser } = useSelector(mapState);
 	const history = useHistory();
 	const dispatch = useDispatch();
 
@@ -35,6 +38,10 @@ const Login = () => {
 		}
 	}, [currentUser]);
 
+	useEffect(() => {
+		return () => dispatch(userErrorStart({}));
+	}, []);
+
 	//reset form input
 	const reset = () => {
 		setEmail("");
@@ -43,6 +50,8 @@ const Login = () => {
 
 	const handleEmailLogin = async (e) => {
 		e.preventDefault();
+		dispatch(userErrorStart({}));
+		dispatch(userSuccessStart({}));
 		setLoading2(true);
 		setTimeout(() => {
 			dispatch(emailSignInStart({ email, password }));
@@ -51,13 +60,16 @@ const Login = () => {
 	};
 
 	const handleGoogleLogin = () => {
+		dispatch(userErrorStart({}));
+		dispatch(userSuccessStart({}));
+
 		setLoading(true);
 		setTimeout(() => {
 			dispatch(googleSignInStart());
 			setLoading(false);
 		}, 5000);
 	};
-
+	// console.log(errors);
 	const configAuthwrapper = {
 		headline: "Login",
 	};
@@ -66,7 +78,7 @@ const Login = () => {
 			<div className="welcome">
 				<h3>
 					<i className="fas fa-book-reader"></i>
-					TINXDAILYGIST
+					STORYBOOK
 				</h3>
 
 				<div className="section">
@@ -76,8 +88,27 @@ const Login = () => {
 					</p>
 				</div>
 			</div>
-			<div className="divider"></div>
 			<AuthWrapper custom="row" {...configAuthwrapper}>
+				{userError.length > 0 && (
+					<>
+						{userError.map((err, index) => (
+							<Alert severity="error" key={index}>
+								<AlertTitle>{err.title}</AlertTitle>
+								{err.message}
+							</Alert>
+						))}
+					</>
+				)}
+				{userSuccess.length > 0 && (
+					<>
+						{userSuccess.map((success, index) => (
+							<Alert severity="success" key={index}>
+								<AlertTitle>{success.title}</AlertTitle>
+								{success.message}
+							</Alert>
+						))}
+					</>
+				)}
 				<form onSubmit={handleEmailLogin}>
 					Email Address:
 					<InputForm
@@ -100,13 +131,17 @@ const Login = () => {
 						value={password}
 					/>
 					<div className="section" style={{ display: "flex" }}>
-						<Button custom="blue" type="submit" disabled={loading}>
+						<Button
+							custom="blue"
+							type="submit"
+							disabled={loading || !email || !password}>
 							Login
 						</Button>
 						{loading2 && <IsLoading />}
 					</div>
-					OR
+					or
 				</form>
+
 				<div style={{ display: "flex" }}>
 					<Button
 						custom="red darken-1"
@@ -117,10 +152,16 @@ const Login = () => {
 					</Button>
 					{loading && <IsLoading />}
 				</div>
-				<span>
-					Don't Have an Account? &nbsp;
-					<Link to="/users/register">Register</Link>
-				</span>
+				<div className="section">
+					<span>
+						Don't Have an Account? &nbsp;
+						<Link to="/users/register">Register</Link>
+					</span>
+					<br />
+					<span>
+						<Link to="/users/recovery">Forgot Password?</Link>
+					</span>
+				</div>
 			</AuthWrapper>
 		</div>
 	);

@@ -1,4 +1,9 @@
+.container {
+	margin-top: 2rem !important;
+	// padding: 10px;
+}
 .card {
+	border-radius: 15px;
 	.usrChip {
 		display: flex;
 		padding: 10px;
@@ -35,8 +40,15 @@
 			margin: 10px;
 		}
 
-		.card-image {
-			padding: 10px 0;
+		.home-image-container {
+			width: 100%;
+			.home-image {
+				display: block;
+				height: auto;
+				width: 100%;
+				object-fit: cover;
+				// max-width: 100%;
+			}
 		}
 		.like {
 			cursor: pointer;
@@ -46,12 +58,3 @@
 		}
 	}
 }
-
-// .row {
-// 	// .load-more {
-// 	// 	border: 1px solid #037fff;
-
-// 	// 	opacity: 0.5;
-// 	// 	margin-left: 2rem;
-// 	// }
-// }

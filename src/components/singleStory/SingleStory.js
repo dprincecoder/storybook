@@ -17,22 +17,28 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import { formatDate } from "../../helpers/Helpers";
 import DB from "../../firebase/functions";
-import MainReply from "./replies/main/MainReply";
-import ReplyInput from "./replies/input/ReplyInput";
-import AllReplies from "./replies/allReplies/AllReplies";
+import MainReply from "../commentsReplies/other/MainReply";
+import AllReplies from "../commentsReplies/allReplies/AllReplies";
+import ReplyInput from "../commentsReplies/input/ReplyInput";
+import firebase from "firebase";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
+	currentUser: user.currentUser,
 });
 const SingleStory = () => {
 	const { storyId } = useParams();
-	const { userData } = useSelector(mapState);
+	const { userData, currentUser } = useSelector(mapState);
+	const { uid } = currentUser;
 	const { profilePic, displayName, userId } = userData;
 	const [story, setStory] = useState({});
 	const [comments, setComments] = useState([]);
 	const [toggleReplyBox, setToggleReplyBox] = useState(false);
 	const [localCommentId, setLocalCommentId] = useState("");
+	const [userThatCommentId, setUserThatCommentId] = useState("");
+	const [userThatCommentName, setUserThatCommentName] = useState("");
 	const [replies, setReplies] = useState([]);
+	const id = userId || uid;
 	const {
 		storyTitle,
 		createdDate,
@@ -77,9 +83,11 @@ const SingleStory = () => {
 	}, []);
 	// console.log(comments);
 
-	const toggle = (commentID, commentN) => {
+	const toggle = (commentID, userThatCommentId, userThatCommentName) => {
 		setToggleReplyBox(!toggleReplyBox);
 		setLocalCommentId(commentID);
+		setUserThatCommentId(userThatCommentId);
+		setUserThatCommentName(userThatCommentName);
 	};
 
 	//useEffect to get replies from commentId
@@ -105,17 +113,74 @@ const SingleStory = () => {
 	}, [localCommentId]);
 
 	const likeStory = () => {
-		handleLikeStory(userId, displayName, storyId);
+		handleLikeStory(
+			id,
+			displayName,
+			profilePic,
+			storyTitle,
+			storyId,
+			storyUserUID
+		);
 	};
 
-	const likeComment = (commentID) => {
-		handleLikeComment(userId, displayName, commentID);
+	const likeComment = async (
+		commentID,
+		commentMsg,
+		userThatCommentName,
+		commentOwnerId
+	) => {
+		let likeDocument = DB.collection("commentLikes");
+		let inc = firebase.firestore.FieldValue.increment(+1);
+		let likeDocu = DB.collection("commentLikes")
+			.where("commentID", "==", commentID)
+			.where("userId", "==", userId)
+			.limit(1);
+		let decr = firebase.firestore.FieldValue.increment(-1);
+		let comment = DB.collection("comments").doc(commentID);
+		let likeDoc = await likeDocu.get();
+		if (likeDoc.empty) {
+			likeDocument.doc(`${userId}~${commentID}`).set({
+				userId,
+				displayName,
+				commentID,
+			});
+			comment.update({
+				likeCount: inc,
+			});
+			if (userId === commentOwnerId) {
+				return;
+			} else {
+				DB.collection("Notifications").doc(`${userId}~${commentID}`).set({
+					userThatSentNotificationId: userId,
+					userThatSentNotificationName: displayName,
+					userThatSentNotificationPic: profilePic,
+					commentID,
+					storyId,
+					userThatOwnNotificationName: userThatCommentName,
+					userThatOwnNotificationId: commentOwnerId,
+					type: "likes your",
+					method: "comment",
+					read: false,
+					seen: false,
+					notificationMsg: commentMsg,
+					createdDate: new Date().toISOString(),
+				});
+			}
+		} else {
+			likeDocument.doc(`${userId}~${commentID}`).delete();
+			comment.update({
+				likeCount: decr,
+			});
+			DB.collection("Notifications").doc(`${userId}~${commentID}`).delete();
+		}
+
+		return likeDocument;
 	};
-	if (!story || !storyUserUID) {
+	if (!story || !storyUserUID || !userId) {
 		return <IsLoadingSkeleton />;
 	}
 	return (
-		<div className="row">
+		<div className={`container ${toggleReplyBox ? "animate-in" : ""}`}>
 			<div className="col s12 m12">
 				<div className="card">
 					<div className="usrChip">
@@ -137,16 +202,20 @@ const SingleStory = () => {
 						<div className="divider"></div>
 						{/* {[1, 2].map((a) => (
 						))} */}
-						<div className="card-image">
-							<img src={storyPhotos} alt={storyTitle} />
+						<div className="single-image-container">
+							<img
+								src={storyPhotos}
+								alt={storyTitle}
+								className="single-image"
+							/>
 						</div>
 						<div className="optionsCount">
 							{likeCount > 0 && (
 								<>
 									{likeCount === 1 ? (
-										<div className="comment-count">{likeCount} reacted</div>
+										<div className="like-count">{likeCount} reacted</div>
 									) : (
-										<div className="comment-count">{likeCount} reaction's</div>
+										<div className="like-count">{likeCount} reaction's</div>
 									)}
 								</>
 							)}
@@ -175,15 +244,22 @@ const SingleStory = () => {
 
 					<div className="divider"></div>
 
-					<div className={`row ${toggleReplyBox ? "show" : "hide"}`}>
+					<div
+						className={`replies-main-window ${
+							toggleReplyBox ? "show" : "hide"
+						}`}>
 						<div className="col s12 m12">
 							<div className="card-content">
-								<div className="window">
-									<div
-										className="window-header"
-										onClick={() => setToggleReplyBox(!toggleReplyBox)}>
-										<CancelIcon style={{ color: "red" }} />
+								<div className="body">
+									<div className="head">
+										<span>Replies</span>
+										<div
+											className="close-btn"
+											onClick={() => setToggleReplyBox(!toggleReplyBox)}>
+											<i className="material-icons">close</i>
+										</div>
 									</div>
+									<div className="divider"></div>
 									<div className="replies">
 										<div className="main-replies">
 											{comments
@@ -218,6 +294,9 @@ const SingleStory = () => {
 										<ReplyInput
 											storyId={storyId}
 											commentId={localCommentId}
+											userThatCommentId={userThatCommentId}
+											storyUserUID={storyUserUID}
+											userThatCommentName={userThatCommentName}
 										/>{" "}
 									</div>
 								</div>
@@ -228,6 +307,8 @@ const SingleStory = () => {
 					<div className="comments">
 						{comments.length > 0 ? (
 							<div className="show-comments">
+								<span>Discussion Started</span>
+								<div className="divider space"></div>
 								{comments.map((c, i) => (
 									<div key={i}>
 										<Showcomment
@@ -235,16 +316,29 @@ const SingleStory = () => {
 											displayName={c.userThatCommentName}
 											createdDate={c.createdDate}
 											commentMsg={c.commentMessage}
+											userThatCommentId={c.userThatCommentId}
 											color={c.color}
 										/>
 										<div className="more">
 											<div className="action">
-												<span onClick={() => likeComment(c.commentID)}>
+												<span
+													onClick={() =>
+														likeComment(
+															c.commentID,
+															c.commentMessage,
+															c.userThatCommentName,
+															c.userThatCommentId
+														)
+													}>
 													like
 												</span>
 												<p
 													onClick={() =>
-														toggle(c.commentID, c.userThatCommentName)
+														toggle(
+															c.commentID,
+															c.userThatCommentId,
+															c.userThatCommentName
+														)
 													}>
 													reply
 												</p>
@@ -260,7 +354,14 @@ const SingleStory = () => {
 													</>
 												)}
 												{c.replyCount > 0 && (
-													<div onClick={() => toggle(c.commentID)}>
+													<div
+														onClick={() =>
+															toggle(
+																c.commentID,
+																c.userThatCommentId,
+																c.userThatCommentName
+															)
+														}>
 														{c.replyCount === 1 ? (
 															<span>{c.replyCount} reply</span>
 														) : (
@@ -277,7 +378,16 @@ const SingleStory = () => {
 							<p className="empty">Be the first to start the conversation.</p>
 						)}
 						<div className="comment-input">
-							<AddComment storyId={storyId} />
+							<AddComment
+								storyId={storyId}
+								userId={id}
+								displayName={displayName}
+								profilePic={profilePic}
+								storyTitle={storyTitle}
+								storyId={storyId}
+								storyUserUID={storyUserUID}
+								userThatPublished={userThatPublished}
+							/>
 						</div>
 					</div>
 				</div>

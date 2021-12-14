@@ -1,24 +1,25 @@
-import React, { useEffect } from "react";
+import { Alert, AlertTitle } from "@mui/material";
 import { AnimatePresence } from "framer-motion";
-import "./App.scss";
-import { Switch, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import RegisterPage from "./pages/RegisterPage";
-import CenteredLayout from "./layouts/CenteredLayout";
-import LoginPage from "./pages/LoginPage";
-import SingleStoryPage from "./pages/SingleStoryPage";
-import DashboardPage from "./pages/DashboardPage";
-
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { checkUserSession } from "./redux/user/user.action";
-import WithAuth from "./hoc/withAuth";
-import Topbar from "./components/topbar/Topbar";
-import AddStoryPage from "./pages/AddStoryPage";
-
+import { Route, Switch, useLocation } from "react-router-dom";
+import "./App.scss";
 import { NetworkDetector } from "./components/network/NetworkDetector";
-import UserStoryPage from "./pages/UserStoryPage";
-import VideoPage from "./pages/VideoPage";
+import Topbar from "./components/topbar/Topbar";
+import DB from "./firebase/functions";
+import WithAuth from "./hoc/withAuth";
+import CenteredLayout from "./layouts/CenteredLayout";
+import AddStoryPage from "./pages/AddStoryPage";
+import ChatsPage from "./pages/ChatsPage";
+import DashboardPage from "./pages/DashboardPage";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
 import NotificationsPage from "./pages/NotificationsPage";
+import RecoveryPage from "./pages/RecoveryPage";
+import RegisterPage from "./pages/RegisterPage";
+import SingleStoryPage from "./pages/SingleStoryPage";
+import VideoPage from "./pages/VideoPage";
+import { checkUserSession } from "./redux/user/user.action";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
@@ -26,62 +27,112 @@ const mapState = ({ user }) => ({
 
 const App = () => {
 	const { currentUser } = useSelector(mapState);
+	const location = useLocation();
+	const [Notifications, setNotifications] = useState([]);
+	const [stories, setStories] = useState([]);
 
 	const dispatch = useDispatch();
-	NetworkDetector();
+	const isDisconnected = NetworkDetector();
+
 	useEffect(() => {
 		dispatch(checkUserSession());
+		DB.collection("Notifications").onSnapshot((snapshot) => {
+			setNotifications(
+				snapshot.docs.map((doc) => ({
+					...doc.data(),
+					notificationID: doc.id,
+				}))
+			);
+		});
+		DB.collection("stories").onSnapshot((snapshot) => {
+			setStories(
+				snapshot.docs.map((doc) => ({
+					...doc.data(),
+					storyID: doc.id,
+				}))
+			);
+		});
 	}, []);
+	const allNotifications = Notifications;
+
 	return (
 		<div className="App">
 			<CenteredLayout>
 				<AnimatePresence>
-					<React.Fragment key="1">
-						{currentUser && <Topbar />}
-						<Switch>
-							<Route exact path="/">
-								<WithAuth>
-									<HomePage />
-								</WithAuth>
-							</Route>
-							<Route exact path="/users/register">
-								<RegisterPage />
-							</Route>
-							<Route exact path="/users/login">
-								<LoginPage />
-							</Route>
-							<Route exact path="/stories/story/:storyId">
-								<WithAuth>
-									<SingleStoryPage />
-								</WithAuth>
-							</Route>
-							<Route exact path="/users/:userId/dashboard">
-								<WithAuth>
-									<DashboardPage />
-								</WithAuth>
-							</Route>
-							<Route exact path="/users/story/post">
-								<WithAuth>
-									<AddStoryPage />
-								</WithAuth>
-							</Route>
-							<Route exact path="/users/:userId/stories">
-								<WithAuth>
-									<UserStoryPage />
-								</WithAuth>
-							</Route>
-							<Route exact path="/videos">
-								<WithAuth>
-									<VideoPage />
-								</WithAuth>
-							</Route>
-							<Route exact path="/notifications">
-								<WithAuth>
-									<NotificationsPage />
-								</WithAuth>
-							</Route>
-						</Switch>
-					</React.Fragment>
+					<>
+						{isDisconnected === "offline" && (
+							<Alert
+								style={{
+									position: "absolute",
+									top: 0,
+									zIndex: 3,
+									width: "100%",
+									maxWidth: "100%",
+								}}
+								severity="error">
+								<AlertTitle>You are offline</AlertTitle>
+								Try:{" "}
+								<ul>
+									<li>Checking the network cables, modem and router</li>
+									<li>Reconnecting to Wi-Fi</li>
+								</ul>
+								DNS_PROBE_FINISHED_NO_INTERNET
+							</Alert>
+						)}
+						<div className="topbar">
+							{currentUser && (
+								<Topbar allNotifications={allNotifications} stories={stories} />
+							)}
+						</div>
+						<div className="main">
+							<Switch location={location} key={location.pathname}>
+								<Route exact path="/">
+									<WithAuth>
+										<HomePage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/register">
+									<RegisterPage />
+								</Route>
+								<Route exact path="/users/login">
+									<LoginPage />
+								</Route>
+								<Route exact path="/users/recovery">
+									<RecoveryPage />
+								</Route>
+								<Route exact path="/stories/story/:storyId">
+									<WithAuth>
+										<SingleStoryPage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/:userId/dashboard">
+									<WithAuth>
+										<DashboardPage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/story/post">
+									<WithAuth>
+										<AddStoryPage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/chats">
+									<WithAuth>
+										<ChatsPage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/videos">
+									<WithAuth>
+										<VideoPage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/notifications">
+									<WithAuth>
+										<NotificationsPage />
+									</WithAuth>
+								</Route>
+							</Switch>
+						</div>
+					</>
 				</AnimatePresence>
 			</CenteredLayout>
 		</div>

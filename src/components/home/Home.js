@@ -23,16 +23,16 @@ const Home = () => {
 		// 		persistStories: data,
 		// 	})
 		// );
-			DB.collection("stories")
-				.orderBy("createdDate", "desc")
-				.onSnapshot((snapshot) => {
-					setData(
-						snapshot.docs.map((doc) => ({
-							...doc.data(),
-							documentID: doc.id,
-						}))
-					);
-				});
+		DB.collection("stories")
+			.orderBy("createdDate", "desc")
+			.onSnapshot((snapshot) => {
+				setData(
+					snapshot.docs.map((doc) => ({
+						...doc.data(),
+						documentID: doc.id,
+					}))
+				);
+			});
 	}, []);
 
 	if (!data || data.length < 1) {
@@ -51,7 +51,7 @@ const Home = () => {
 		// onLoadMoreEvt: handleLoadMore,
 	};
 	return (
-		<div className="row">
+		<div className="container">
 			{data.map((story, index) => {
 				const configStory = {
 					...story,

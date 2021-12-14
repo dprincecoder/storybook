@@ -14,13 +14,12 @@ import LoadMore from "../forms/button/LoadMore";
 const mapState = ({ user, storiesData }) => ({
 	currentUser: user.currentUser,
 });
-const UserStory = () => {
+const UserStory = ({ userId }) => {
 	const { stories, currentUser } = useSelector(mapState);
 	// const { data, isLastPage, queryDoc } = stories;
 	const [data, setData] = React.useState([]);
 	const [loading, setLoading] = React.useState(false);
 	const dispatch = useDispatch();
-	const { userId } = useParams();
 
 	useEffect(() => {
 		// dispatch(

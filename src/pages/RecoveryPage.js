@@ -1,12 +1,13 @@
 import { motion } from "framer-motion";
 import React from "react";
 import {
+	pageStyle,
 	pageTransition,
 	pageVariants,
 } from "../components/animation/PageAnimations";
-import UserStory from "../components/userStory/UserStory";
+import Recovery from "../components/recovery/Recovery";
 
-const UserStoryPage = () => {
+const RecoveryPage = () => {
 	return (
 		<motion.div
 			initial="initial"
@@ -14,9 +15,9 @@ const UserStoryPage = () => {
 			exit="out"
 			variants={pageVariants}
 			transition={pageTransition}>
-			<UserStory />
+			<Recovery />
 		</motion.div>
 	);
 };
 
-export default UserStoryPage;
+export default RecoveryPage;

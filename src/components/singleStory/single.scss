@@ -1,3 +1,7 @@
+.container {
+	margin-bottom: 1rem;
+}
+
 .card {
 	.usrChip {
 		display: flex;
@@ -15,7 +19,7 @@
 		}
 	}
 	.card-content {
-		padding: 15px;
+		padding: 5px;
 
 		h4 {
 			margin: 0;
@@ -35,9 +39,15 @@
 			margin: 10px;
 		}
 
-		.card-image {
-			padding: 1px 0;
-			height: 100%;
+		.single-image-container {
+			width: 100%;
+			.single-image {
+				display: block;
+				height: auto;
+				width: 100%;
+				object-fit: cover;
+				// max-width: 100%;
+			}
 		}
 	}
 }
@@ -71,6 +81,9 @@
 				margin-right: 10px;
 			}
 		}
+		.space {
+			margin-bottom: 1rem;
+		}
 	}
 	.comment-input {
 		position: absolute;
@@ -83,65 +96,85 @@
 }
 
 .show-comments::-webkit-scrollbar {
-	width: 4px;
-}
-.show-comments::-webkit-scrollbar-thumb {
-	background-color: white;
-	border-radius: 50px;
-}
-.show-comments::-webkit-scrollbar-track {
-	background-color: white;
-}
-
-.show {
-	display: block;
-}
-
-.hide {
 	display: none;
 }
 
-.window {
-	height: 55%;
-	top: 45%;
+// .show {
+// 	display: block;
+// }
+
+// .hide {
+// 	display: none;
+// }
+
+.replies-main-window {
+	height: auto;
+	// top: 45%;
 	width: 100%;
+	bottom: -70%;
 	z-index: 10;
 	background-color: #f1f1f0;
 	left: 0;
+	transition: 0.5s;
+	transition-property: bottom;
 	position: absolute;
-	.window-header {
-		float: right;
-		padding: 10px;
-		cursor: pointer;
+	overflow: hidden;
+	.head {
+		display: flex;
+		height: 3rem;
+		width: 100%;
+		justify-content: space-between;
+		span {
+			color: #0037ff;
+			font-size: 1.5rem;
+			opacity: 0.5;
+			text-align: center !important;
+		}
+		.close-btn {
+			// float: right;
+			height: 10px;
+			padding: 10px;
+			cursor: pointer;
+			color: red;
+		}
+	}
+	.body {
+		// overflow-y: scroll;
+		padding-bottom: 10px;
+		height: 100%;
 	}
 	.replies {
-		overflow: hidden;
+		// overflow: hidden;
 		// margin-bottom: 5rem;
 		.main-replies {
 			margin: 1rem;
 			// padding: 10px;
 		}
 		.replies-list {
-			overflow-y: scroll;
-			height: 350px;
+			height: auto;
 			// margin-bottom: 10rem;
 			padding: 10px;
+			overflow-y: scroll;
 		}
 	}
 	.replies-input {
-		position: absolute;
-		bottom: 0;
+		background-color: white;
+		position: relative;
 		width: 100%;
 	}
 }
 
+.animate-in .replies-main-window {
+	bottom: 0;
+}
+
 .replies-list::-webkit-scrollbar {
-	width: 4px;
+	width: 5px;
 }
 .replies-list::-webkit-scrollbar-thumb {
-	background-color: white;
+	background-color: #037fff;
 	border-radius: 50px;
 }
 .replies-list::-webkit-scrollbar-track {
-	background-color: white;
+	background-color: #f1f1f0;
 }
