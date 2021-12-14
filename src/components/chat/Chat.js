@@ -32,7 +32,7 @@ const Chat = () => {
 
 	useEffect(() => {
 		DB.collection("messages")
-			.doc(userChatId)
+			.doc(userChatId + d)
 			.collection("chat")
 			.orderBy("createdDate", "asc")
 			.onSnapshot((snapshot) => {
