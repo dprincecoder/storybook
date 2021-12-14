@@ -19,6 +19,7 @@ const Chat = () => {
 	const { userId } = userData;
 	const { uid } = currentUser;
 	const d = userId || uid;
+
 	useEffect(() => {
 		DB.collection("messages")
 			.where("userThatOwnMessageId", "==", d)
