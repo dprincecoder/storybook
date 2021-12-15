@@ -27,12 +27,15 @@ import { checkUserSession } from "./redux/user/user.action";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
+	userData: user.userData,
 });
 
 const App = () => {
-	const { currentUser } = useSelector(mapState);
+	const { currentUser, userData } = useSelector(mapState);
 	const location = useLocation();
+	const d = userData?.userId || currentUser?.uid;
 	const [Notifications, setNotifications] = useState([]);
+	const [messages, setMessages] = useState([]);
 	const [stories, setStories] = useState([]);
 
 	const dispatch = useDispatch();
@@ -56,6 +59,20 @@ const App = () => {
 				}))
 			);
 		});
+		if (d || currentUser) {
+			DB.collection("messages")
+				.where("betweenUsers", "array-contains", d)
+				.onSnapshot((snapshot) => {
+					setMessages(
+						snapshot.docs.map((doc) => ({
+							...doc.data(),
+							messageID: doc.id,
+						}))
+					);
+				});
+		} else {
+			return;
+		}
 	}, []);
 	const allNotifications = Notifications;
 
@@ -86,7 +103,11 @@ const App = () => {
 						)}
 						<div className="topbar">
 							{currentUser && (
-								<Topbar allNotifications={allNotifications} stories={stories} />
+								<Topbar
+									allNotifications={allNotifications}
+									stories={stories}
+									allMessages={messages}
+								/>
 							)}
 						</div>
 						<div className="main">

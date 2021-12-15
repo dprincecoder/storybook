@@ -44,7 +44,7 @@ const ReplyInput = ({
 				userThatReplyImage: profilePic,
 				userThatReplyId: userId,
 				userThatCommentId: userThatCommentId || "",
-				createdAt: timestamp,
+				createdDate: today,
 				color: randomColor,
 			})
 			.then(() => {
@@ -60,7 +60,7 @@ const ReplyInput = ({
 							userThatSentNotificationName: displayName,
 							userThatSentNotificationPic: profilePic,
 							userThatSentNotificationId: userId,
-							createdDate: date,
+							createdDate: today,
 							type: "replied to your",
 							method: "comment",
 							userThatOwnNotificationId: userThatCommentId || "",

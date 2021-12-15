@@ -20,17 +20,18 @@ const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
-const Topbar = ({ allNotifications, stories }) => {
+const Topbar = ({ allNotifications, stories, allMessages }) => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
-	const { profilePic, displayName } = userData;
+	const { profilePic, displayName, activeStatus } = userData;
 	const d = userId || uid;
 
 	const unseenNotifications = allNotifications
 		.filter((id) => id.userThatOwnNotificationId === userId)
 		.filter((not) => not.seen === false).length;
 	const unseenStories = stories.filter((id) => id.seen === false).length;
+	const unseenMsgs = allMessages.filter((id) => id.seen === false).length;
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
 
@@ -62,6 +63,16 @@ const Topbar = ({ allNotifications, stories }) => {
 		});
 		batch.commit();
 	};
+
+	const markMsgsSeen = () => {
+		let batch = DB.batch();
+		allMessages.forEach((msg) => {
+			const msgID = msg.messageID;
+			const msgDoc = DB.collection("messages").doc(msgID);
+			batch.update(msgDoc, { seen: true });
+		});
+		batch.commit();
+	};
 	return (
 		<div className="fixed">
 			<div className="app-name">
@@ -77,10 +88,11 @@ const Topbar = ({ allNotifications, stories }) => {
 								<li className="tab usr-name">
 									<Link to={`/users/${userId}/dashboard`}>{displayName}</Link>
 								</li>
-								<li className="tab">
+								<li className="tab badge">
 									<Link to={`/users/${userId}/dashboard`}>
 										<Avatar src={profilePic} />
 									</Link>
+									{activeStatus && <div className="activeBadge"></div>}
 								</li>
 							</>
 						)}
@@ -99,9 +111,11 @@ const Topbar = ({ allNotifications, stories }) => {
 								</BadgeWrapper>
 							</li>
 							<li className="tab icon">
-								<Link to={`/users/chats`}>
-									<ChatIcon />{" "}
-								</Link>
+								<BadgeWrapper badgeContent={Number(unseenMsgs)}>
+									<Link to={`/users/chats`}>
+										<ChatIcon onClick={markMsgsSeen} />{" "}
+									</Link>
+								</BadgeWrapper>
 							</li>
 							<li className="tab icon">
 								<BadgeWrapper badgeContent={Number(unseenNotifications)}>

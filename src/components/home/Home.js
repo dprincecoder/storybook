@@ -7,14 +7,20 @@ import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import LoadMore from "../forms/button/LoadMore";
 import DB from "../../firebase/functions";
 import { dd } from "../../Dd";
+import { NetworkDetector } from "../network/NetworkDetector";
 
-const mapState = ({ storiesData }) => ({
+const mapState = ({ storiesData, user }) => ({
 	stories: storiesData.stories,
+	userData: user.userData,
+	currentUser: user.currentUser,
 });
 const Home = () => {
-	const { stories } = useSelector(mapState);
+	const { stories, userData, currentUser } = useSelector(mapState);
 	const [data, setData] = useState([]);
-	const dispatch = useDispatch();
+	const { userId } = userData;
+	const d = userId || currentUser?.uid;
+
+	const isDisconnected = NetworkDetector();
 
 	useEffect(() => {
 		// dispatch(
@@ -34,6 +40,22 @@ const Home = () => {
 				);
 			});
 	}, []);
+
+	useEffect(() => {
+		if (d && currentUser?.uid) {
+			if (isDisconnected === "online") {
+				DB.collection("users").doc(d).update({
+					activeStatus: "online",
+				});
+			} else {
+				DB.collection("users").doc(d).update({
+					activeStatus: "offline",
+				});
+			}
+		} else {
+			return;
+		}
+	}, [isDisconnected]);
 
 	if (!data || data.length < 1) {
 		return <IsLoadingSkeleton />;

@@ -29,6 +29,7 @@ const AddStory = () => {
 	const [loading, setLoading] = useState();
 	const [progress, setProgress] = useState(0);
 	const [linkUrl, setLinkurl] = useState("");
+	const [charCount, setCharCount] = useState(0);
 
 	const upload = (image) => {
 		const uploadTask = storage.ref(`storyImages/${image.name}`).put(image);
@@ -181,6 +182,11 @@ const AddStory = () => {
 	const configAuthWrapper = {
 		headline: "Share your story",
 	};
+
+	const handleChange = (e) => {
+		setStoryDetails(e.target.value);
+		setCharCount(e.target.value.length);
+	};
 	return (
 		<>
 			{!displayName ? (
@@ -256,9 +262,8 @@ const AddStory = () => {
 									id="story-details"
 									value={storyDetails}
 									className="add-story-textarea"
-									onChange={(evt) =>
-										setStoryDetails(evt.target.value)
-									}></textarea>
+									onChange={handleChange}></textarea>
+								{charCount}/1000
 								<div className="divider"></div>
 								<br />
 								<div className="section" style={{ display: "flex" }}>

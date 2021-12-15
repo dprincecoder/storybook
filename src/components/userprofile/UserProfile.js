@@ -5,6 +5,8 @@ import Button from "../../components/forms/button/Button";
 import IsLoading from "../../components/loading/IsLoading";
 import DB from "../../firebase/functions";
 import "./userProfile.scss";
+import { formatDate } from "../../helpers/Helpers";
+import Avatar from "@material-ui/core/Avatar";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -25,10 +27,20 @@ const UserProfile = () => {
 
 	const uniqId =
 		d > userProfileId ? `${d}${userProfileId}` : `${userProfileId}${d}`;
+
+	const fetchUserProfile = () => {
+		DB.collection("users")
+			.doc(userProfileId)
+			.get()
+			.then((doc) => {
+				setUserProfile(doc.data());
+			});
+	};
+
 	const submit = (e) => {
 		e.preventDefault();
 		DB.collection("messages")
-			.doc()
+			.doc(uniqId)
 			.set({
 				message,
 				userThatOwnMessageId: userProfileId,
@@ -38,20 +50,28 @@ const UserProfile = () => {
 				read: false,
 				userThatSentMessageName: displayName,
 				userThatSentMessagePic: profilePic,
+				userThatOwnMessageName: userProfile?.displayName,
+				userThatOwnMessagePic: userProfile?.profilePic,
 				betweenUsers: [userProfileId, d],
 			})
 			.then(() => {
-				DB.collection("messages").doc(uniqId).collection("chat").doc().set({
-					message,
-					userThatOwnChatId: userProfileId,
-					userThatOwnChatName: userProfile?.displayName,
-					userThatSentChatId: d,
-					createdDate: new Date().toISOString(),
-					seen: false,
-					read: false,
-					userThatSentChatName: displayName,
-					userThatSentChatPic: profilePic,
-				});
+				DB.collection("messages")
+					.doc(uniqId)
+					.collection("chat")
+					.doc()
+					.set({
+						message,
+						userThatOwnChatId: userProfileId,
+						userThatOwnChatName: userProfile?.displayName,
+						userThatSentChatId: d,
+						createdDate: new Date().toISOString(),
+						seen: false,
+						read: false,
+						userThatSentChatName: displayName,
+						userThatSentChatPic: profilePic,
+						userThatOwnChatPic: userProfile?.profilePic,
+						betweenUsers: [userProfileId, d],
+					});
 			})
 			.then(() => {
 				setMessage("");
@@ -60,13 +80,46 @@ const UserProfile = () => {
 	};
 
 	useEffect(() => {
+		fetchUserProfile();
+	}, [userProfileId]);
+
+	const followUser = () => {
 		DB.collection("users")
 			.doc(userProfileId)
-			.get()
-			.then((doc) => {
-				setUserProfile(doc.data());
+			.update({
+				followers: [...userProfile.followers, d],
+			})
+			.then(() => {
+				DB.collection("users")
+					.doc(d)
+					.update({
+						following: [...userProfile.following, userProfileId],
+					})
+					.then(() => {
+						fetchUserProfile();
+					});
 			});
-	}, [userProfileId]);
+	};
+
+	const unfollowUser = () => {
+		DB.collection("users")
+			.doc(userProfileId)
+			.update({
+				followers: userProfile?.followers.filter((follower) => follower !== d),
+			})
+			.then(() => {
+				DB.collection("users")
+					.doc(d)
+					.update({
+						following: userProfile.following.filter(
+							(following) => following !== userProfileId
+						),
+					})
+					.then(() => {
+						fetchUserProfile();
+					});
+			});
+	};
 
 	useEffect(() => {
 		DB.collection("stories")
@@ -81,23 +134,12 @@ const UserProfile = () => {
 			});
 	}, [userProfileId]);
 
-	const length = usrStories.length;
-	const nextSlide = () => {
-		setCurrent(current === length - 1 ? 0 : current + 1);
-	};
-
-	const prevSlide = () => {
-		setCurrent(current === 0 ? length - 1 : current - 1);
-	};
-
-	if (!Array.isArray(usrStories) || usrStories.length <= 0) {
-		return null;
-	}
-
 	return (
 		<div className="">
-			{!userProfile ? (
-				<IsLoading />
+			{!userProfile.userId ? (
+				<div className="loading">
+					<IsLoading />
+				</div>
 			) : (
 				<>
 					<div className="profile-bg-container">
@@ -114,13 +156,34 @@ const UserProfile = () => {
 					<div className="col s12 m12">
 						<div className="profile-full">
 							<div className="profile-details">
-								<h3>{userProfile?.displayName}</h3>
+								<div className="avater-n-name">
+									<div className="main-photo">
+										<Avatar src={userProfile?.profilePic} />
+										<div
+											className={`active-status ${
+												userProfile?.activeStatus === "online"
+													? "active"
+													: "offline"
+											}`}
+										/>
+									</div>
+									<div className="profile">
+										<h3>{userProfile?.displayName}</h3>
+										<div className="active-now">
+											{userProfile?.activeStatus} &nbsp;now
+										</div>
+									</div>
+									<div className="divider"></div>
+								</div>
 								{userProfile?.city && (
 									<div className="profile-location">
 										<i className="material-icons">location_on</i>
 										<p className="location-detials">{userProfile?.city}</p>
 									</div>
 								)}
+								{/* <div className="joined">
+									Joined: {userProfile?.createdDate.split("T")[0]}
+								</div> */}
 								{userProfile?.web && (
 									<div className="profile-info">
 										<i className="material-icons">web</i>
@@ -139,7 +202,16 @@ const UserProfile = () => {
 							<div className="profile-actions">
 								{d !== userProfile?.userId && (
 									<div className="actions-btn">
-										<p className="active">Follow</p>
+										{userProfile?.followers?.includes(d) ? (
+											<p className="follow-btn" onClick={unfollowUser}>
+												Unfollow
+											</p>
+										) : (
+											<p className="follow-btn" onClick={followUser}>
+												Follow
+											</p>
+										)}
+
 										<p onClick={() => setShowInput(!showInput)}>Message</p>
 									</div>
 								)}
@@ -170,20 +242,12 @@ const UserProfile = () => {
 									</p>
 									<p>
 										{" "}
-										<span>
-											{userProfile?.followers?.length < 1
-												? 0
-												: usrStories?.followers?.length}
-										</span>
+										<span>{userProfile?.followers?.length}</span>
 										<span className="pre">followers</span>
 									</p>
 									<p>
 										{" "}
-										<span>
-											{userProfile?.following?.length < 1
-												? 0
-												: usrStories?.following?.length}
-										</span>
+										<span>{userProfile?.following?.length}</span>
 										<span className="pre">following</span>
 									</p>
 								</div>

@@ -52,6 +52,7 @@
 		overflow-y: scroll;
 		.chat-hod {
 			display: flex;
+			position: relative;
 			.chat-img {
 				margin-right: 0.5rem;
 			}
@@ -81,7 +82,8 @@
 			margin-bottom: 10px;
 		}
 		.time-date {
-			margin-bottom: 10px;
+			// position: absolute;
+			margin-bottom: 5px;
 			text-align: center;
 		}
 	}
@@ -102,6 +104,7 @@
 		.chat-body-text {
 			resize: none;
 			outline: none;
+			color: white;
 			border: none;
 			padding: 0.5rem;
 			&::placeholder {

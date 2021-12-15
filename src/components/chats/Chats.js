@@ -16,25 +16,35 @@ const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const { userData, currentUser } = useSelector(mapState);
 	const [loading, setLoading] = useState(true);
-	const { userId } = userData;
+	const { userId, displayName, profilePic } = userData;
 	const { uid } = currentUser;
-	const d = userId || uid;
+	const d = userData?.userId;
 
 	useEffect(() => {
-		DB.collection("messages")
-			.where("betweenUsers", "array-contains", d)
-
-			.orderBy("createdDate", "desc")
-			.onSnapshot((snapshot) => {
-				setMessages(
-					snapshot.docs.map((doc) => ({
-						messageID: doc.id,
-						...doc.data(),
-					}))
-				);
-				setLoading(false);
-			});
+		if (d || userId) {
+			DB.collection("messages")
+				.where("betweenUsers", "array-contains", d)
+				.orderBy("createdDate", "desc")
+				.onSnapshot((snapshot) => {
+					setMessages(
+						snapshot.docs.map((doc) => ({
+							messageID: doc.id,
+							...doc.data(),
+						}))
+					);
+					setLoading(false);
+				});
+		} else {
+			return;
+		}
 	}, [d]);
+
+	const markAsRead = (messageID) => {
+		DB.collection("messages").doc(messageID).update({
+			read: true,
+		});
+	};
+
 	return (
 		<div className="row">
 			<div className="s12 m12">
@@ -56,20 +66,35 @@ const Chat = () => {
 					{messages.length > 0 && !loading ? (
 						messages.map((m) => (
 							<Link
-								to={`/users/chats/${m?.userThatSentMessageId}`}
+								to={`/users/chats/${
+									m?.userThatSentMessageId === d
+										? m?.userThatOwnMessageId
+										: m?.userThatSentMessageId
+								}`}
 								className="col s12 m12"
 								key={m.messageID}>
-								<div className="card-body">
+								<div
+									className="card-body"
+									onClick={() => markAsRead(m.messageID)}>
 									<div className="msg-left">
 										<Avatar
-											src={m?.userThatSentMessagePic}
-											alt={m?.userThatSentMessageName}
+											src={
+												m?.userThatSentMessagePic === profilePic
+													? m?.userThatOwnMessagePic
+													: m?.userThatSentMessagePic
+											}
+											alt="avater"
 										/>
 									</div>
 									<div className="msg-right">
 										<div className="msg-center-top">
-											<h4>{m?.userThatSentMessageName}</h4>
-											<div className="msg-center-content">
+											<h4 className={m?.read && "read"}>
+												{m?.userThatSentMessageName === displayName
+													? m?.userThatOwnMessageName
+													: m?.userThatSentMessageName}
+											</h4>
+											<div
+												className={`msg-center-content ${m?.read && "read"}`}>
 												{shortenMsgText(m?.message, 50)}
 											</div>
 										</div>
@@ -77,7 +102,7 @@ const Chat = () => {
 											<div className="msg-right-time">
 												{formatDate(m?.createdDate)}
 											</div>
-											{m?.seen && (
+											{m?.read && (
 												<p className="status">
 													<i className="material-icons circle">done</i>
 												</p>

@@ -52,11 +52,7 @@ const SingleStory = () => {
 	} = story;
 	const dispatch = useDispatch();
 
-	useEffect(() => {
-		// dispatch(fetchStoryStart(storyId));
-		// return () => {
-		// 	dispatch(setStory({}));
-		// };
+	const fetchStory = () => {
 		DB.collection("stories")
 			.doc(storyId)
 			.get()
@@ -66,6 +62,14 @@ const SingleStory = () => {
 				}
 			})
 			.catch((err) => console.log(err));
+	};
+
+	useEffect(() => {
+		// dispatch(fetchStoryStart(storyId));
+		// return () => {
+		// 	dispatch(setStory({}));
+		// };
+		fetchStory();
 	}, []);
 
 	useEffect(() => {
@@ -120,7 +124,9 @@ const SingleStory = () => {
 			storyTitle,
 			storyId,
 			storyUserUID
-		);
+		).then(() => {
+			fetchStory();
+		});
 	};
 
 	const likeComment = async (

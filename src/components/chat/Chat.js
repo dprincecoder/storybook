@@ -30,11 +30,11 @@ const Chat = () => {
 	const scrollInToView = () =>
 		divRef.current?.scrollIntoView({ behavior: "smooth" });
 
+	const uniqId = d > userChatId ? `${d}${userChatId}` : `${userChatId}${d}`;
+
 	useEffect(() => {
 		DB.collection("messages")
-
-			.doc(userChatId + d)
-
+			.doc(uniqId)
 			.collection("chat")
 			.orderBy("createdDate", "asc")
 			.onSnapshot((snapshot) => {
@@ -50,7 +50,6 @@ const Chat = () => {
 		scrollInToView();
 
 		return () => divRef.current?.removeEventListener("scroll", scrollInToView);
-
 	}, [userChatId]);
 
 	useEffect(() => {
@@ -64,6 +63,34 @@ const Chat = () => {
 			})
 			.catch((err) => console.error(err));
 	}, []);
+
+	const sendChat = (e) => {
+		e.preventDefault();
+		if (message) {
+			DB.collection("messages")
+				.doc(uniqId)
+				.collection("chat")
+				.add({
+					message,
+					userThatOwnChatId: userChatId,
+					userThatOwnChatName: usrData?.displayName,
+					userThatSentChatId: d,
+					createdDate: new Date().toISOString(),
+					seen: false,
+					read: false,
+					userThatSentChatName: displayName,
+					userThatSentChatPic: profilePic,
+					userThatOwnChatPic: usrData?.profilePic,
+					betweenUsers: [userChatId, d],
+				})
+				.then(() => {
+					setMessage("");
+					scrollInToView();
+				})
+				.catch((err) => console.error(err));
+		}
+	};
+
 	return (
 		<div className="chat-container">
 			<div className="col s12 m12">
@@ -95,22 +122,24 @@ const Chat = () => {
 					<div className={`chat-body-center`}>
 						{chats.length > 0 && !loading ? (
 							chats.map((i) => (
-								<div className="chat-hod">
-									{i.userThatSentChatPic !== profilePic && (
-										<div className="chat-img">
-											<Avatar src={i.userThatSentChatPic} />
-										</div>
-									)}
-									<div
-										className={`${
-											displayName === i.userThatSentChat
-												? "my-chat"
-												: "other-chat"
-										}`}>
-										{<p>{i.message}</p>}
-									</div>
+								<>
 									<div className="time-date">{formatDate(i.createdDate)}</div>
-								</div>
+									<div className="chat-hod">
+										{i.userThatSentChatPic !== profilePic && (
+											<div className="chat-img">
+												<Avatar src={i.userThatSentChatPic} />
+											</div>
+										)}
+										<div
+											className={`${
+												displayName === i.userThatSentChatName
+													? "my-chat"
+													: "other-chat"
+											}`}>
+											{<p>{i.message}</p>}
+										</div>
+									</div>
+								</>
 							))
 						) : (
 							<>
@@ -124,10 +153,12 @@ const Chat = () => {
 							</>
 						)}
 					</div>
-					<form className="chat-body-bottom">
+					<form className="chat-body-bottom" onSubmit={sendChat}>
 						<textarea
 							type="text"
 							placeholder="Chat..."
+							value={message}
+							onChange={(e) => setMessage(e.target.value)}
 							className="chat-body-text"></textarea>
 						<Button disabled={!message} type="submit" className="submit-btn">
 							<i className="material-icons">send</i>

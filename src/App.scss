@@ -39,21 +39,33 @@ body,
 }
 
 @media screen and (min-width: 200px) and (max-width: 560px) {
+	.main-left {
+		flex: 0;
+	}
+	.main-right {
+		flex: 0;
+	}
 	.centerEverything {
 		width: 100% !important;
 		overflow: hidden;
 		position: relative;
-
+		flex: 1;
 		height: 100%;
 	}
 }
 
 @media screen and (min-width: 560px) and (max-width: 900px) {
+	.main-left {
+		flex: 0;
+	}
+	.main-right {
+		flex: 0;
+	}
 	.centerEverything {
 		width: 100% !important;
 		overflow: hidden;
 		position: relative;
-
+		flex: 1;
 		height: 100%;
 	}
 }

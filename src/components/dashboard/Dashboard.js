@@ -6,7 +6,7 @@ import "./dashboard.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { signOutUserStart } from "../../redux/user/user.action";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
-import { storage } from "../../firebase/functions.js";
+import DB, { storage } from "../../firebase/functions.js";
 import UserStory from "../userStory/UserStory";
 
 import {
@@ -98,6 +98,9 @@ const Dashboard = () => {
 
 	const handleLogout = () => {
 		dispatch(signOutUserStart());
+		DB.collection("users").doc(userId).update({
+			activeStatus: "offline",
+		});
 	};
 	return (
 		<div className="row">

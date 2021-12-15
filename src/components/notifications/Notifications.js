@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Avatar } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { dd } from "../../Dd";
-import { formatDate } from "../../helpers/Helpers";
+import { formatDate, shortenText } from "../../helpers/Helpers";
 import { useSelector } from "react-redux";
 import "./notification.scss";
 import DB from "../../firebase/functions";
@@ -15,7 +15,7 @@ const mapState = ({ user }) => ({
 
 const Notifications = () => {
 	const [notifications, setNotifications] = useState([]);
-
+	const [welcomeNotes, setWelcomeNotes] = useState([]);
 	const [loading, setLoading] = React.useState(true);
 	const { userData, currentUser } = useSelector(mapState);
 	const { uid } = currentUser;
@@ -25,6 +25,7 @@ const Notifications = () => {
 
 	useEffect(() => {
 		DB.collection("Notifications")
+			.where("userThatOwnNotificationId", "==", d)
 			.orderBy("createdDate", "desc")
 			.onSnapshot((snapshot) => {
 				setNotifications(
@@ -35,12 +36,20 @@ const Notifications = () => {
 				);
 				setLoading(false);
 			});
-
-		return () => {
-			setNotifications([]);
-			setLoading(false);
-		};
 	}, []);
+
+	// useEffect(() => {
+	// 	DB.collection("welcome")
+	// 		.where("userThatOwnWelcomeId", "==", d)
+	// 		.onSnapshot((snapshot) => {
+	// 			setWelcomeNotes(
+	// 				snapshot.docs.map((doc) => ({
+	// 					...doc.data(),
+	// 					notificationID: doc.id,
+	// 				}))
+	// 			);
+	// 		});
+	// }, [d]);
 
 	const readNotification = (id) => {
 		DB.collection("Notifications").doc(id).update({ read: true });
@@ -58,6 +67,7 @@ const Notifications = () => {
 	if (loading) {
 		return <IsLoadingSkeleton />;
 	}
+	console.log(notifications);
 
 	return (
 		<div className="row">
@@ -77,12 +87,26 @@ const Notifications = () => {
 								<p>
 									{not.type}&nbsp;{not.method} &nbsp; "{not.notificationMsg}"
 								</p>
-								<span>{formatDate(not.createDate)}</span>
-								{!not.read && <div className="dot"></div>}
+								<span>{formatDate(not.createdDate)}</span>
 							</div>
 						</div>
 					</Link>
 				))}
+				{welcomeNotes?.note && (
+					<Link to={`/users/welcome`}>
+						<div className={`card-b ${!welcomeNotes.read ? "unread" : "read"}`}>
+							<div className="avatar">
+								<Avatar src={welcomeNotes?.logo} />
+							</div>
+							<div className="note-content">
+								<b>{welcomeNotes?.userThatSentNote}</b>
+								<p>{shortenText(welcomeNotes?.note, 100)}</p>
+								<span>{formatDate(welcomeNotes?.createdDate)}</span>
+								{!welcomeNotes?.read && <div className="dot"></div>}
+							</div>
+						</div>
+					</Link>
+				)}
 			</div>
 		</div>
 	);
