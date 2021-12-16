@@ -16,12 +16,14 @@ import {
 	DashboardPage,
 	HomePage,
 	LoginPage,
+	MorePage,
 	NotificationsPage,
 	RecoveryPage,
 	RegisterPage,
 	SingleStoryPage,
 	UserProfilePage,
 	VideoPage,
+	WelcomePage,
 } from "./pages";
 import { checkUserSession } from "./redux/user/user.action";
 
@@ -164,6 +166,16 @@ const App = () => {
 								<Route exact path="/users/user/:userProfileId/profile">
 									<WithAuth>
 										<UserProfilePage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/user/welcome">
+									<WithAuth>
+										<WelcomePage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/user/welcome">
+									<WithAuth>
+										<MorePage />
 									</WithAuth>
 								</Route>
 							</Switch>

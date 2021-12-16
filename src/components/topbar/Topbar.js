@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "./topbar.scss";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import ChatIcon from "@mui/icons-material/Chat";
+import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import HomeIcon from "@mui/icons-material/Home";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import DB from "../../firebase/functions";
 import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
 import BadgeWrapper from "../notificationwrap/Wrapper";
-import DB from "../../firebase/functions";
+import "./topbar.scss";
+
 const { useSelector } = require("react-redux");
 
 const mapState = ({ user }) => ({
@@ -73,6 +73,7 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 		});
 		batch.commit();
 	};
+
 	return (
 		<div className="fixed">
 			<div className="app-name">
@@ -80,6 +81,7 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 					<li className="name">
 						<Link to="/">STORYBOOK</Link>
 					</li>
+
 					<div className="user-info">
 						{!userId ? (
 							<IsLoading />
@@ -136,6 +138,11 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 									<VideoLibraryIcon />
 								</Link>
 							</li>
+							<div className="tab icon">
+								<Link to="/users/user/welcome">
+									<FormatListBulletedIcon />
+								</Link>
+							</div>
 						</ul>
 					</div>
 				</div>

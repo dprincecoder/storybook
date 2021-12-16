@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from "react";
-import Button from "../forms/button/Button";
-import AuthWrapper from "../authwrapper/Authwraper";
-import InputForm from "../forms/inputs/InputForm";
-import "./dashboard.scss";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { signOutUserStart } from "../../redux/user/user.action";
-import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
-import DB, { storage } from "../../firebase/functions.js";
-import UserStory from "../userStory/UserStory";
-
+import { storage } from "../../firebase/functions.js";
 import {
-	handleUpdateUserImage,
 	handleUpdateUserDetails,
+	handleUpdateUserImage,
 } from "../../redux/user/user.helpers";
+import AuthWrapper from "../authwrapper/Authwraper";
+import Button from "../forms/button/Button";
+import InputForm from "../forms/inputs/InputForm";
+import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
+import UserStory from "../userStory/UserStory";
+import "./dashboard.scss";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -96,12 +94,6 @@ const Dashboard = () => {
 		// }, 10000);
 	};
 
-	const handleLogout = () => {
-		dispatch(signOutUserStart());
-		DB.collection("users").doc(userId).update({
-			activeStatus: "offline",
-		});
-	};
 	return (
 		<div className="row">
 			{!displayName || !userId ? (
@@ -232,13 +224,6 @@ const Dashboard = () => {
 											</Button>
 										</div>
 									</form>
-									<div className="section">
-										<Button
-											onClick={handleLogout}
-											custom="waves-effect waves-light red">
-											LOG Out
-										</Button>
-									</div>
 								</AuthWrapper>
 							</div>
 						</div>

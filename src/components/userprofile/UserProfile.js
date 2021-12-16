@@ -135,7 +135,7 @@ const UserProfile = () => {
 	}, [userProfileId]);
 
 	return (
-		<div className="">
+		<div className="con">
 			{!userProfile.userId ? (
 				<div className="loading">
 					<IsLoading />
@@ -181,9 +181,9 @@ const UserProfile = () => {
 										<p className="location-detials">{userProfile?.city}</p>
 									</div>
 								)}
-								{/* <div className="joined">
-									Joined: {userProfile?.createdDate.split("T")[0]}
-								</div> */}
+								<div className="joined">
+									Joined: {userProfile?.createdDate.toDate().toDateString()}
+								</div>
 								{userProfile?.web && (
 									<div className="profile-info">
 										<i className="material-icons">web</i>

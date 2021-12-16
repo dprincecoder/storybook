@@ -122,7 +122,7 @@ const Chat = () => {
 					<div className={`chat-body-center`}>
 						{chats.length > 0 && !loading ? (
 							chats.map((i) => (
-								<>
+								<div key={i.chatID}>
 									<div className="time-date">{formatDate(i.createdDate)}</div>
 									<div className="chat-hod">
 										{i.userThatSentChatPic !== profilePic && (
@@ -139,7 +139,7 @@ const Chat = () => {
 											{<p>{i.message}</p>}
 										</div>
 									</div>
-								</>
+								</div>
 							))
 						) : (
 							<>
