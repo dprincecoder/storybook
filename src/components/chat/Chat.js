@@ -235,6 +235,11 @@ const Chat = () => {
 		}
 	};
 
+	const searchChat = (chats, query) => {
+		return chats.filter((chat) => {
+			JSON.stringify(chat).toLowerCase().includes(query);
+		});
+	};
 	return (
 		<div className="chat-container">
 			<div className="col s12 m12">
@@ -288,7 +293,7 @@ const Chat = () => {
 				<div className="chat-body">
 					<div className={`chat-body-center`}>
 						{chats.length > 0 && !loading ? (
-							chats.map((i) => (
+							searchChat(chats, searchField).map((i) => (
 								<div key={i.chatID}>
 									<div className="time-date">{formatDate(i.createdDate)}</div>
 									<div className="chat-hod">
