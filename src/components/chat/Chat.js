@@ -236,9 +236,9 @@ const Chat = () => {
 	};
 
 	const searchChat = (chats, query) => {
-		return chats.filter((chat) => {
-			JSON.stringify(chat).toLowerCase().includes(query);
-		});
+		return chats.filter((chat) =>
+			JSON.stringify(chat).toLowerCase().includes(query.toLowerCase())
+		);
 	};
 	return (
 		<div className="chat-container">

@@ -49,7 +49,7 @@ const Chat = () => {
 
 	const getSearchMessages = (msgs, input) => {
 		return msgs.filter((msg) =>
-			JSON.stringify(msg).toLowerCase().includes(input)
+			JSON.stringify(msg).toLowerCase().includes(input.toLowerCase())
 		);
 	};
 
