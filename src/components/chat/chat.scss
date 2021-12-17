@@ -38,17 +38,42 @@
 			}
 		}
 	}
+	.search-wrapper {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: #f5f5f5;
+		.search {
+			width: 100%;
+			height: 100%;
+			background-color: transparent;
+			font-size: 1.5rem;
+			color: black;
+			&::placeholder {
+				color: #bdbdbd;
+			}
+			&:focus {
+				outline: none !important;
+				border-bottom: none !important;
+			}
+		}
+		i {
+			font-size: 1.5rem;
+			color: #bdbdbd;
+			cursor: pointer;
+		}
+	}
 }
 
 .chat-body {
 	// height: auto;
 	width: 100%;
-
+	height: 70vh;
 	.chat-body-center {
-		height: 90vh;
+		height: 100%;
 		width: 100%;
 		position: relative;
-		margin: 1rem 0 0 0;
+		margin: 1rem 5px 0 0;
 		overflow-y: scroll;
 		.chat-hod {
 			display: flex;
@@ -67,19 +92,105 @@
 		.my-chat {
 			border-radius: 10px;
 			margin-left: auto;
-			padding: 5px;
+			// padding: 5px;
 			width: fit-content;
 			margin-bottom: 10px;
 			color: white;
 			background-color: #037fff;
+			p {
+				padding: 5px;
+			}
+			.chatcon {
+				width: 200px;
+				height: 200px;
+				overflow: hidden;
+			}
+			.chat-img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+			}
+			.audio-container {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				audio {
+					&::-webkit-media-controls-panel {
+						background-color: #037fff;
+						border: none;
+						outline: none;
+					}
+					&::-webkit-media-controls-play-button {
+						background-color: white;
+						border-radius: 50%;
+						color: #037fff;
+					}
+					&::-webkit-media-controls-timeline {
+						background-color: none;
+						color: white;
+					}
+					&::-webkit-media-controls-timeline-container {
+						background-color: none;
+						border: none;
+						outline: none;
+					}
+					&::-webkit-media-controls-seek-forward-button {
+						color: white;
+					}
+				}
+			}
 		}
 		.other-chat {
 			background-color: rgb(138, 39, 39);
 			border-radius: 10px;
 			color: white;
-			padding: 5px;
 			width: fit-content;
+			p {
+				padding: 5px;
+			}
 			margin-bottom: 10px;
+			.chatcon {
+				width: 200px;
+				height: 200px;
+				overflow: hidden;
+			}
+			.chat-img {
+				width: 100%;
+				height: 100%;
+				object-fit: contain;
+			}
+			.audio-container {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				audio {
+					&::-webkit-media-controls-panel {
+						background-color: rgb(138, 39, 39);
+						border: none;
+						outline: none;
+					}
+					&::-webkit-media-controls-play-button {
+						background-color: white;
+						border-radius: 50%;
+					}
+					&::-webkit-media-controls-timeline {
+						background-color: none;
+						color: white;
+					}
+					&::-webkit-media-controls-timeline-container {
+						background-color: none;
+						border: none;
+						outline: none;
+					}
+					&::-webkit-media-controls-seek-forward-button {
+						color: white;
+					}
+				}
+			}
 		}
 		.time-date {
 			// position: absolute;
@@ -91,58 +202,192 @@
 		width: 0.5rem;
 	}
 	.chat-body-bottom {
-		position: absolute;
+		// position: absolute;
 		bottom: 0;
-		width: 100%;
 		height: 3rem;
-		margin: 2rem 0 0.5rem 0;
-		background-color: rgb(82, 133, 82);
-		border-radius: 5rem;
 		display: flex;
-		justify-content: space-between;
-		padding: 0 1rem;
-		.chat-body-text {
-			resize: none;
-			outline: none;
+		justify-content: space-around;
+		width: 100%;
+		margin: 2rem 0 0 0;
+		align-items: center;
+		background-color: rgb(245, 245, 245);
+		.chat-more {
+			background-color: #037fff;
+			box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.2);
+			border-radius: 10px;
 			color: white;
-			border: none;
-			padding: 0.5rem;
-			&::placeholder {
+			padding: 5px;
+			width: fit-content;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			transition-property: display;
+			transition: 400ms;
+			i {
+				margin-right: 0.5rem;
+				cursor: pointer;
 				color: white;
 			}
-		}
-		.chat-body-text::-webkit-scrollbar {
-			display: none;
-		}
-		.submit-btn {
-			cursor: pointer;
-			background-color: transparent;
-			border: none;
-			border-radius: 5rem;
-			padding: 0.5rem 1rem;
-			color: #000;
-			font-size: 1rem;
-			font-weight: bold;
-			outline: none;
-			transition: all 0.3s ease-in-out;
-			&:disabled {
-				opacity: 0.5;
-				cursor: not-allowed;
-			}
-			&:disabled:hover {
-				background-color: gray;
-			}
-			&:hover {
-				background-color: #037fff;
-				color: #fff;
-			}
-			i {
-				transform: rotate(-35deg);
-				&:hover {
-					transform: rotate(0deg);
-					transition: all 0.3s ease-in-out;
+			.animate {
+				i {
+					animation: animate 1s linear infinite;
 				}
 			}
 		}
+		.chat-input {
+			width: 70%;
+			height: 3rem;
+			background-color: rgb(82, 133, 82);
+			border-radius: 5rem;
+			display: flex;
+			justify-content: space-between;
+			padding: 0 1rem;
+			transition: 400ms;
+			transition-property: width;
+			.chat-body-text {
+				resize: none;
+				outline: none;
+				color: white;
+				border: none;
+				padding: 0.5rem;
+				&::placeholder {
+					color: white;
+				}
+			}
+			.chat-body-text::-webkit-scrollbar {
+				display: none;
+			}
+			.submit-btn {
+				cursor: pointer;
+				background-color: transparent;
+				border: none;
+				border-radius: 5rem;
+				padding: 0.5rem 1rem;
+				color: #000;
+				font-size: 1rem;
+				font-weight: bold;
+				outline: none;
+				transition: all 0.3s ease-in-out;
+				&:disabled {
+					opacity: 0.5;
+					cursor: not-allowed;
+				}
+				&:disabled:hover {
+					background-color: gray;
+				}
+				&:hover {
+					background-color: #037fff;
+					color: #fff;
+				}
+				i {
+					transform: rotate(-35deg);
+					&:hover {
+						transform: rotate(0deg);
+						transition: all 0.3s ease-in-out;
+					}
+				}
+			}
+		}
+	}
+	.typing {
+		.chat-input {
+			width: 100%;
+		}
+		.chat-more {
+			display: none;
+		}
+	}
+}
+
+.image-preview {
+	margin: 2rem;
+	width: 50%;
+	height: 50%;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	.send {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		padding: 0.5rem;
+		i {
+			margin-right: 1rem;
+			cursor: pointer;
+		}
+	}
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	img {
+		width: 100%;
+		height: 200px;
+		object-fit: contain;
+	}
+}
+
+.voice-preview {
+	margin: 2rem;
+	width: fit-content;
+	height: fit-content;
+	position: absolute;
+	bottom: 0;
+	padding: 0.5rem;
+	border-radius: 10px;
+	background-color: #331b04;
+	right: 0;
+	.send {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		padding: 0.5rem;
+		i {
+			margin-right: 1rem;
+			color: white;
+			cursor: pointer;
+		}
+		.send-note {
+			padding: 10px;
+			background-color: #037fff;
+			border-radius: 10px;
+			color: white;
+			width: fit-content;
+			cursor: pointer;
+		}
+	}
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	audio {
+		width: 100%;
+		//remove all default controls and styles
+
+		display: block;
+		width: 100%;
+	}
+}
+
+.stop {
+	padding: 10px;
+	background-color: #037fff;
+	border-radius: 10px;
+	color: white;
+	width: fit-content;
+	cursor: pointer;
+}
+//animate the color of the mic in and out
+@keyframes animate {
+	0% {
+		background-color: white;
+	}
+	50% {
+		background-color: red;
+	}
+	100% {
+		background-color: #037fff;
 	}
 }

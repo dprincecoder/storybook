@@ -104,7 +104,13 @@ const Dashboard = () => {
 						<h5>My Dashboard</h5>
 						<div className="card">
 							<div className="card-image">
-								<img src={profilePic} alt={displayName} />
+								<div className="img-con">
+									<img
+										src={profilePic}
+										alt={displayName}
+										className="dash-img"
+									/>
+								</div>
 								<InputForm
 									type="file"
 									id="file-input"

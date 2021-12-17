@@ -139,7 +139,7 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 								</Link>
 							</li>
 							<div className="tab icon">
-								<Link to="/users/user/welcome">
+								<Link to="/users/user/more">
 									<FormatListBulletedIcon />
 								</Link>
 							</div>

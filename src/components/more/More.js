@@ -9,6 +9,34 @@ const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
+
+const styles = {
+	container: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		height: "100%",
+		marginTop: "2rem",
+		width: "100%",
+	},
+	list: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center",
+		margin: "10px",
+		width: "100%",
+		border: "1px solid #ccc",
+	},
+	item: {
+		margin: "10px",
+		textDecoration: "none",
+		backgroundColor: "#f4f4f4",
+		padding: "10px",
+		width: "fit-content",
+	},
+};
 const More = () => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
@@ -23,31 +51,26 @@ const More = () => {
 	};
 	return (
 		<div>
-			<div className="more-options">
-				<ul className="list">
-					<li className="item">
+			<div style={styles.container}>
+				<ul style={styles.list}>
+					<li style={styles.item}>
+						{" "}
 						<Link to="/users/user/welcome">About Us</Link>
 					</li>
-					<li className="item">
+					<li style={styles.item}>
+						{" "}
 						<Link to="/users/user/welcome">Contact Us</Link>
 					</li>
-					<li className="item">
+					<li style={styles.item}>
+						{" "}
 						<Link to="/users/user/welcome">Privacy Policy</Link>
 					</li>
-					<div className="signout">
+					<div style={styles.item}>
 						<Button onClick={handleLogout} custom=" red">
 							LOG Out
 						</Button>
 					</div>
 				</ul>
-				<div className="arrown-open-and-close">
-					<div className="arrow-open">
-						<i className="material-icons">keyboard_arrow_down</i>
-					</div>
-					<div className="arrow-close">
-						<i className="material-icons">keyboard_arrow_up</i>
-					</div>
-				</div>
 			</div>
 		</div>
 	);

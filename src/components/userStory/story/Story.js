@@ -128,7 +128,7 @@ const Story = (story) => {
 						<b>Read More</b>
 
 						<div className="divider"></div>
-						<div className="card-image">
+						<div className="img-card">
 							<img src={storyPhotos} alt={storyTitle} />
 						</div>
 					</Link>

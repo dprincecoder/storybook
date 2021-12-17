@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import DB from "../../firebase/functions";
 import { useSelector } from "react-redux";
 import IsLoading from "../../components/loading/IsLoading";
+import InputForm from "../forms/inputs/InputForm";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -15,6 +16,7 @@ const mapState = ({ user }) => ({
 const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const { userData, currentUser } = useSelector(mapState);
+	const [searchField, setSearchField] = useState("");
 	const [loading, setLoading] = useState(true);
 	const { userId, displayName, profilePic } = userData;
 	const { uid } = currentUser;
@@ -45,6 +47,12 @@ const Chat = () => {
 		});
 	};
 
+	const getSearchMessages = (msgs, input) => {
+		return msgs.filter((msg) =>
+			JSON.stringify(msg).toLowerCase().includes(input)
+		);
+	};
+
 	return (
 		<div className="row">
 			<div className="s12 m12">
@@ -53,10 +61,12 @@ const Chat = () => {
 						<h4>Messages</h4>
 					</div>
 					<div className="msg-search">
-						<input
+						<InputForm
 							type="text"
+							value={searchField}
 							className="search"
 							placeholder="Search Messages"
+							handleChange={(e) => setSearchField(e.target.value)}
 						/>
 						<i className="material-icons">search</i>
 					</div>
@@ -64,7 +74,7 @@ const Chat = () => {
 				<div className="divider"></div>
 				<div className="msg-body">
 					{messages.length > 0 && !loading ? (
-						messages.map((m) => (
+						getSearchMessages(messages, searchField).map((m) => (
 							<Link
 								to={`/users/chats/${
 									m?.userThatSentMessageId === d

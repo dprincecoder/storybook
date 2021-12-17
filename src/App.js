@@ -173,7 +173,7 @@ const App = () => {
 										<WelcomePage />
 									</WithAuth>
 								</Route>
-								<Route exact path="/users/user/welcome">
+								<Route exact path="/users/user/more">
 									<WithAuth>
 										<MorePage />
 									</WithAuth>
