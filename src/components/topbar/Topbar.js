@@ -31,7 +31,9 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 		.filter((id) => id.userThatOwnNotificationId === userId)
 		.filter((not) => not.seen === false).length;
 	const unseenStories = stories.filter((id) => id.seen === false).length;
-	const unseenMsgs = allMessages.filter((id) => id.seen === false).length;
+	const unseenMsgs = allMessages
+		.filter((id) => id.userThatSentMessageId !== userId)
+		.filter((id) => id.seen === false).length;
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
 
@@ -66,11 +68,13 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 
 	const markMsgsSeen = () => {
 		let batch = DB.batch();
-		allMessages.forEach((msg) => {
-			const msgID = msg.messageID;
-			const msgDoc = DB.collection("messages").doc(msgID);
-			batch.update(msgDoc, { seen: true });
-		});
+		allMessages
+			.filter((msg) => msg.userThatSentMessageId !== userId)
+			.forEach((msg) => {
+				const msgID = msg.messageID;
+				const msgDoc = DB.collection("messages").doc(msgID);
+				batch.update(msgDoc, { seen: true });
+			});
 		batch.commit();
 	};
 

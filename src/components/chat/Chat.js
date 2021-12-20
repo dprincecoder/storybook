@@ -72,7 +72,7 @@ const Chat = () => {
 				}
 			})
 			.catch((err) => console.error(err));
-	}, []);
+	}, [userChatId]);
 
 	const sendChat = (e) => {
 		e.preventDefault();
@@ -81,26 +81,40 @@ const Chat = () => {
 				.doc(uniqId)
 				.update({
 					message: message,
-				})
-				.collection("chat")
-				.add({
-					message,
-					userThatOwnChatId: userChatId,
-					userThatOwnChatName: usrData?.displayName,
-					userThatSentChatId: d,
+					userThatOwnMessageId: userChatId,
+					userThatSentMessageId: d,
 					createdDate: new Date().toISOString(),
 					seen: false,
 					read: false,
-					userThatSentChatName: displayName,
-					userThatSentChatPic: profilePic,
-					userThatOwnChatPic: usrData?.profilePic,
+					userThatSentMessageName: displayName,
+					userThatSentMessagePic: profilePic,
+					userThatOwnMessageName: usrData?.displayName,
+					userThatOwnMessagePic: usrData?.profilePic,
 					betweenUsers: [userChatId, d],
 				})
 				.then(() => {
-					setMessage("");
-					scrollInToView();
-				})
-				.catch((err) => console.error(err));
+					DB.collection("messages")
+						.doc(uniqId)
+						.collection("chat")
+						.add({
+							message,
+							userThatOwnChatId: userChatId,
+							userThatOwnChatName: usrData?.displayName,
+							userThatSentChatId: d,
+							createdDate: new Date().toISOString(),
+							seen: false,
+							read: false,
+							userThatSentChatName: displayName,
+							userThatSentChatPic: profilePic,
+							userThatOwnChatPic: usrData?.profilePic,
+							betweenUsers: [userChatId, d],
+						})
+						.then(() => {
+							setMessage("");
+							scrollInToView();
+						})
+						.catch((err) => console.error(err));
+				});
 		}
 	};
 	const sendImage = (e) => {
@@ -368,7 +382,8 @@ const Chat = () => {
 						<div className="start">
 							<Button custom="blue" onClick={startRecording}>
 								start
-							</Button>
+							</Button>{" "}
+							&nbsp;
 							<Button custom="blue" onClick={() => setStartRec(!startRec)}>
 								Cancel
 							</Button>
@@ -411,7 +426,6 @@ const Chat = () => {
 								placeholder="Chat..."
 								disabled={loading || image}
 								value={message}
-								onEnter={sendChat}
 								onChange={(e) => setMessage(e.target.value)}
 								className="chat-body-text"></textarea>
 							<Button disabled={!message} type="submit" className="submit-btn">

@@ -99,7 +99,7 @@ const Welcome = () => {
 									If you are interested in hiring the developer, please contact
 									him on{" "}
 									<a
-										href="https://www.dprincecoder.com"
+										href="https://www.dprincecoder.codes"
 										target="_blank"
 										rel="noopener noreferrer">
 										<i>www.dprincecoder.codes</i>

@@ -23,7 +23,7 @@ const Chat = () => {
 	const d = userData?.userId;
 
 	useEffect(() => {
-		if (d || userId) {
+		if (d) {
 			DB.collection("messages")
 				.where("betweenUsers", "array-contains", d)
 				.orderBy("createdDate", "desc")
@@ -98,14 +98,20 @@ const Chat = () => {
 									</div>
 									<div className="msg-right">
 										<div className="msg-center-top">
-											<h4 className={m?.read && "read"}>
+											<h4 className={`title ${m?.read ? "read" : ""}`}>
 												{m?.userThatSentMessageName === displayName
 													? m?.userThatOwnMessageName
 													: m?.userThatSentMessageName}
 											</h4>
 											<div
 												className={`msg-center-content ${m?.read && "read"}`}>
-												{shortenMsgText(m?.message, 50)}
+												{m?.userThatSentMessageName === displayName ? (
+													<p style={{ opacity: "0.5" }}>
+														You: {shortenMsgText(m?.message, 50)}
+													</p>
+												) : (
+													shortenMsgText(m?.message, 50)
+												)}
 											</div>
 										</div>
 										<div className="msg-right-end">

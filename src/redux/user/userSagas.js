@@ -102,20 +102,17 @@ export function* onSignOutUserStart() {
 }
 
 export function* emailSignUp({
-	payload: {
-		email,
-		password,
-		displayName,
-		confirmPassword,
-		firstName,
-		lastName,
-		country,
-		city,
-	},
+	payload: { displayName, email, password, confirmPassword },
 }) {
 	if (password !== confirmPassword) {
-		const newError = ["Password don't match try again"];
-		yield put(userErrorStart(newError));
+		yield put(
+			userErrorStart([
+				{
+					title: "Incorrect Password",
+					message: "Password don't match try again",
+				},
+			])
+		);
 		return;
 	}
 
@@ -123,7 +120,7 @@ export function* emailSignUp({
 		const { user } = yield auth.createUserWithEmailAndPassword(email, password);
 
 		yield localStorage.setItem("currentUser", JSON.stringify(user));
-		const additionalData = { displayName, firstName, lastName, country, city };
+		const additionalData = { displayName };
 		yield getSnapshotFromUserAuth(user, additionalData);
 		if (user)
 			yield put(
@@ -135,8 +132,41 @@ export function* emailSignUp({
 					},
 				])
 			);
-	} catch (error) {
-		console.log(error);
+	} catch (e) {
+		switch (e.code) {
+			case "auth/email-already-in-use":
+				yield put(
+					userErrorStart([
+						{
+							title: "Email already in use",
+							message: "Sorry Email already in use by another user",
+						},
+					])
+				);
+				break;
+			case "auth/invalid-email":
+				yield put(
+					userErrorStart([
+						{
+							title: "Invalid Email",
+							message: "Invalid Email",
+						},
+					])
+				);
+				break;
+			case "auth/weak-password":
+				yield put(
+					userErrorStart([
+						{
+							title: "Weak Password",
+							message: "Weak Password",
+						},
+					])
+				);
+				break;
+			default:
+				yield put(userErrorStart([e]));
+		}
 	}
 }
 
@@ -201,9 +231,9 @@ export function* fetchUserData({ payload }) {
 	}
 }
 
-export function* resetPassword({ payload: { email } }) {
+export function* resetPassword({ payload: { email, webAddress } }) {
 	try {
-		yield call(handleResetPasswordAPI, email);
+		yield call(handleResetPasswordAPI, { email, webAddress });
 		yield put(resetPasswordSuccess());
 	} catch (e) {
 		yield put(

@@ -78,14 +78,10 @@ const Register = () => {
 		setTimeout(() => {
 			dispatch(
 				signUpUserStart({
+					displayName,
 					email,
 					password,
-					displayName,
 					confirmPassword,
-					firstName,
-					lastName,
-					country,
-					city,
 				})
 			);
 			setLoading2(false);
@@ -191,8 +187,8 @@ const Register = () => {
 					</>
 				)}
 				<form onSubmit={handleEmailRegister}>
-					Display Name:
 					<InputForm
+						label="Display Name"
 						type="text"
 						name="displayName"
 						placeholder="Enter your display name"
@@ -200,52 +196,15 @@ const Register = () => {
 						required
 						handleChange={(e) => setDisplayName(e.target.value)}
 					/>
-					Email Address:
 					<InputForm
+						label="Email Address"
 						type="email"
 						name="email"
 						placeholder="Enter your email"
 						value={email}
 						required
 						handleChange={(e) => setEmail(e.target.value)}
-					/>
-					First Name:
-					<InputForm
-						type="text"
-						name="firstName"
-						placeholder="Enter your first name"
-						value={firstName}
-						required
-						handleChange={(e) => setFirstName(e.target.value)}
-					/>
-					Last Name:
-					<InputForm
-						type="text"
-						name="lastName"
-						placeholder="Enter your last name"
-						value={lastName}
-						required
-						handleChange={(e) => setLastName(e.target.value)}
-					/>
-					Country:
-					<InputForm
-						type="text"
-						name="country"
-						value={country}
-						placeholder="Enter your Country"
-						required
-						handleChange={(e) => setCountry(e.target.value)}
-					/>
-					City
-					<InputForm
-						type="text"
-						name="city"
-						placeholder="Enter the City you are in now"
-						value={city}
-						required
-						handleChange={(e) => setCity(e.target.value)}
-					/>
-					Password:{" "}
+					/>{" "}
 					{focus && (
 						<div className="suggest" onClick={suggest}>
 							Suggest Password
@@ -303,6 +262,7 @@ const Register = () => {
 						</div>
 					)}
 					<InputForm
+						label="Password"
 						type="password"
 						name="password"
 						placeholder="Enter your password"
@@ -314,8 +274,8 @@ const Register = () => {
 						}}
 						onFocus={() => setFocus(!focus)}
 					/>
-					Confirm Password:
 					<InputForm
+						label="Confirm Password"
 						type="password"
 						name="confirmPassword"
 						placeholder="Confirm your password"

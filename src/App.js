@@ -53,14 +53,20 @@ const App = () => {
 				}))
 			);
 		});
-		DB.collection("stories").onSnapshot((snapshot) => {
-			setStories(
-				snapshot.docs.map((doc) => ({
-					...doc.data(),
-					storyID: doc.id,
-				}))
-			);
-		});
+		if (d || currentUser) {
+			DB.collection("stories")
+				.where("storyUserUID", "!=", d)
+				.onSnapshot((snapshot) => {
+					setStories(
+						snapshot.docs.map((doc) => ({
+							...doc.data(),
+							storyID: doc.id,
+						}))
+					);
+				});
+		} else {
+			return;
+		}
 		if (d || currentUser) {
 			DB.collection("messages")
 				.where("betweenUsers", "array-contains", d)

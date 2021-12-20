@@ -10,6 +10,7 @@ import Button from "../forms/button/Button";
 import InputForm from "../forms/inputs/InputForm";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import UserStory from "../userStory/UserStory";
+import { useParams } from "react-router-dom";
 import "./dashboard.scss";
 
 const mapState = ({ user }) => ({
@@ -25,17 +26,22 @@ const Dashboard = () => {
 	const [updateCity, setUpdateCity] = useState("");
 	const [updateFirstName, setUpdateFirstName] = useState("");
 	const [updateLastName, setUpdateLastName] = useState("");
+	const [updateBio, setUpdateBio] = useState("");
+	const [updateWeb, setUpdateWeb] = useState("");
 	const [progress, setProgress] = useState(0);
 	const [imageUrl, setImageUrl] = useState(null);
+	const { userId } = useParams();
 	const {
 		displayName,
-		userId,
+		// userId,
 		email,
 		firstName,
 		lastName,
 		profilePic,
 		country,
 		city,
+		web,
+		bio,
 	} = userData;
 
 	const reset = () => {
@@ -55,7 +61,9 @@ const Dashboard = () => {
 			updateLastName,
 			updateCountry,
 			updateCity,
-			userId
+			userId,
+			updateBio,
+			updateWeb
 		);
 		reset();
 		setTimeout(() => {
@@ -82,7 +90,11 @@ const Dashboard = () => {
 					.then((firebaseUrl) => {
 						// const newUrl = (prevURl) => ({ ...prevURl, imgUrl: firebaseUrl });
 						handleUpdateUserImage(firebaseUrl, userId);
-						// setImageUrl(firebaseUrl);
+					})
+					.then(() => {
+						setProgress(0);
+						setImageUrl(null);
+						setUpdateImage(null);
 						setTimeout(() => {
 							window.location.reload();
 						}, 2000);
@@ -163,6 +175,7 @@ const Dashboard = () => {
 											</span>
 											<div className="divider"></div>
 											<InputForm
+												placeholder="Enter here"
 												type="text"
 												value={updateDisplayName}
 												name="displayName"
@@ -177,6 +190,7 @@ const Dashboard = () => {
 										</span>
 										<div className="divider"></div>
 										<InputForm
+											placeholder="Enter here"
 											type="text"
 											value={updateFirstName}
 											name="updateFirstName"
@@ -189,6 +203,7 @@ const Dashboard = () => {
 										<div className="divider"></div>
 
 										<InputForm
+											placeholder="Enter here"
 											type="text"
 											value={updateLastName}
 											name="updateLastName"
@@ -200,22 +215,48 @@ const Dashboard = () => {
 										<div className="divider"></div>
 
 										<InputForm
+											placeholder="Enter here"
 											type="text"
 											value={updateCountry}
 											name="updateCountry"
 											handleChange={(e) => setUpdateCountry(e.target.value)}
 										/>
+
 										<span>
 											City: <h6>{city && city}</h6>
 										</span>
 										<div className="divider"></div>
-
 										<InputForm
+											placeholder="Enter here"
 											type="text"
 											value={updateCity}
 											name="updateCity"
 											handleChange={(e) => setUpdateCity(e.target.value)}
 										/>
+										<span>
+											Website: <h6>{web && web}</h6>
+										</span>
+										<div className="divider"></div>
+										<InputForm
+											placeholder="Enter here"
+											type="text"
+											value={updateWeb}
+											name="updateWeb"
+											handleChange={(e) => setUpdateWeb(e.target.value)}
+										/>
+										<span>
+											Bio: <h6>{bio && bio}</h6>
+										</span>
+										<div className="divider"></div>
+										<InputForm
+											placeholder="Enter here"
+											type="text"
+											value={updateBio}
+											className="text-expand"
+											name="updateBio"
+											handleChange={(e) => setUpdateBio(e.target.value)}
+										/>
+
 										<h6>Email</h6>
 										<span>
 											Email: <h6>{email && email}</h6>
@@ -233,7 +274,7 @@ const Dashboard = () => {
 								</AuthWrapper>
 							</div>
 						</div>
-						<span>Your Stories</span>
+
 						<div className="my-stories">
 							<UserStory userId={userId} />
 						</div>

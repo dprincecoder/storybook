@@ -67,26 +67,25 @@ const Comments = ({
 
 		story.update({ commentCount: increment });
 
-		inputRef.current.value = "";
+		setCommentMsg("");
 	};
 
 	return (
 		<div className="">
 			<div className="post-details-header">
-				<form className="post-form">
+				<form className="post-form" onSubmit={sendComment}>
 					<Avatar src={profilePic} className="post-details-header-avatar" />
 					<div className="post-details-header-details">
-						<ExpandInput
+						<textarea
 							type="text"
+							className="text-expand"
 							value={commentMsg}
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}
-							ref={inputRef}
-						/>
+							ref={inputRef}></textarea>
 						<Button
 							className="submit-comment-button"
 							type="submit"
-							onClick={sendComment}
 							disabled={!commentMsg}>
 							<TelegramIcon />
 						</Button>

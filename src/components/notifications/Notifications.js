@@ -38,24 +38,30 @@ const Notifications = () => {
 			});
 	}, []);
 
-	// useEffect(() => {
-	// 	DB.collection("welcome")
-	// 		.where("userThatOwnWelcomeId", "==", d)
-	// 		.onSnapshot((snapshot) => {
-	// 			setWelcomeNotes(
-	// 				snapshot.docs.map((doc) => ({
-	// 					...doc.data(),
-	// 					notificationID: doc.id,
-	// 				}))
-	// 			);
-	// 		});
-	// }, [d]);
+	useEffect(() => {
+		DB.collection("welcome")
+			.where("userThatOwnNotificationId", "==", d)
+			.orderBy("createdDate", "desc")
+			.onSnapshot((snapshot) => {
+				setWelcomeNotes(
+					snapshot.docs.map((doc) => ({
+						...doc.data(),
+						welcomeID: doc.id,
+					}))
+				);
+				setLoading(false);
+			});
+	}, []);
 
 	const readNotification = (id) => {
 		DB.collection("Notifications").doc(id).update({ read: true });
 	};
 
-	if (!loading && notifications.length < 1) {
+	const readWelcomeNote = (id) => {
+		DB.collection("welcome").doc(id).update({ read: true });
+	};
+
+	if (!loading && welcomeNotes.length < 1) {
 		return (
 			<div>
 				<h4>Notifications</h4>
@@ -67,7 +73,6 @@ const Notifications = () => {
 	if (loading) {
 		return <IsLoadingSkeleton />;
 	}
-	console.log(notifications);
 
 	return (
 		<div className="row">
@@ -92,21 +97,23 @@ const Notifications = () => {
 						</div>
 					</Link>
 				))}
-				{welcomeNotes?.note && (
-					<Link to={`/users/welcome`}>
-						<div className={`card-b ${!welcomeNotes.read ? "unread" : "read"}`}>
+				{welcomeNotes.map((not, i) => (
+					<Link to={`/users/user/welcome`} key={i}>
+						<div
+							className={`card-b ${!not.read ? "unread" : "read"}`}
+							onClick={() => readWelcomeNote(not.welcomeID)}>
 							<div className="avatar">
-								<Avatar src={welcomeNotes?.logo} />
+								<Avatar src={not?.logo} />
 							</div>
-							<div className="note-content">
-								<b>{welcomeNotes?.userThatSentNote}</b>
-								<p>{shortenText(welcomeNotes?.note, 100)}</p>
-								<span>{formatDate(welcomeNotes?.createdDate)}</span>
-								{!welcomeNotes?.read && <div className="dot"></div>}
+							<div className="not-content">
+								<b>{not?.userThatSentNote}</b>
+								<p>{not?.note}</p>
+								<span>{formatDate(not?.createdDate)}</span>
+								{!not?.read && <div className="dot"></div>}
 							</div>
 						</div>
 					</Link>
-				)}
+				))}
 			</div>
 		</div>
 	);

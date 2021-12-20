@@ -21,22 +21,22 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 	const snapshot = await userRef.get();
 
 	if (!snapshot.exists) {
-		const { email, displayName, firstName, lastName, country, city, photoURL } =
-			userAuth;
+		const { displayName, email, photoURL } = userAuth;
 		const timestamp = new Date().toISOString();
 		const profilePic = !photoURL ? dummyAvatar : photoURL;
 		try {
 			await userRef
 				.set({
-					email,
 					displayName,
-					firstName: firstName || "",
-					lastName: lastName || "",
-					country: country || "",
-					city: city || "",
+					email,
+					firstName: "",
+					lastName: "",
+					country: "",
+					city: "",
 					profilePic,
 					bio: "",
-					areaOfExpertise: "",
+					web: "",
+
 					createdDate: timestamp,
 					following: [],
 					followers: [],
@@ -45,7 +45,7 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 					...additionalData,
 				})
 				.then(() => {
-					DB.collection("welcome")
+					DB.collection("Notifications")
 						.doc(uid)
 						.set({
 							createdDate: timestamp,

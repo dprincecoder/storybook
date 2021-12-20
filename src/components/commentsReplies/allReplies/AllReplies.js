@@ -2,36 +2,67 @@ import React from "react";
 import { Avatar } from "@material-ui/core";
 import "./allreplies.scss";
 import { formatDate, detectLinks } from "../../../helpers/Helpers";
-import _ from "lodash";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import DB from "../../../firebase/functions";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+const mapState = ({ user }) => ({
+	userData: user.userData,
+});
 
 const MainReply = ({
 	profilePic,
 	displayName,
+	userThatReplyId,
 	createdDate,
 	repliesMsg,
 	color,
+	replyId,
 }) => {
-	const divRef = React.useRef();
-	React.useEffect(() => {
-		divRef.current.innerHTML = detectLinks(repliesMsg);
-		return () => {
-			divRef.current.innerHTML = "";
-		};
-	}, []);
+	const [hide, setHide] = React.useState(false);
+	const { userData } = useSelector(mapState);
+	const { userId } = userData;
+
+	const deleteReply = () => {
+		DB.collection("replies").doc(replyId).delete();
+	};
 	return (
 		<div className="he">
 			<div className="main-header">
-				<Avatar src={profilePic} className="main-header-avatar" />
+				<Link to={`/users/user/${userThatReplyId}/profile`}>
+					<Avatar src={profilePic} className="main-header-avatar" />
+				</Link>
 				<div className="main-header-name">
 					<ul>
-						<li className="name" style={{ color: color }}>
+						<Link
+							to={`/users/user/${userThatReplyId}/profile`}
+							className="name"
+							style={{ color: color }}>
 							{displayName}
-						</li>
+						</Link>
 						<li>{formatDate(createdDate)}</li>
 					</ul>
 				</div>
+				<div className="more-btn" onClick={() => setHide(!hide)}>
+					<MoreVertIcon />
+				</div>
+				{hide && (
+					<div className="more-options">
+						<ul className="collection">
+							{userId === userThatReplyId && (
+								<li className="collection-item">Edit</li>
+							)}
+							{userId === userThatReplyId && (
+								<li className="collection-item" onClick={deleteReply}>
+									Delete
+								</li>
+							)}
+							<li className="collection-item">Report</li>
+						</ul>
+					</div>
+				)}
 			</div>
-			<div className="main-content" ref={divRef}></div>
+			<div className="main-content">{repliesMsg}</div>
 		</div>
 	);
 };

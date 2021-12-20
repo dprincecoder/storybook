@@ -182,7 +182,7 @@ const UserProfile = () => {
 									</div>
 								)}
 								<div className="joined">
-									Joined: {userProfile?.createdDate.toDate().toDateString()}
+									Joined: {formatDate(userProfile?.createdDate)}
 								</div>
 								{userProfile?.web && (
 									<div className="profile-info">

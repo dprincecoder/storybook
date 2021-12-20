@@ -77,6 +77,15 @@
 			color: #777575;
 		}
 	}
+	.profile-info {
+		display: flex;
+		margin: 5px 0;
+		text-align: center;
+		i,
+		p {
+			color: #777575;
+		}
+	}
 }
 .profile-details::-webkit-scrollbar {
 	display: none;

@@ -26,7 +26,7 @@ const Recovery = () => {
 	const { resetPasswordSuccess, userError } = useSelector(mapState);
 	const history = useHistory();
 	const dispatch = useDispatch();
-
+	const webAddress = window.location.href;
 	useEffect(() => {
 		if (resetPasswordSuccess) {
 			setSuccMsg(
@@ -52,7 +52,7 @@ const Recovery = () => {
 		dispatch(userErrorStart({}));
 		setLoading(true);
 		setTimeout(() => {
-			dispatch(resetPasswordStart({ email }));
+			dispatch(resetPasswordStart({ email, webAddress }));
 			setLoading(false);
 		}, 3000);
 	};
@@ -86,7 +86,12 @@ const Recovery = () => {
 						))}
 					</>
 				)}
-				{success && <li>{success}</li>}
+				{success && (
+					<Alert severity="success">
+						<AlertTitle>Link sent</AlertTitle>
+						{success}
+					</Alert>
+				)}
 				<form onSubmit={handleRecovery}>
 					Email Address:
 					<InputForm

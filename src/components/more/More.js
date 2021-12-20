@@ -4,42 +4,21 @@ import DB from "../../firebase/functions";
 import { signOutUserStart } from "../../redux/user/user.action";
 import Button from "../forms/button/Button";
 import { Link } from "react-router-dom";
+import InputForm from "../forms/inputs/InputForm";
+import "./more.scss";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
 
-const styles = {
-	container: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		justifyContent: "center",
-		height: "100%",
-		marginTop: "2rem",
-		width: "100%",
-	},
-	list: {
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center",
-		justifyContent: "center",
-		margin: "10px",
-		width: "100%",
-		border: "1px solid #ccc",
-	},
-	item: {
-		margin: "10px",
-		textDecoration: "none",
-		backgroundColor: "#f4f4f4",
-		padding: "10px",
-		width: "fit-content",
-	},
-};
 const More = () => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
+	const [message, setMessage] = React.useState("");
+	const [name, setName] = React.useState("");
+	const [email, setEmail] = React.useState("");
+	const [success, setSuccess] = React.useState(false);
 	const { uid } = currentUser;
 	const { userId } = userData;
 	const d = userId || uid;
@@ -49,29 +28,79 @@ const More = () => {
 			activeStatus: "offline",
 		});
 	};
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (name && email && message) {
+			DB.collection("feedback").doc(d).set({
+				name,
+				email,
+				message,
+			});
+			setSuccess(true);
+		}
+	};
+
 	return (
-		<div>
-			<div style={styles.container}>
-				<ul style={styles.list}>
-					<li style={styles.item}>
+		<div className="wrp">
+			<div className="wrp-content">
+				<ul>
+					<li>
 						{" "}
 						<Link to="/users/user/welcome">About Us</Link>
 					</li>
-					<li style={styles.item}>
+					<li>
 						{" "}
 						<Link to="/users/user/welcome">Contact Us</Link>
 					</li>
-					<li style={styles.item}>
+					<li>
 						{" "}
 						<Link to="/users/user/welcome">Privacy Policy</Link>
 					</li>
-					<div style={styles.item}>
-						<Button onClick={handleLogout} custom=" red">
-							LOG Out
-						</Button>
-					</div>
+					<li>
+						<a
+							href="https://www.dprincecoder.codes"
+							target="_blank"
+							rel="noopener noreferrer">
+							Hire the developer
+						</a>
+					</li>
 				</ul>
 			</div>
+			<div className="divider"></div>
+			<div className=" feedback">
+				<h5>Leave a Feedback</h5>
+				{success ? (
+					<div className="success">
+						<p>Thank you for your feedback!</p>
+						<i className="material-icons">check</i>
+					</div>
+				) : (
+					<form className="form" onSubmit={handleSubmit}>
+						<InputForm
+							label="Name"
+							placeholder="Enter your name..."
+							handleChange={(e) => setName(e.target.value)}
+						/>
+						<InputForm
+							label="Email"
+							placeholder="Enter your email..."
+							handleChange={(e) => setEmail(e.target.value)}
+						/>
+						<div className="textarea-msg">
+							<label>Message</label>
+							<textarea
+								className="textarea"
+								placeholder="Enter your message..."
+								onChange={(e) => setMessage(e.target.value)}></textarea>
+						</div>
+						<Button type="submit">Send</Button>
+					</form>
+				)}
+			</div>
+			<Button onClick={handleLogout} custom="log red">
+				LOG Out
+			</Button>
 		</div>
 	);
 };

@@ -117,7 +117,6 @@ const AddStory = () => {
 					storyCategory: category,
 					storyDetails: storyDetails,
 					storyPhotos: linkUrl,
-					storyVideo: "",
 				})
 			);
 		}
