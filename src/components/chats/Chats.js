@@ -98,13 +98,15 @@ const Chat = () => {
 									</div>
 									<div className="msg-right">
 										<div className="msg-center-top">
-											<h4 className={`title ${m?.read ? "read" : ""}`}>
+											<h4>
 												{m?.userThatSentMessageName === displayName
 													? m?.userThatOwnMessageName
 													: m?.userThatSentMessageName}
 											</h4>
 											<div
-												className={`msg-center-content ${m?.read && "read"}`}>
+												className={`msg-center-content ${
+													m?.read ? "read" : "unread"
+												}`}>
 												{m?.userThatSentMessageName === displayName ? (
 													<p style={{ opacity: "0.5" }}>
 														You: {shortenMsgText(m?.message, 50)}
@@ -118,7 +120,7 @@ const Chat = () => {
 											<div className="msg-right-time">
 												{formatDate(m?.createdDate)}
 											</div>
-											{m?.read && (
+											{m?.userThatSentMessageName === displayName && (
 												<p className="status">
 													<i className="material-icons circle">done</i>
 												</p>

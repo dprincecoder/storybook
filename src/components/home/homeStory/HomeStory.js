@@ -41,12 +41,16 @@ const HomeStory = (story) => {
 		storyUserUID,
 	} = story;
 	const ftch = async () => {
-		let doc = DB.collection("storyLikes")
-			.where("userId", "==", d)
-			.where("storyId", "==", documentID)
-			.limit(1);
-		let likedDoc = await doc.get();
-		setLiked(likedDoc.empty);
+		if (d) {
+			let doc = DB.collection("storyLikes")
+				.where("userId", "==", d)
+				.where("storyId", "==", documentID)
+				.limit(1);
+			let likedDoc = await doc.get();
+			setLiked(likedDoc.empty);
+		} else {
+			return;
+		}
 	};
 
 	const likeStory = () => {
