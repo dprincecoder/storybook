@@ -395,7 +395,6 @@ const SingleStory = () => {
 								displayName={displayName}
 								profilePic={profilePic}
 								storyTitle={storyTitle}
-								storyId={storyId}
 								storyUserUID={storyUserUID}
 								userThatPublished={userThatPublished}
 							/>
