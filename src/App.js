@@ -36,6 +36,7 @@ const App = () => {
 	const { currentUser, userData } = useSelector(mapState);
 	const location = useLocation();
 	const d = userData?.userId || currentUser?.uid;
+	const [welcomeNotifications, setWelcomeNotifications] = useState([]);
 	const [Notifications, setNotifications] = useState([]);
 	const [messages, setMessages] = useState([]);
 	const [stories, setStories] = useState([]);
@@ -61,6 +62,20 @@ const App = () => {
 						snapshot.docs.map((doc) => ({
 							...doc.data(),
 							storyID: doc.id,
+						}))
+					);
+				});
+		} else {
+			return;
+		}
+		if (d || currentUser) {
+			DB.collection("welcome")
+				.where("userThatOwnNotificationId", "==", d)
+				.onSnapshot((snapshot) => {
+					setWelcomeNotifications(
+						snapshot.docs.map((doc) => ({
+							...doc.data(),
+							welcomeID: doc.id,
 						}))
 					);
 				});
@@ -115,6 +130,7 @@ const App = () => {
 									allNotifications={allNotifications}
 									stories={stories}
 									allMessages={messages}
+									welcomeNotifications={welcomeNotifications}
 								/>
 							)}
 						</div>

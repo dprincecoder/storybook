@@ -1,17 +1,16 @@
+import { Alert, AlertTitle } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import AuthWrapper from "../authwrapper/Authwraper";
-import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import InputForm from "../forms/inputs/InputForm";
-import Button from "../forms/button/Button";
-
-import IsLoading from "../loading/IsLoading";
+import { Link, useHistory } from "react-router-dom";
 import {
 	resetPasswordStart,
 	resetUserState,
 	userErrorStart,
 } from "../../redux/user/user.action";
-import { Alert, AlertTitle } from "@mui/material";
+import AuthWrapper from "../authwrapper/Authwraper";
+import Button from "../forms/button/Button";
+import InputForm from "../forms/inputs/InputForm";
+import IsLoading from "../loading/IsLoading";
 
 const mapState = ({ user }) => ({
 	resetPasswordSuccess: user.resetPasswordSuccess,
@@ -19,7 +18,7 @@ const mapState = ({ user }) => ({
 });
 const Recovery = () => {
 	const [email, setEmail] = useState("");
-	const [failedEmail, setFailedEmail] = useState([]);
+	// const [failedEmail, setFailedEmail] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [success, setSuccMsg] = useState("");
 
@@ -41,11 +40,11 @@ const Recovery = () => {
 	useEffect(() => {
 		return () => dispatch(userErrorStart({}));
 	}, []);
-	useEffect(() => {
-		if (Array.isArray(userError) && userError.length > 0) {
-			setFailedEmail(userError);
-		}
-	}, [userError]);
+	// useEffect(() => {
+	// 	if (Array.isArray(userError) && userError.length > 0) {
+	// 		setFailedEmail(userError);
+	// 	}
+	// }, [userError]);
 
 	const handleRecovery = async (e) => {
 		e.preventDefault();

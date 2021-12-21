@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./home.scss";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchStoriesStart } from "../../redux/story/story.action";
-import HomeStory from "./homeStory/HomeStory";
-import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
-import LoadMore from "../forms/button/LoadMore";
+import { useSelector } from "react-redux";
 import DB from "../../firebase/functions";
-import { dd } from "../../Dd";
+import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import { NetworkDetector } from "../network/NetworkDetector";
+import "./home.scss";
+import HomeStory from "./homeStory/HomeStory";
 
 const mapState = ({ storiesData, user }) => ({
 	stories: storiesData.stories,
@@ -15,7 +12,7 @@ const mapState = ({ storiesData, user }) => ({
 	currentUser: user.currentUser,
 });
 const Home = () => {
-	const { stories, userData, currentUser } = useSelector(mapState);
+	const { userData, currentUser } = useSelector(mapState);
 	const [data, setData] = useState([]);
 	const { userId } = userData;
 	const d = userId || currentUser?.uid;
@@ -69,9 +66,9 @@ const Home = () => {
 	// 		})
 	// 	);
 	// };
-	const configLoadMore = {
-		// onLoadMoreEvt: handleLoadMore,
-	};
+	// const configLoadMore = {
+	// 	// onLoadMoreEvt: handleLoadMore,
+	// };
 	return (
 		<div className="container">
 			{data.map((story, index) => {

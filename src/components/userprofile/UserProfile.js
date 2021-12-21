@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useHistory, useParams } from "react-router-dom";
 import Button from "../../components/forms/button/Button";
 import IsLoading from "../../components/loading/IsLoading";
 import DB from "../../firebase/functions";
-import "./userProfile.scss";
 import { formatDate } from "../../helpers/Helpers";
-import Avatar from "@material-ui/core/Avatar";
+import "./userProfile.scss";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -17,7 +17,7 @@ const UserProfile = () => {
 	const [usrStories, setUsrStories] = useState([]);
 	const [message, setMessage] = useState("");
 	const [userProfile, setUserProfile] = useState({});
-	const [current, setCurrent] = useState(0);
+	// const [current, setCurrent] = useState(0);
 	const history = useHistory();
 	const { userData, currentUser } = useSelector(mapState);
 	const { userId, displayName, profilePic } = userData;
@@ -191,7 +191,7 @@ const UserProfile = () => {
 											<a
 												href={`${userProfile?.web}`}
 												target="_blank"
-												rel="noreferal noopener">
+												rel="noreferral noopener">
 												{userProfile?.web}
 											</a>
 										</p>

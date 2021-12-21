@@ -20,7 +20,7 @@ const Chat = () => {
 	const [loading, setLoading] = useState(true);
 	const { userId, displayName, profilePic } = userData;
 	const { uid } = currentUser;
-	const d = userData?.userId;
+	const d = userId || uid;
 
 	useEffect(() => {
 		if (d) {

@@ -45,7 +45,7 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 					...additionalData,
 				})
 				.then(() => {
-					DB.collection("Notifications")
+					DB.collection("welcome")
 						.doc(uid)
 						.set({
 							createdDate: timestamp,
@@ -53,7 +53,9 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 							read: false,
 							userThatSentNote: "Storybook Admin",
 							userThatOwnNotificationId: uid,
-							note: `Welcome to the community, ${displayName}! Please fill out your profile and start sharing your stories. You can also follow other users to see their stories, comment, or even reply to a comment. Please take a look at our About page at the very topbar to see more information. Happy reading! 📖`,
+							note: `Welcome to the community, ${
+								displayName || ""
+							}. Please fill out your profile and start sharing your stories. You can also follow other users to see their stories, comment, or even reply to a comment. Please take a look at our About page at the very topbar to see more information. Happy reading! 📖`,
 							logo: "/assets/storybook.jpg",
 						});
 				});

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import { storage } from "../../firebase/functions.js";
 import {
 	handleUpdateUserDetails,
@@ -10,14 +11,13 @@ import Button from "../forms/button/Button";
 import InputForm from "../forms/inputs/InputForm";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
 import UserStory from "../userStory/UserStory";
-import { useParams } from "react-router-dom";
 import "./dashboard.scss";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
 });
 const Dashboard = () => {
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 	const { userData } = useSelector(mapState);
 	const [showEditInput, setShowEditInput] = useState(false);
 	const [updateDisplayName, setUpdateDisplayName] = useState("");
@@ -29,7 +29,7 @@ const Dashboard = () => {
 	const [updateBio, setUpdateBio] = useState("");
 	const [updateWeb, setUpdateWeb] = useState("");
 	const [progress, setProgress] = useState(0);
-	const [imageUrl, setImageUrl] = useState(null);
+	// const [imageUrl, setImageUrl] = useState(null);
 	const { userId } = useParams();
 	const {
 		displayName,
@@ -93,7 +93,6 @@ const Dashboard = () => {
 					})
 					.then(() => {
 						setProgress(0);
-						setImageUrl(null);
 						setUpdateImage(null);
 						setTimeout(() => {
 							window.location.reload();

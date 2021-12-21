@@ -1,19 +1,18 @@
-import React, { useEffect, useState, useRef } from "react";
-import AuthWrapper from "../authwrapper/Authwraper";
-import InputForm from "../forms/inputs/InputForm";
-import Button from "../forms/button/Button";
+import { Alert, AlertTitle } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory, withRouter } from "react-router-dom";
 import {
 	googleSignInStart,
 	signUpUserStart,
 	userErrorStart,
 	userSuccessStart,
 } from "../../redux/user/user.action";
+import AuthWrapper from "../authwrapper/Authwraper";
+import Button from "../forms/button/Button";
+import InputForm from "../forms/inputs/InputForm";
 import IsLoading from "../loading/IsLoading";
 import "./register.scss";
-import { Link, withRouter } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { Alert, AlertTitle } from "@mui/material";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
@@ -26,12 +25,12 @@ const Register = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [errors, setErrors] = useState([]);
+	// const [errors, setErrors] = useState([]);
 	const [displayName, setDisplayName] = useState("");
-	const [country, setCountry] = useState("");
-	const [city, setCity] = useState("");
-	const [firstName, setFirstName] = useState("");
-	const [lastName, setLastName] = useState("");
+	// const [country, setCountry] = useState("");
+	// const [city, setCity] = useState("");
+	// const [firstName, setFirstName] = useState("");
+	// const [lastName, setLastName] = useState("");
 	const [loading, setLoading] = useState();
 	const [loading2, setLoading2] = useState();
 	const [suggestedChar, setSuggestedChar] = useState("");
@@ -43,7 +42,7 @@ const Register = () => {
 	const includeUpperRef = useRef();
 	const includeNumbersRef = useRef();
 	const includeSymbolsRef = useRef();
-	const inputRef = useRef();
+	// const inputRef = useRef();
 
 	useEffect(() => {
 		if (currentUser) {
@@ -57,12 +56,7 @@ const Register = () => {
 		setEmail("");
 		setConfirmPassword("");
 		setDisplayName("");
-		setErrors([]);
 		setPassword("");
-		setFirstName("");
-		setLastName("");
-		setCountry("");
-		setCity("");
 	};
 
 	useEffect(() => {

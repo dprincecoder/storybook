@@ -20,7 +20,12 @@ const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
-const Topbar = ({ allNotifications, stories, allMessages }) => {
+const Topbar = ({
+	allNotifications,
+	stories,
+	allMessages,
+	welcomeNotifications,
+}) => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
@@ -31,9 +36,15 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 		.filter((id) => id.userThatOwnNotificationId === userId)
 		.filter((not) => not.seen === false).length;
 	const unseenStories = stories.filter((id) => id.seen === false).length;
+
 	const unseenMsgs = allMessages
 		.filter((id) => id.userThatSentMessageId !== userId)
 		.filter((id) => id.seen === false).length;
+
+	const unseenWelcome = welcomeNotifications.filter(
+		(id) => id.seen === false
+	).length;
+
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
 
@@ -43,6 +54,7 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 	}, []);
 
 	const markNotificationsSeen = () => {
+		DB.collection("welcome").doc(userId).update({ seen: true });
 		let batch = DB.batch();
 		allNotifications
 			.filter((not) => not.userThatOwnNotificationId === userId)
@@ -124,11 +136,10 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 								</BadgeWrapper>
 							</li>
 							<li className="tab icon">
-								<BadgeWrapper badgeContent={Number(unseenNotifications)}>
+								<BadgeWrapper
+									badgeContent={unseenWelcome + unseenNotifications}>
 									<Link to={`/notifications`}>
-										<CircleNotificationsIcon
-											onClick={() => markNotificationsSeen()}
-										/>
+										<CircleNotificationsIcon onClick={markNotificationsSeen} />
 									</Link>
 								</BadgeWrapper>
 							</li>

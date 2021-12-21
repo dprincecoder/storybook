@@ -22,8 +22,8 @@ const AddStory = () => {
 	const { profilePic, displayName } = userData;
 	const [title, setTitle] = useState("");
 	const [category, setCategory] = useState("");
-	const [photos, setPhotos] = useState([]);
-	const [photoURL, setPhotoURL] = useState("");
+	// const [photos, setPhotos] = useState([]);
+	// const [photoURL, setPhotoURL] = useState("");
 	const [imageUpload, setImageUpload] = useState(null);
 	const [storyDetails, setStoryDetails] = useState("");
 	const [loading, setLoading] = useState();
@@ -146,7 +146,6 @@ const AddStory = () => {
 		setTitle("");
 		setCategory("");
 		setStoryDetails("");
-		setPhotos([]);
 		inputRef.current.value = "";
 	};
 	const handleCancel = (e) => {

@@ -1,11 +1,11 @@
-import React from "react";
 import { Avatar } from "@material-ui/core";
-import "./allreplies.scss";
-import { formatDate, detectLinks } from "../../../helpers/Helpers";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import DB from "../../../firebase/functions";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import DB from "../../../firebase/functions";
+import { formatDate } from "../../../helpers/Helpers";
+import "./allreplies.scss";
 const mapState = ({ user }) => ({
 	userData: user.userData,
 });

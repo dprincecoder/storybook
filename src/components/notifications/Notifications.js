@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from "react";
 import { Avatar } from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { dd } from "../../Dd";
-import { formatDate, shortenText } from "../../helpers/Helpers";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import "./notification.scss";
+import { Link } from "react-router-dom";
 import DB from "../../firebase/functions";
+import { formatDate } from "../../helpers/Helpers";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
+import "./notification.scss";
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
@@ -61,7 +60,7 @@ const Notifications = () => {
 		DB.collection("welcome").doc(id).update({ read: true });
 	};
 
-	if (!loading && welcomeNotes.length < 1) {
+	if (!loading && notifications.length < 1 && welcomeNotes.length < 1) {
 		return (
 			<div>
 				<h4>Notifications</h4>

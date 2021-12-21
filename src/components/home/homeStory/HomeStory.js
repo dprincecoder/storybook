@@ -3,8 +3,9 @@ import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
 import { Avatar } from "@mui/material";
 import "aos/dist/aos.css";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import DB from "../../../firebase/functions";
 import {
 	formatDate,
 	shortenText,
@@ -15,13 +16,17 @@ import { handleLikeStory } from "../../../redux/story/story.helpers";
 const mapState = ({ user, storiesData }) => ({
 	userData: user.userData,
 	stories: storiesData.stories,
+	currentUser: user.currentUser,
 });
 
 const HomeStory = (story) => {
-	const dispatch = useDispatch();
-	const { stories, userData } = useSelector(mapState);
+	// const dispatch = useDispatch();
+	const { userData } = useSelector(mapState);
 	const { userId, displayName, profilePic } = userData;
-	const { data, queryDoc } = stories;
+	const { currentUser } = useSelector(mapState);
+	const d = userId || currentUser?.uid;
+	const [liked, setLiked] = React.useState(Boolean);
+	// const { data, queryDoc } = stories;
 
 	const {
 		storyTitle,
@@ -35,6 +40,14 @@ const HomeStory = (story) => {
 		documentID,
 		storyUserUID,
 	} = story;
+	const ftch = async () => {
+		let doc = DB.collection("storyLikes")
+			.where("userId", "==", d)
+			.where("storyId", "==", documentID)
+			.limit(1);
+		let likedDoc = await doc.get();
+		setLiked(likedDoc.empty);
+	};
 
 	const likeStory = () => {
 		handleLikeStory(
@@ -44,13 +57,14 @@ const HomeStory = (story) => {
 			storyTitle,
 			documentID,
 			storyUserUID
-		);
-		// dispatch(
-		// 	fetchStoriesStart({ startAfterDoc: queryDoc, persistStories: data })
-		// );
+		).then(() => {
+			ftch();
+		});
 	};
 
-	// console.log(storyUserUID);
+	React.useEffect(() => {
+		ftch();
+	}, []);
 
 	return (
 		<div className="col s12 m12">
@@ -108,10 +122,10 @@ const HomeStory = (story) => {
 					<div className="divider"></div>
 					<div className="options">
 						<div className="like" onClick={likeStory}>
-							{likeCount > 0 ? (
-								<ThumbUpIcon className="liked" />
-							) : (
+							{liked ? (
 								<ThumbUpAltOutlinedIcon />
+							) : (
+								<ThumbUpIcon className="liked" />
 							)}
 						</div>
 						<Link to={`/stories/story/${documentID}`}>Comments</Link>

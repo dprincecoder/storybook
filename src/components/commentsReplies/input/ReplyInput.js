@@ -1,14 +1,10 @@
-import React, { useRef, useState } from "react";
-import InputEmoji from "react-input-emoji";
 import { Avatar, Button } from "@material-ui/core";
-import "./input.scss";
-
-import firebase from "firebase";
 import TelegramIcon from "@material-ui/icons/Telegram";
+import firebase from "firebase";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import ExpandInput from "../../forms/expandForm/ExpandInput";
 import DB from "../../../firebase/functions";
+import "./input.scss";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -22,10 +18,10 @@ const ReplyInput = ({
 	userThatCommentName,
 }) => {
 	const [replyMsg, setReplyMsg] = useState("");
-	const [text, setText] = useState("");
+	// const [text, setText] = useState("");
 	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 	const inputRef = useRef();
 	const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 	let today = new Date().toISOString();
