@@ -25,7 +25,7 @@ const Recovery = () => {
 	const { resetPasswordSuccess, userError } = useSelector(mapState);
 	const history = useHistory();
 	const dispatch = useDispatch();
-	const webAddress = window.location.href;
+
 	useEffect(() => {
 		if (resetPasswordSuccess) {
 			setSuccMsg(
@@ -34,7 +34,7 @@ const Recovery = () => {
 			dispatch(resetUserState());
 			setTimeout(() => {
 				history.push("/users/login");
-			}, 3000);
+			}, 5000);
 		}
 	}, [resetPasswordSuccess]);
 	useEffect(() => {
@@ -51,13 +51,13 @@ const Recovery = () => {
 		dispatch(userErrorStart({}));
 		setLoading(true);
 		setTimeout(() => {
-			dispatch(resetPasswordStart({ email, webAddress }));
+			dispatch(resetPasswordStart({ email }));
 			setLoading(false);
 		}, 3000);
 	};
 
 	const configAuthwrapper = {
-		headline: "Email Recovery",
+		headline: "Password Recovery",
 	};
 	return (
 		<div className="container">
@@ -92,15 +92,15 @@ const Recovery = () => {
 					</Alert>
 				)}
 				<form onSubmit={handleRecovery}>
-					Email Address:
 					<InputForm
 						type="email"
+						label="Email Address"
 						className="input-field"
 						placeholder="Enter your email"
 						name="email"
+						value={email}
 						required
 						handleChange={(e) => setEmail(e.target.value)}
-						value={email}
 					/>
 					<div className="section" style={{ display: "flex" }}>
 						<Button custom="blue" type="submit" disabled={loading}>

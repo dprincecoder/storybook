@@ -47,8 +47,9 @@ export const handleUpdateUserDetails = (
 	});
 };
 
-export const handleResetPasswordAPI = (email, webAddress) => {
+export const handleResetPasswordAPI = ({ email }) => {
 	//redirect users to login page after they sent reset email
+	const webAddress = window.location.origin;
 	const redirectUrl = { url: `${webAddress}/users/login` };
 
 	return new Promise((resolve, reject) => {

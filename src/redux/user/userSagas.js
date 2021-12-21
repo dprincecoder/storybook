@@ -231,9 +231,9 @@ export function* fetchUserData({ payload }) {
 	}
 }
 
-export function* resetPassword({ payload: { email, webAddress } }) {
+export function* resetPassword({ payload: { email } }) {
 	try {
-		yield call(handleResetPasswordAPI, { email, webAddress });
+		yield call(handleResetPasswordAPI, { email });
 		yield put(resetPasswordSuccess());
 	} catch (e) {
 		yield put(
