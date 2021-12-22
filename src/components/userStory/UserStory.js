@@ -1,15 +1,9 @@
 import React, { useEffect } from "react";
-import "./userstory.scss";
 import { useDispatch, useSelector } from "react-redux";
 import DB from "../../firebase/functions";
-import {
-	fetchUserStoriesStart,
-	setStory,
-} from "../../redux/story/story.action";
-import Story from "./story/Story";
 import IsLoadingSkeleton from "../loading/IsLoadingSkeleton";
-import { useParams } from "react-router-dom";
-import LoadMore from "../forms/button/LoadMore";
+import Story from "./story/Story";
+import "./userstory.scss";
 
 const mapState = ({ user, storiesData }) => ({
 	currentUser: user.currentUser,

@@ -1,7 +1,6 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import DB from "../../firebase/functions";
-import { signOutUserStart } from "../../redux/user/user.action";
 import Button from "../forms/button/Button";
 import { Link } from "react-router-dom";
 import InputForm from "../forms/inputs/InputForm";
@@ -13,7 +12,6 @@ const mapState = ({ user }) => ({
 });
 
 const More = () => {
-	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const [message, setMessage] = React.useState("");
 	const [name, setName] = React.useState("");
@@ -22,12 +20,6 @@ const More = () => {
 	const { uid } = currentUser;
 	const { userId } = userData;
 	const d = userId || uid;
-	const handleLogout = () => {
-		dispatch(signOutUserStart());
-		DB.collection("users").doc(d).update({
-			activeStatus: "offline",
-		});
-	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -79,28 +71,31 @@ const More = () => {
 					<form className="form" onSubmit={handleSubmit}>
 						<InputForm
 							label="Name"
+							required
 							placeholder="Enter your name..."
 							handleChange={(e) => setName(e.target.value)}
 						/>
 						<InputForm
 							label="Email"
+							required
 							placeholder="Enter your email..."
 							handleChange={(e) => setEmail(e.target.value)}
 						/>
 						<div className="textarea-msg">
 							<label>Message</label>
 							<textarea
+								name="message"
+								required
 								className="textarea"
 								placeholder="Enter your message..."
 								onChange={(e) => setMessage(e.target.value)}></textarea>
 						</div>
-						<Button type="submit">Send</Button>
+						<Button disabled={!email && !name && !message} type="submit">
+							Send
+						</Button>
 					</form>
 				)}
 			</div>
-			<Button onClick={handleLogout} custom="log red">
-				LOG Out
-			</Button>
 		</div>
 	);
 };

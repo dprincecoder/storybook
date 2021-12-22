@@ -119,16 +119,16 @@ const Story = (story) => {
 				<div className="divider"></div>
 				<div className="card-content">
 					<Link to={`/stories/story/${documentID}`}>
-						<h4>{storyTitle}</h4>
+						<h1>{storyTitle}</h1>
 						<div className="divider"></div>
-						<span>{stripHtmlTags(shortenText(storyDetails, 150))}</span>
-						<br />
-						<b>Read More</b>
+						<span>{shortenText(storyDetails, 150)}</span>
 
 						<div className="divider"></div>
-						<div className="img-card">
-							<img src={storyPhotos} alt={storyTitle} />
-						</div>
+						{storyPhotos && (
+							<div className="img-card">
+								<img src={storyPhotos} alt="" />
+							</div>
+						)}
 					</Link>
 					<div className="divider"></div>
 					<div className="optionsCount">

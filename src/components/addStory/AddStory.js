@@ -14,6 +14,32 @@ const mapState = ({ user }) => ({
 	userData: user.userData,
 });
 
+const selectCat = [
+	{ id: 10, opt: "MentorShip" },
+	{ id: 1, opt: "Marriage" },
+	{ id: 2, opt: "Family" },
+	{ id: 3, opt: "Relationship" },
+	{ id: 4, opt: "Politics" },
+	{ id: 5, opt: "Vacation" },
+
+	{ id: 6, opt: "Meme" },
+	{ id: 7, opt: "Qoute" },
+	{ id: 8, opt: "Carear" },
+	{ id: 9, opt: "Football" },
+	{ id: 11, opt: "Coaching" },
+	{ id: 12, opt: "Other" },
+	{ id: 13, opt: "Love" },
+	{ id: 14, opt: "Hobbies" },
+	{ id: 15, opt: "Work" },
+	{ id: 16, opt: "Holidays" },
+	{ id: 17, opt: "Funny" },
+	{ id: 18, opt: "Health" },
+	{ id: 19, opt: "Education" },
+	{ id: 20, opt: "Sports" },
+	{ id: 21, opt: "Technology" },
+	{ id: 22, opt: "Entertainment" },
+];
+
 const AddStory = () => {
 	const { userData } = useSelector(mapState);
 	const dispatch = useDispatch();
@@ -107,8 +133,7 @@ const AddStory = () => {
 		setLoading(true);
 		if (imageUpload) {
 			upload(imageUpload);
-		}
-		if (linkUrl) {
+		} else if (linkUrl) {
 			dispatch(
 				addStoryStart({
 					userThatPublished: displayName,
@@ -119,7 +144,30 @@ const AddStory = () => {
 					storyPhotos: linkUrl,
 				})
 			);
+		} else {
+			dispatch(
+				addStoryStart({
+					userThatPublished: displayName,
+					userthatPublishedProfilePic: profilePic,
+					storyTitle: title,
+					storyCategory: category,
+					storyDetails: storyDetails,
+					storyPhotos: "",
+				})
+			);
 		}
+		// if (linkUrl) {
+		// 	dispatch(
+		// 		addStoryStart({
+		// 			userThatPublished: displayName,
+		// 			userthatPublishedProfilePic: profilePic,
+		// 			storyTitle: title,
+		// 			storyCategory: category,
+		// 			storyDetails: storyDetails,
+		// 			storyPhotos: linkUrl,
+		// 		})
+		// 	);
+		// }
 		// dispatch(
 		// 	addStoryStart({
 		// 		userThatPublished: displayName,
@@ -194,9 +242,9 @@ const AddStory = () => {
 					<div className="card-content">
 						<AuthWrapper {...configAuthWrapper}>
 							<form onSubmit={handlePublish}>
-								Title:
 								<InputForm
 									type="text"
+									label="Title"
 									name="title"
 									placeholder="Enter your story Title"
 									value={title}
@@ -204,14 +252,16 @@ const AddStory = () => {
 									handleChange={(e) => setTitle(e.target.value)}
 								/>
 								Category:
-								<InputForm
-									type="text"
-									name="category"
-									placeholder="E.g marriage, family, relationship or vacation"
+								<select
+									className="browser-default"
 									value={category}
-									required
-									handleChange={(e) => setCategory(e.target.value)}
-								/>
+									onChange={(e) => setCategory(e.target.value)}>
+									{selectCat.map((e) => (
+										<option key={e.id} value={e.id}>
+											{e.opt}
+										</option>
+									))}
+								</select>
 								<div className="file-field input-field">
 									<div className="btn">
 										<span>Select</span>
@@ -274,7 +324,7 @@ const AddStory = () => {
 									{loading && <IsLoading />}
 								</div>
 							</form>
-							<br />
+							&nbsp;
 							{title && (
 								<Button onClick={handleCancel} custom="red">
 									Cancel

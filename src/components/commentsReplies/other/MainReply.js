@@ -11,22 +11,22 @@ const MainReply = ({
 	color,
 }) => {
 	return (
-		<>
-			<div className="main-header">
-				<Avatar src={profilePic} className="main-header-avatar" />
-				<div className="main-header-name">
-					<ul>
+		<div className="main-reply-container">
+			<Avatar src={profilePic} className="main-reply-header-avatar" />
+			<div className="main-reply-header">
+				<div className="main-reply-header-name">
+					<ul className="main-reply-header-list">
 						<li className="name" style={{ color: color }}>
 							{displayName}
 						</li>
 						<li>{formatDate(createdDate)}</li>
 					</ul>
 				</div>
+				<div className="main-reply-content">
+					<p>{repliesMsg} </p>
+				</div>
 			</div>
-			<div className="main-content">
-				<p>{repliesMsg} </p>
-			</div>
-		</>
+		</div>
 	);
 };
 

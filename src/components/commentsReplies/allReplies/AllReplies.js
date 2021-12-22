@@ -28,12 +28,12 @@ const MainReply = ({
 	};
 	return (
 		<div className="he">
+			<Link to={`/users/user/${userThatReplyId}/profile`}>
+				<Avatar src={profilePic} className="main-header-avatar" />
+			</Link>
 			<div className="main-header">
-				<Link to={`/users/user/${userThatReplyId}/profile`}>
-					<Avatar src={profilePic} className="main-header-avatar" />
-				</Link>
 				<div className="main-header-name">
-					<ul>
+					<ul className="main-header-list">
 						<Link
 							to={`/users/user/${userThatReplyId}/profile`}
 							className="name"
@@ -42,27 +42,28 @@ const MainReply = ({
 						</Link>
 						<li>{formatDate(createdDate)}</li>
 					</ul>
-				</div>
-				<div className="more-btn" onClick={() => setHide(!hide)}>
-					<MoreVertIcon />
+					<div className="more-btn" onClick={() => setHide(!hide)}>
+						<MoreVertIcon />
+					</div>
 				</div>
 				{hide && (
 					<div className="more-options">
 						<ul className="collection">
-							{userId === userThatReplyId && (
-								<li className="collection-item">Edit</li>
+							{userId === userThatReplyId ? (
+								<>
+									<li className="collection-item">Edit</li>
+									<li className="collection-item" onClick={deleteReply}>
+										Delete
+									</li>
+								</>
+							) : (
+								<li className="collection-item">Report</li>
 							)}
-							{userId === userThatReplyId && (
-								<li className="collection-item" onClick={deleteReply}>
-									Delete
-								</li>
-							)}
-							<li className="collection-item">Report</li>
 						</ul>
 					</div>
 				)}
+				<div className="all-main-content">{repliesMsg}</div>
 			</div>
-			<div className="main-content">{repliesMsg}</div>
 		</div>
 	);
 };

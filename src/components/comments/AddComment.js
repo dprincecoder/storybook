@@ -75,7 +75,7 @@ const Comments = ({
 					<div className="post-details-header-details">
 						<textarea
 							type="text"
-							className="text-expand"
+							className="comment-textarea"
 							value={commentMsg}
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}

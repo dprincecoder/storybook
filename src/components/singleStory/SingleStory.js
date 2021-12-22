@@ -204,19 +204,17 @@ const SingleStory = () => {
 					</div>
 					<div className="divider"></div>
 					<div className="card-content">
-						<h4>{storyTitle}</h4>
+						<h1>{storyTitle}</h1>
 						<div className="divider"></div>
 						<span dangerouslySetInnerHTML={{ __html: storyDetails }} />
 						<div className="divider"></div>
 						{/* {[1, 2].map((a) => (
 						))} */}
-						<div className="single-image-container">
-							<img
-								src={storyPhotos}
-								alt={storyTitle}
-								className="single-image"
-							/>
-						</div>
+						{storyPhotos && (
+							<div className="single-image-container">
+								<img src={storyPhotos} alt="" className="single-image" />
+							</div>
+						)}
 						<div className="optionsCount">
 							{likeCount > 0 && (
 								<>

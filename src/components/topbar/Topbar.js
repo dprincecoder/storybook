@@ -9,7 +9,11 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import DB from "../../firebase/functions";
-import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
+import {
+	fetchUserDataStart,
+	setUserData,
+	signOutUserStart,
+} from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
 import BadgeWrapper from "../notificationwrap/Wrapper";
 import "./topbar.scss";
@@ -90,6 +94,14 @@ const Topbar = ({
 		batch.commit();
 	};
 
+	const handleLogout = () => {
+		DB.collection("users")
+			.doc(d)
+			.update({
+				activeStatus: "offline",
+			})
+			.then(() => dispatch(signOutUserStart()));
+	};
 	return (
 		<div className="fixed">
 			<div className="app-name">
@@ -102,7 +114,7 @@ const Topbar = ({
 						{!userId ? (
 							<IsLoading />
 						) : (
-							<>
+							<div className="detls">
 								<li className="tab usr-name">
 									<Link to={`/users/${userId}/dashboard`}>{displayName}</Link>
 								</li>
@@ -112,8 +124,11 @@ const Topbar = ({
 									</Link>
 									{activeStatus && <div className="activeBadge"></div>}
 								</li>
-							</>
+							</div>
 						)}
+						<span className="lgt" onClick={handleLogout}>
+							Logout
+						</span>
 					</div>
 				</ul>
 			</div>

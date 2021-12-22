@@ -71,9 +71,9 @@ body,
 }
 
 .main {
-	height: calc(100% - 6rem);
+	height: calc(100% - 3rem);
 	padding: 10px;
-	margin: 0 auto;
+	margin: auto;
 }
 
 a {
@@ -82,8 +82,15 @@ a {
 	color: white;
 }
 
+h1 {
+	font-size: 1.3rem;
+	color: #333;
+	margin: 0;
+	padding: 0;
+}
+
 body::-webkit-scrollbar {
-	width: 5px;
+	display: none;
 }
 body::-webkit-scrollbar-thumb {
 	background-color: #037fff;

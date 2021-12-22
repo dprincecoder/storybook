@@ -28,12 +28,12 @@ const Showcoment = ({
 
 	return (
 		<div className="show-a-comment">
+			<Link to={`/users/user/${userThatCommentId}/profile`}>
+				<Avatar src={profilePic} className="comment-header-avatar" />
+			</Link>
 			<div className="comment-header">
-				<Link to={`/users/user/${userThatCommentId}/profile`}>
-					<Avatar src={profilePic} className="comment-header-avatar" />
-				</Link>
 				<div className="comment-header-name">
-					<ul>
+					<ul className="comment-header-list">
 						<Link
 							to={`/users/user/${userThatCommentId}/profile`}
 							className="name"
@@ -42,28 +42,29 @@ const Showcoment = ({
 						</Link>
 						<li>{formatDate(createdDate)}</li>
 					</ul>
-				</div>
-				<div className="more-btn" onClick={() => setHide(!hide)}>
-					<MoreVertIcon />
+					<div className="more-btn" onClick={() => setHide(!hide)}>
+						<MoreVertIcon />
+					</div>
 				</div>
 				{hide && (
 					<div className="more-options">
 						<ul className="collection">
-							{userId === userThatCommentId && (
-								<li className="collection-item">Edit</li>
+							{userId === userThatCommentId ? (
+								<>
+									<li className="collection-item">Edit</li>
+									<li className="collection-item" onClick={deleteComment}>
+										Delete
+									</li>
+								</>
+							) : (
+								<li className="collection-item">Report</li>
 							)}
-							{userId === userThatCommentId && (
-								<li className="collection-item" onClick={deleteComment}>
-									Delete
-								</li>
-							)}
-							<li className="collection-item">Report</li>
 						</ul>
 					</div>
 				)}
-			</div>
-			<div className="comment-content">
-				<p>{commentMsg} </p>
+				<div className="comment-content">
+					<p>{commentMsg} </p>
+				</div>
 			</div>
 		</div>
 	);
