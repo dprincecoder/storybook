@@ -323,13 +323,11 @@ const Chat = () => {
 													: "other-chat"
 											}`}>
 											{i.message && <p>{i.message}</p>}
-
 											{i.imageUrl && (
 												<div className="chatcon">
 													<img src={i.imageUrl} alt="" className="chat-img" />
 												</div>
 											)}
-
 											{i.audioUrl && (
 												<div className="audio-container">
 													<audio src={i.audioUrl} controls />

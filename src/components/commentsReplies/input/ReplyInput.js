@@ -85,7 +85,7 @@ const ReplyInput = ({
 						<textarea
 							type="text"
 							name="replyMsg"
-							className="text-expand"
+							className="text-area"
 							onChange={(e) => setReplyMsg(e.target.value)}
 							placeholder="Write a public reply"
 							value={replyMsg}
