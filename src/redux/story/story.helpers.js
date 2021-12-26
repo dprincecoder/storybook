@@ -1,5 +1,5 @@
-import DB from "../../firebase/functions";
 import firebase from "firebase/app";
+import DB from "../../firebase/functions";
 export const handleAddStory = (story) => {
 	if (!story) return;
 	return new Promise((resolve, reject) => {
@@ -186,35 +186,7 @@ export const handleLikeStory = async (
 		DB.collection("Notifications").doc(`${userId}~${storyId}`).delete();
 	}
 
-	return likeDocument;
-};
-
-export const handleLikeVideo = async (userId, displayName, videoID) => {
-	let likeDocument = DB.collection("videoLikes");
-	let increment = firebase.firestore.FieldValue.increment(+1);
-	let likeDocu = DB.collection("videoLikes")
-		.where("userId", "==", userId)
-		.where("videoID", "==", videoID)
-		.limit(1);
-	let decrement = firebase.firestore.FieldValue.increment(-1);
-	let video = DB.collection("videos").doc(videoID);
-	let likeDoc = await likeDocu.get();
-	if (likeDoc.empty) {
-		likeDocument.doc(videoID).set({
-			userId,
-			displayName,
-			videoID,
-		});
-		video.update({
-			likeCount: increment,
-		});
-	} else {
-		likeDocument.doc(videoID).delete();
-		video.update({
-			likeCount: decrement,
-		});
-	}
-	return likeDocument;
+	return { likeDoc };
 };
 
 export const handleAddComment = (comments) => {

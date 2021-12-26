@@ -1,26 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "./topbar.scss";
-import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
-import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
-
-import AddBoxIcon from "@mui/icons-material/AddBox";
-import HomeIcon from "@mui/icons-material/Home";
 import { Avatar } from "@material-ui/core";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import ChatIcon from "@mui/icons-material/Chat";
+import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+import HomeIcon from "@mui/icons-material/Home";
+import VideoLibraryIcon from "@mui/icons-material/VideoLibrary";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchUserDataStart, setUserData } from "../../redux/user/user.action";
+import { Link } from "react-router-dom";
+import DB from "../../firebase/functions";
+import {
+	fetchUserDataStart,
+	setUserData,
+	signOutUserStart,
+} from "../../redux/user/user.action";
 import IsLoading from "../loading/IsLoading";
 import BadgeWrapper from "../notificationwrap/Wrapper";
-import DB from "../../firebase/functions";
+import "./topbar.scss";
+
 const { useSelector } = require("react-redux");
 
 const mapState = ({ user }) => ({
 	currentUser: user.currentUser,
 	userData: user.userData,
 });
-const Topbar = ({ allNotifications, stories, allMessages }) => {
+const Topbar = ({
+	allNotifications,
+	stories,
+	allMessages,
+	welcomeNotifications,
+}) => {
 	const dispatch = useDispatch();
 	const { currentUser, userData } = useSelector(mapState);
 	const { uid, userId } = currentUser;
@@ -31,7 +40,15 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 		.filter((id) => id.userThatOwnNotificationId === userId)
 		.filter((not) => not.seen === false).length;
 	const unseenStories = stories.filter((id) => id.seen === false).length;
-	const unseenMsgs = allMessages.filter((id) => id.seen === false).length;
+
+	const unseenMsgs = allMessages
+		.filter((id) => id.userThatSentMessageId !== userId)
+		.filter((id) => id.seen === false).length;
+
+	const unseenWelcome = welcomeNotifications.filter(
+		(id) => id.seen === false
+	).length;
+
 	useEffect(() => {
 		dispatch(fetchUserDataStart(d));
 
@@ -41,6 +58,7 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 	}, []);
 
 	const markNotificationsSeen = () => {
+		DB.collection("welcome").doc(userId).update({ seen: true });
 		let batch = DB.batch();
 		allNotifications
 			.filter((not) => not.userThatOwnNotificationId === userId)
@@ -66,12 +84,23 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 
 	const markMsgsSeen = () => {
 		let batch = DB.batch();
-		allMessages.forEach((msg) => {
-			const msgID = msg.messageID;
-			const msgDoc = DB.collection("messages").doc(msgID);
-			batch.update(msgDoc, { seen: true });
-		});
+		allMessages
+			.filter((msg) => msg.userThatSentMessageId !== userId)
+			.forEach((msg) => {
+				const msgID = msg.messageID;
+				const msgDoc = DB.collection("messages").doc(msgID);
+				batch.update(msgDoc, { seen: true });
+			});
 		batch.commit();
+	};
+
+	const handleLogout = () => {
+		DB.collection("users")
+			.doc(d)
+			.update({
+				activeStatus: "offline",
+			})
+			.then(() => dispatch(signOutUserStart()));
 	};
 	return (
 		<div className="fixed">
@@ -80,11 +109,12 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 					<li className="name">
 						<Link to="/">STORYBOOK</Link>
 					</li>
+
 					<div className="user-info">
 						{!userId ? (
 							<IsLoading />
 						) : (
-							<>
+							<div className="detls">
 								<li className="tab usr-name">
 									<Link to={`/users/${userId}/dashboard`}>{displayName}</Link>
 								</li>
@@ -94,8 +124,11 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 									</Link>
 									{activeStatus && <div className="activeBadge"></div>}
 								</li>
-							</>
+							</div>
 						)}
+						<span className="lgt" onClick={handleLogout}>
+							Logout
+						</span>
 					</div>
 				</ul>
 			</div>
@@ -118,11 +151,10 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 								</BadgeWrapper>
 							</li>
 							<li className="tab icon">
-								<BadgeWrapper badgeContent={Number(unseenNotifications)}>
+								<BadgeWrapper
+									badgeContent={unseenWelcome + unseenNotifications}>
 									<Link to={`/notifications`}>
-										<CircleNotificationsIcon
-											onClick={() => markNotificationsSeen()}
-										/>
+										<CircleNotificationsIcon onClick={markNotificationsSeen} />
 									</Link>
 								</BadgeWrapper>
 							</li>
@@ -136,6 +168,11 @@ const Topbar = ({ allNotifications, stories, allMessages }) => {
 									<VideoLibraryIcon />
 								</Link>
 							</li>
+							<div className="tab icon">
+								<Link to="/users/user/more">
+									<FormatListBulletedIcon />
+								</Link>
+							</div>
 						</ul>
 					</div>
 				</div>

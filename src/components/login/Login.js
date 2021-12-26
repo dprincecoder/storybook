@@ -110,9 +110,9 @@ const Login = () => {
 					</>
 				)}
 				<form onSubmit={handleEmailLogin}>
-					Email Address:
 					<InputForm
 						type="email"
+						label="Email Address"
 						className="input-field"
 						placeholder="Enter your email"
 						name="email"
@@ -120,10 +120,10 @@ const Login = () => {
 						handleChange={(e) => setEmail(e.target.value)}
 						value={email}
 					/>
-					Password:
 					<InputForm
 						type="password"
 						className="input-field"
+						label="Password"
 						placeholder="Enter your password"
 						name="password"
 						required

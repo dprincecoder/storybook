@@ -26,7 +26,7 @@ const ExpandInput = React.forwardRef((props, ref) => {
 			ref={ref}
 			className="text-expand"
 			data-min-rows="3"
-			onInput={expandTextareaInput}
+			onChange={expandTextareaInput}
 			{...props}></textarea>
 	);
 });

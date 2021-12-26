@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import DB from "../../firebase/functions";
 import { useSelector } from "react-redux";
 import IsLoading from "../../components/loading/IsLoading";
+import InputForm from "../forms/inputs/InputForm";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -15,13 +16,14 @@ const mapState = ({ user }) => ({
 const Chat = () => {
 	const [messages, setMessages] = useState([]);
 	const { userData, currentUser } = useSelector(mapState);
+	const [searchField, setSearchField] = useState("");
 	const [loading, setLoading] = useState(true);
 	const { userId, displayName, profilePic } = userData;
 	const { uid } = currentUser;
-	const d = userData?.userId;
+	const d = userId || uid;
 
 	useEffect(() => {
-		if (d || userId) {
+		if (d) {
 			DB.collection("messages")
 				.where("betweenUsers", "array-contains", d)
 				.orderBy("createdDate", "desc")
@@ -45,6 +47,12 @@ const Chat = () => {
 		});
 	};
 
+	const getSearchMessages = (msgs, input) => {
+		return msgs.filter((msg) =>
+			JSON.stringify(msg).toLowerCase().includes(input.toLowerCase())
+		);
+	};
+
 	return (
 		<div className="row">
 			<div className="s12 m12">
@@ -53,10 +61,12 @@ const Chat = () => {
 						<h4>Messages</h4>
 					</div>
 					<div className="msg-search">
-						<input
+						<InputForm
 							type="text"
+							value={searchField}
 							className="search"
 							placeholder="Search Messages"
+							handleChange={(e) => setSearchField(e.target.value)}
 						/>
 						<i className="material-icons">search</i>
 					</div>
@@ -64,7 +74,7 @@ const Chat = () => {
 				<div className="divider"></div>
 				<div className="msg-body">
 					{messages.length > 0 && !loading ? (
-						messages.map((m) => (
+						getSearchMessages(messages, searchField).map((m) => (
 							<Link
 								to={`/users/chats/${
 									m?.userThatSentMessageId === d
@@ -88,21 +98,29 @@ const Chat = () => {
 									</div>
 									<div className="msg-right">
 										<div className="msg-center-top">
-											<h4 className={m?.read && "read"}>
+											<h4>
 												{m?.userThatSentMessageName === displayName
 													? m?.userThatOwnMessageName
 													: m?.userThatSentMessageName}
 											</h4>
 											<div
-												className={`msg-center-content ${m?.read && "read"}`}>
-												{shortenMsgText(m?.message, 50)}
+												className={`msg-center-content ${
+													m?.read ? "read" : "unread"
+												}`}>
+												{m?.userThatSentMessageName === displayName ? (
+													<p style={{ opacity: "0.5" }}>
+														You: {shortenMsgText(m?.message, 50)}
+													</p>
+												) : (
+													shortenMsgText(m?.message, 50)
+												)}
 											</div>
 										</div>
 										<div className="msg-right-end">
 											<div className="msg-right-time">
 												{formatDate(m?.createdDate)}
 											</div>
-											{m?.read && (
+											{m?.userThatSentMessageName === displayName && (
 												<p className="status">
 													<i className="material-icons circle">done</i>
 												</p>

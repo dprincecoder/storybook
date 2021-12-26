@@ -1,15 +1,10 @@
-import React from "react";
-import InputEmoji from "react-input-emoji";
 import { Avatar, Button } from "@material-ui/core";
-import { useState } from "react";
-import "./input.scss";
-
-import firebase from "firebase";
 import TelegramIcon from "@material-ui/icons/Telegram";
+import firebase from "firebase";
+import React, { useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import ExpandInput from "../../forms/expandForm/ExpandInput";
 import DB from "../../../firebase/functions";
+import "./input.scss";
 
 const mapState = ({ user }) => ({
 	userData: user.userData,
@@ -23,11 +18,11 @@ const ReplyInput = ({
 	userThatCommentName,
 }) => {
 	const [replyMsg, setReplyMsg] = useState("");
-	const [text, setText] = useState("");
+	// const [text, setText] = useState("");
 	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
-	const dispatch = useDispatch();
-	const inputRef = React.createRef();
+	// const dispatch = useDispatch();
+	const inputRef = useRef();
 	const randomColor = "#" + Math.floor(Math.random() * 16777215).toString(16);
 	let today = new Date().toISOString();
 
@@ -70,32 +65,34 @@ const ReplyInput = ({
 							seen: false,
 						});
 				}
+			})
+			.then(() => {
+				const comment = DB.collection("comments").doc(commentId);
+				const increment = firebase.firestore.FieldValue.increment(+1);
+
+				comment.update({ replyCount: increment });
+
+				setReplyMsg("");
 			});
-
-		const comment = DB.collection("comments").doc(commentId);
-		const increment = firebase.firestore.FieldValue.increment(+1);
-
-		comment.update({ replyCount: increment });
-
-		inputRef.current.value = "";
 	};
 
 	return (
 		<div className="container-o">
 			<div className="reply-details-header">
-				<form className="reply-form">
+				<form className="reply-form" onSubmit={sendReply}>
 					<Avatar src={profilePic} className="reply-details-header-avatar" />
 					<div className="reply-details-header-details">
-						<ExpandInput
+						<textarea
+							type="text"
+							name="replyMsg"
+							className="text-area"
 							onChange={(e) => setReplyMsg(e.target.value)}
 							placeholder="Write a public reply"
 							value={replyMsg}
-							ref={inputRef}
-						/>
+							ref={inputRef}></textarea>
 						<Button
 							className="submit-reply-button"
 							type="submit"
-							onClick={sendReply}
 							disabled={!replyMsg}>
 							<TelegramIcon />
 						</Button>

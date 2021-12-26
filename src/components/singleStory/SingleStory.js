@@ -70,7 +70,7 @@ const SingleStory = () => {
 		// 	dispatch(setStory({}));
 		// };
 		fetchStory();
-	}, []);
+	}, [comments.length]);
 
 	useEffect(() => {
 		DB.collection("comments")
@@ -100,7 +100,7 @@ const SingleStory = () => {
 			DB.collection("comments")
 				.doc(localCommentId)
 				.collection("replies")
-				.orderBy("createdAt", "asc")
+				.orderBy("createdDate", "asc")
 				.onSnapshot((snapshot) => {
 					setReplies(
 						snapshot.docs.map((doc) => ({
@@ -204,19 +204,17 @@ const SingleStory = () => {
 					</div>
 					<div className="divider"></div>
 					<div className="card-content">
-						<h4>{storyTitle}</h4>
+						<h1>{storyTitle}</h1>
 						<div className="divider"></div>
 						<span dangerouslySetInnerHTML={{ __html: storyDetails }} />
 						<div className="divider"></div>
 						{/* {[1, 2].map((a) => (
 						))} */}
-						<div className="single-image-container">
-							<img
-								src={storyPhotos}
-								alt={storyTitle}
-								className="single-image"
-							/>
-						</div>
+						{storyPhotos && (
+							<div className="single-image-container">
+								<img src={storyPhotos} alt="" className="single-image" />
+							</div>
+						)}
 						<div className="optionsCount">
 							{likeCount > 0 && (
 								<>
@@ -290,9 +288,11 @@ const SingleStory = () => {
 													key={index}
 													profilePic={reply.userThatReplyImage}
 													displayName={reply.userThatReplyName}
+													userThatReplyId={reply.userThatReplyId}
 													createdDate={reply.createdAt}
 													repliesMsg={reply.replyMessage}
 													color={reply.color}
+													replyId={reply.replyId}
 												/>
 											))}
 										</div>
@@ -317,8 +317,8 @@ const SingleStory = () => {
 							<div className="show-comments">
 								<span>Discussion Started</span>
 								<div className="divider space"></div>
-								{comments.map((c, i) => (
-									<div key={i}>
+								{comments.map((c) => (
+									<div key={c.commentID}>
 										<Showcomment
 											profilePic={c.userThatCommentImage}
 											displayName={c.userThatCommentName}
@@ -326,6 +326,7 @@ const SingleStory = () => {
 											commentMsg={c.commentMessage}
 											userThatCommentId={c.userThatCommentId}
 											color={c.color}
+											commentId={c.commentID}
 										/>
 										<div className="more">
 											<div className="action">
@@ -392,7 +393,6 @@ const SingleStory = () => {
 								displayName={displayName}
 								profilePic={profilePic}
 								storyTitle={storyTitle}
-								storyId={storyId}
 								storyUserUID={storyUserUID}
 								userThatPublished={userThatPublished}
 							/>

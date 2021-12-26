@@ -21,22 +21,22 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 	const snapshot = await userRef.get();
 
 	if (!snapshot.exists) {
-		const { email, displayName, firstName, lastName, country, city, photoURL } =
-			userAuth;
+		const { displayName, email, photoURL } = userAuth;
 		const timestamp = new Date().toISOString();
 		const profilePic = !photoURL ? dummyAvatar : photoURL;
 		try {
 			await userRef
 				.set({
-					email,
 					displayName,
-					firstName: firstName || "",
-					lastName: lastName || "",
-					country: country || "",
-					city: city || "",
+					email,
+					firstName: "",
+					lastName: "",
+					country: "",
+					city: "",
 					profilePic,
 					bio: "",
-					areaOfExpertise: "",
+					web: "",
+
 					createdDate: timestamp,
 					following: [],
 					followers: [],
@@ -53,7 +53,9 @@ const handleUserProfile = async ({ userAuth, additionalData }) => {
 							read: false,
 							userThatSentNote: "Storybook Admin",
 							userThatOwnNotificationId: uid,
-							note: `Welcome to the community, ${displayName}! Please fill out your profile and start sharing your stories. You can also follow other users to see their stories, comment, or even reply to a comment. Please take a look at our About page at the very topbar to see more information. Happy reading! 📖`,
+							note: `Welcome to the community, ${
+								displayName || ""
+							}. Please fill out your profile and start sharing your stories. You can also follow other users to see their stories, comment, or even reply to a comment. Please take a look at our About page at the very topbar to see more information. Happy reading! 📖`,
 							logo: "/assets/storybook.jpg",
 						});
 				});

@@ -1,21 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { Delete } from "@material-ui/icons";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
+import { Avatar } from "@mui/material";
+import "aos/dist/aos.css";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
 	formatDate,
 	shortenText,
 	stripHtmlTags,
 } from "../../../helpers/Helpers";
-import ThumbUpAltOutlinedIcon from "@mui/icons-material/ThumbUpAltOutlined";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import { Link } from "react-router-dom";
-import { Avatar } from "@mui/material";
-import { Delete } from "@material-ui/icons";
-import Button from "../../forms/button/Button";
-import { useDispatch, useSelector } from "react-redux";
 import { deleteStoryStart } from "../../../redux/story/story.action";
-import Aos from "aos";
-import "aos/dist/aos.css";
 import { handleLikeStory } from "../../../redux/story/story.helpers";
-import { fetchStoriesStart } from "../../../redux/story/story.action";
+import Button from "../../forms/button/Button";
 
 const mapState = ({ user, storiesData }) => ({
 	userData: user.userData,
@@ -24,9 +22,9 @@ const mapState = ({ user, storiesData }) => ({
 
 const Story = (story) => {
 	const dispatch = useDispatch();
-	const { userData, stories } = useSelector(mapState);
+	const { userData } = useSelector(mapState);
 	const { profilePic, displayName, userId } = userData;
-	const { data, queryDoc } = stories;
+	// const { data, queryDoc } = stories;
 
 	const [del, setDel] = useState(false);
 	const [delSuccess, setDelSuccess] = useState(false);
@@ -121,16 +119,16 @@ const Story = (story) => {
 				<div className="divider"></div>
 				<div className="card-content">
 					<Link to={`/stories/story/${documentID}`}>
-						<h4>{storyTitle}</h4>
+						<h1>{storyTitle}</h1>
 						<div className="divider"></div>
-						<span>{stripHtmlTags(shortenText(storyDetails, 150))}</span>
-						<br />
-						<b>Read More</b>
+						<span>{shortenText(storyDetails, 150)}</span>
 
 						<div className="divider"></div>
-						<div className="card-image">
-							<img src={storyPhotos} alt={storyTitle} />
-						</div>
+						{storyPhotos && (
+							<div className="img-card">
+								<img src={storyPhotos} alt="" />
+							</div>
+						)}
 					</Link>
 					<div className="divider"></div>
 					<div className="optionsCount">

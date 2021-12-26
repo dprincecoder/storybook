@@ -10,3 +10,5 @@ export { default as SingleStoryPage } from "./SingleStoryPage";
 export { default as VideoPage } from "./VideoPage";
 export { default as ChatPage } from "./ChatPage";
 export { default as UserProfilePage } from "./UserProfilePage";
+export { default as WelcomePage } from "./WelcomePage";
+export { default as MorePage } from "./MorePage";

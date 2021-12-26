@@ -1,15 +1,12 @@
-import React from "react";
 import { Avatar, Button } from "@material-ui/core";
-import { useState } from "react";
+import TelegramIcon from "@material-ui/icons/Telegram";
+import firebase from "firebase";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import DB from "../../firebase/functions";
+import { addCommentStart } from "../../redux/story/story.action";
 import "./addcomment.scss";
 
-import firebase from "firebase";
-import TelegramIcon from "@material-ui/icons/Telegram";
-import { useSelector } from "react-redux";
-import DB from "../../firebase/functions";
-import { useDispatch } from "react-redux";
-import { addCommentStart } from "../../redux/story/story.action";
-import ExpandInput from "../forms/expandForm/ExpandInput";
 const mapState = ({ user }) => ({
 	userData: user.userData,
 });
@@ -67,26 +64,25 @@ const Comments = ({
 
 		story.update({ commentCount: increment });
 
-		inputRef.current.value = "";
+		setCommentMsg("");
 	};
 
 	return (
 		<div className="">
 			<div className="post-details-header">
-				<form className="post-form">
+				<form className="post-form" onSubmit={sendComment}>
 					<Avatar src={profilePic} className="post-details-header-avatar" />
 					<div className="post-details-header-details">
-						<ExpandInput
+						<textarea
 							type="text"
+							className="comment-textarea"
 							value={commentMsg}
 							onChange={(e) => setCommentMsg(e.target.value)}
 							placeholder={`Join the conversation ${displayName || ""}`}
-							ref={inputRef}
-						/>
+							ref={inputRef}></textarea>
 						<Button
 							className="submit-comment-button"
 							type="submit"
-							onClick={sendComment}
 							disabled={!commentMsg}>
 							<TelegramIcon />
 						</Button>

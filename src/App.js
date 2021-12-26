@@ -16,12 +16,14 @@ import {
 	DashboardPage,
 	HomePage,
 	LoginPage,
+	MorePage,
 	NotificationsPage,
 	RecoveryPage,
 	RegisterPage,
 	SingleStoryPage,
 	UserProfilePage,
 	VideoPage,
+	WelcomePage,
 } from "./pages";
 import { checkUserSession } from "./redux/user/user.action";
 
@@ -34,6 +36,7 @@ const App = () => {
 	const { currentUser, userData } = useSelector(mapState);
 	const location = useLocation();
 	const d = userData?.userId || currentUser?.uid;
+	const [welcomeNotifications, setWelcomeNotifications] = useState([]);
 	const [Notifications, setNotifications] = useState([]);
 	const [messages, setMessages] = useState([]);
 	const [stories, setStories] = useState([]);
@@ -51,14 +54,34 @@ const App = () => {
 				}))
 			);
 		});
-		DB.collection("stories").onSnapshot((snapshot) => {
-			setStories(
-				snapshot.docs.map((doc) => ({
-					...doc.data(),
-					storyID: doc.id,
-				}))
-			);
-		});
+		if (d || currentUser) {
+			DB.collection("stories")
+				.where("storyUserUID", "!=", d)
+				.onSnapshot((snapshot) => {
+					setStories(
+						snapshot.docs.map((doc) => ({
+							...doc.data(),
+							storyID: doc.id,
+						}))
+					);
+				});
+		} else {
+			return;
+		}
+		if (d || currentUser) {
+			DB.collection("welcome")
+				.where("userThatOwnNotificationId", "==", d)
+				.onSnapshot((snapshot) => {
+					setWelcomeNotifications(
+						snapshot.docs.map((doc) => ({
+							...doc.data(),
+							welcomeID: doc.id,
+						}))
+					);
+				});
+		} else {
+			return;
+		}
 		if (d || currentUser) {
 			DB.collection("messages")
 				.where("betweenUsers", "array-contains", d)
@@ -107,6 +130,7 @@ const App = () => {
 									allNotifications={allNotifications}
 									stories={stories}
 									allMessages={messages}
+									welcomeNotifications={welcomeNotifications}
 								/>
 							)}
 						</div>
@@ -164,6 +188,16 @@ const App = () => {
 								<Route exact path="/users/user/:userProfileId/profile">
 									<WithAuth>
 										<UserProfilePage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/user/welcome">
+									<WithAuth>
+										<WelcomePage />
+									</WithAuth>
+								</Route>
+								<Route exact path="/users/user/more">
+									<WithAuth>
+										<MorePage />
 									</WithAuth>
 								</Route>
 							</Switch>
