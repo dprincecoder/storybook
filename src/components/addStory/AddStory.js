@@ -319,7 +319,7 @@ const AddStory = () => {
 										custom="blue"
 										type="submit"
 										disabled={loading || !title}>
-										publish
+										post
 									</Button>
 									{loading && <IsLoading />}
 								</div>
